@@ -1,4 +1,8 @@
 package com.example.rentalmanagerapp.User.Registration;
 
-public interface RegistrationReposity {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface RegistrationReposity extends JpaRepository<Registration, Registration> {
+    public String findByEmail(email);
+
 }

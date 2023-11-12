@@ -45,12 +45,16 @@ public class User {
     private Boolean isActive;
     private Boolean isLocked;
     private UserRoles userRole;
+    private Boolean hasUnit;
 
     //Rental info
     private LocalDate rentDue;
     private LocalDate rentLastPaid;
+    private LocalDate dateLeaseStarted;
     private Long amountPaid;
     private Long amountOwed;
+    private String rentalAddress;
+
 
     public User() {
 
