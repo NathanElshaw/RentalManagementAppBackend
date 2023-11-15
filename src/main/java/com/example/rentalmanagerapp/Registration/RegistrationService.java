@@ -12,7 +12,7 @@ public class RegistrationService {
 
         if(!emailIsValid || request.getEmail() == null){
             throw new IllegalStateException("Email is not valid");
-        } else if(email.validateAgainstDb(request.getEmail()) != true){
+        } else if(!email.validateAgainstDb(request.getEmail())){
             throw new IllegalStateException("Email already exists");
         }
         return "";
