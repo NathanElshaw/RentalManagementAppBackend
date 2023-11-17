@@ -18,4 +18,8 @@ public class RegistrationService {
         return "";
     }
 
+    public String confirmToken(String token){
+        return "";
+    }
+
 }
