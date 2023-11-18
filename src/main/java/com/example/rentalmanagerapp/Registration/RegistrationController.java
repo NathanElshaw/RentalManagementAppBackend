@@ -15,8 +15,14 @@ public class RegistrationController {
         return registrationService.createAccount(registrationPayload);
     }
 
+    @GetMapping
+    public String sendToken(@RequestParam("email") String email){
+        return registrationService.
+    }
+
     @PutMapping
     public String confirmToken(@RequestParam("token") String token){
+
         return registrationService.confirmToken(token);
     }
 

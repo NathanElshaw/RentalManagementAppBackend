@@ -18,6 +18,10 @@ public class RegistrationService {
         return "";
     }
 
+    public String sendToken(String email){
+        return "";
+    }
+
     public String confirmToken(String token){
         return "";
     }
