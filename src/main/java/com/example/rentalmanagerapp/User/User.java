@@ -2,18 +2,23 @@ package com.example.rentalmanagerapp.User;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @AllArgsConstructor
+@Setter
+@Getter
 @Entity
 @Table(name = "users")
 public class User {
     @SequenceGenerator(
             name = "userSequence",
-            sequenceName = "userSequence"
+            sequenceName = "userSequence",
+            allocationSize = 1
     )
 
     @GeneratedValue(
@@ -42,21 +47,33 @@ public class User {
     private String password;
 
     //Authority
-    private Boolean isActive;
-    private Boolean isLocked;
-    private UserRoles userRole;
-    private Boolean hasUnit;
+    private Boolean isActive = false;
+    private Boolean isLocked = false;
+    private UserRoles userRole = UserRoles.User;
+    private Boolean hasUnit = false;
 
     //Rental info
-    private LocalDate rentDue;
-    private LocalDate rentLastPaid;
-    private LocalDate dateLeaseStarted;
-    private Long amountPaid;
-    private Long amountOwed;
-    private String rentalAddress;
+    private LocalDate rentDue = null;
+    private LocalDate rentLastPaid = null;
+    private LocalDate dateLeaseStarted = null;
+    private Long amountPaid = 0L;
+    private Long amountOwed = 0L;
+    private String rentalAddress = null;
 
 
     public User() {
 
+    }
+
+    public User(String firstName, String lastName, String fullName, LocalDate birthDate, String address, String email, String telephone, String username, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.fullName = fullName;
+        this.birthDate = birthDate;
+        this.address = address;
+        this.email = email;
+        this.telephone = telephone;
+        this.username = username;
+        this.password = password;
     }
 }
