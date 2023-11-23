@@ -1,16 +1,25 @@
 package com.example.rentalmanagerapp.Rental.Rentee;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
 
+import static jakarta.persistence.GenerationType.SEQUENCE;
+
 @AllArgsConstructor
 @Entity
-@Table(name="Renters", schema="")
+@Table(name="RENTEES")
 public class Rentee {
+    @SequenceGenerator(
+            name = "renteeSequence",
+            sequenceName = "renteeSequence"
+    )
+
+    @GeneratedValue(
+            strategy = SEQUENCE,
+            generator = "renteeSequence"
+    )
     @Id
     private Long id;
     private String tenantName;
