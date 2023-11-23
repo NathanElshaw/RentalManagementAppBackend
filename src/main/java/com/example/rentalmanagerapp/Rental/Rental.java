@@ -12,7 +12,8 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 public class Rental {
     @SequenceGenerator(
             name = "rentalSequence",
-            sequenceName = "rentalSequence"
+            sequenceName = "rentalSequence",
+            allocationSize = 1
     )
 
     @GeneratedValue(
