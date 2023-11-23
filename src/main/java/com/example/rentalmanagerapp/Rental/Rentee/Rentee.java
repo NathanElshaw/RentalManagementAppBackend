@@ -9,11 +9,12 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @AllArgsConstructor
 @Entity
-@Table(name="RENTEES")
+@Table(name="rentee")
 public class Rentee {
     @SequenceGenerator(
             name = "renteeSequence",
-            sequenceName = "renteeSequence"
+            sequenceName = "renteeSequence",
+            allocationSize = 1
     )
 
     @GeneratedValue(
