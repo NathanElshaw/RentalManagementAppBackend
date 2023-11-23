@@ -1,9 +1,6 @@
 package com.example.rentalmanagerapp.User;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
@@ -12,6 +9,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @AllArgsConstructor
 @Entity
+@Table(name = "users")
 public class User {
     @SequenceGenerator(
             name = "userSequence",
@@ -31,6 +29,8 @@ public class User {
     private String firstName;
     private String lastName;
     private String fullName;
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
 
     //Contact Info
     private String address;
