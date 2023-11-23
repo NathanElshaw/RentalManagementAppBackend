@@ -17,7 +17,7 @@ public class RegistrationController {
 
     @GetMapping
     public String sendToken(@RequestParam("email") String email){
-        return registrationService.
+        return registrationService.sendToken(email);
     }
 
     @PutMapping
