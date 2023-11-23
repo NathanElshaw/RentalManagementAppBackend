@@ -4,14 +4,26 @@ import com.example.rentalmanagerapp.Rental.Rentee.Rentee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 
+import static jakarta.persistence.GenerationType.SEQUENCE;
+
 @AllArgsConstructor
 @Entity
-@Table(name="Rental", schema = "")
+@Table(name="RENTALS")
 public class Rental {
+    @SequenceGenerator(
+            name = "rentalSequence",
+            sequenceName = "rentalSequence"
+    )
+
+    @GeneratedValue(
+            strategy = SEQUENCE,
+            generator = "rentalSequence"
+    )
 
     @Id
     private Long id;
     private String rentalAddress;
+    @ManyToOne
     private Rentee renter;
     private int totalTenants;
 
