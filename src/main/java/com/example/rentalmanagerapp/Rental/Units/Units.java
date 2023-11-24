@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -32,7 +34,8 @@ public class Units {
         private Long parentUnitId;
         private Long unitNumber;
         @ManyToOne
-        private User Renter;
+        private User Renters;
+        private Boolean hasPets;
         private Long rentAmount;
         private Long rentDue;
         private Long rentPaid;
