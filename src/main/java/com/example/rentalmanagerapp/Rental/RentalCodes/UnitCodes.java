@@ -3,13 +3,16 @@ package com.example.rentalmanagerapp.Rental.RentalCodes;
 import com.example.rentalmanagerapp.Rental.Rental;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name="rentalCodes")
 public class UnitCodes {
@@ -28,6 +31,7 @@ public class UnitCodes {
     private String unitCode;
     @OneToOne
     private Rental rental_id;
+    private LocalDateTime confirmedAt;
     private LocalDateTime issuedAt;
     private LocalDateTime expiresAt;
 
