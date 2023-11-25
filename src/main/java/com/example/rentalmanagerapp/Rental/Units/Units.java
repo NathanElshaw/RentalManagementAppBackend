@@ -1,5 +1,7 @@
 package com.example.rentalmanagerapp.Rental.Units;
 
+import com.example.rentalmanagerapp.Rental.Rental;
+import com.example.rentalmanagerapp.Rental.RentalCodes.UnitCodes;
 import com.example.rentalmanagerapp.User.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,10 +33,14 @@ public class Units {
 
         @Id
         private Long id;
-        private Long parentUnitId;
-        private Long unitNumber;
+        @OneToOne
+        private Rental parentUnitId = null;
         @ManyToOne
-        private User Renters;
+        private User Renters = null;
+        @OneToOne
+        private UnitCodes unitCode;
+
+        private Long unitNumber;
         private Boolean hasPets;
         private Long rentAmount;
         private Long rentDue;
@@ -46,5 +52,8 @@ public class Units {
 
         }
 
-
+        public Units(Long unitNumber, Long rentAmount) {
+                this.unitNumber = unitNumber;
+                this.rentAmount = rentAmount;
+        }
 }
