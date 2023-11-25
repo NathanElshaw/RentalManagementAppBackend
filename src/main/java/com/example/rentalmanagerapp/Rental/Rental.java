@@ -29,6 +29,7 @@ public class Rental {
     private Long id;
     private String rentalAddress;
     private String description;
+    private String type;
     @ManyToOne
     private Rentee renter = null;
     @ManyToMany
@@ -45,15 +46,17 @@ public class Rental {
 
     public Rental(String rentalAddress,
                   String description,
+                  String type,
                   long rentAmount,
                   LocalDate dateAvailable) {
         this.rentalAddress = rentalAddress;
         this.description = description;
+        this.type = type;
         this.rentAmount = rentAmount;
         this.dateAvailable = dateAvailable;
     }
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="Renter_id", nullable = false)
     public Rentee getRenter() {
         return renter;
