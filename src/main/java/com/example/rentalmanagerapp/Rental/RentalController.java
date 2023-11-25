@@ -24,6 +24,7 @@ public class RentalController {
 
     @PutMapping("/addRenter")
     public String addRenter(){
+        //Todo Admin version of joinRental
         return "";
     }
 
@@ -31,5 +32,14 @@ public class RentalController {
     public String deleteRental(){
         //Todo check priv, add service, validate
         return "";
+    }
+
+    //Base User Api interation
+
+    //User Rental api
+
+    @GetMapping("/joinRental")
+    public String joinRental(@RequestParam("unitCode") String unitCode){
+        return rentalService.joinRental(unitCode);
     }
 }
