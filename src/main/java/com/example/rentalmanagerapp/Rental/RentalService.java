@@ -42,7 +42,7 @@ public class RentalService {
 
         LocalDateTime expiresAt = unitCodeData.getExpiresAt();
 
-        if(expiresAt != null){
+        if(expiresAt == null){
             throw new IllegalStateException("Unit has Already been confirmed");
         }
 
