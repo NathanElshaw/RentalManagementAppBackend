@@ -30,12 +30,8 @@ public class Rental {
     private String rentalAddress;
     private String description;
     private String type;
-    @ManyToOne
-    private Rentee renter = null;
-    @ManyToMany
-    private List<Units> subUnits = null;
     private int totalTenants = 0;
-    private long rentAmount;
+    private double rentAmount;
     private long totalRentIncome = 0L;
     private LocalDate dateAvailable;
 
@@ -47,18 +43,12 @@ public class Rental {
     public Rental(String rentalAddress,
                   String description,
                   String type,
-                  long rentAmount,
+                  double rentAmount,
                   LocalDate dateAvailable) {
         this.rentalAddress = rentalAddress;
         this.description = description;
         this.type = type;
         this.rentAmount = rentAmount;
         this.dateAvailable = dateAvailable;
-    }
-
-    @ManyToOne
-    @JoinColumn(name="Renter_id", nullable = false)
-    public Rentee getRenter() {
-        return renter;
     }
 }
