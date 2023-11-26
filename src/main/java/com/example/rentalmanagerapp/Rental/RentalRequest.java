@@ -11,6 +11,6 @@ public class RentalRequest {
     private String rentalAddress;
     private String description;
     private String type;
-    private long rentAmount;
+    private double rentAmount;
     private String dateAvailable;
 }
