@@ -33,13 +33,4 @@ public class RentalController {
         //Todo check priv, add service, validate
         return "";
     }
-
-    //Base User Api interation
-
-    //User Rental api
-
-    @GetMapping("/joinRental")
-    public String joinRental(@RequestParam("unitCode") String unitCode){
-        return rentalService.joinRental(unitCode);
-    }
 }
