@@ -1,4 +1,4 @@
-package com.example.rentalmanagerapp.Rental.RentalCodes;
+package com.example.rentalmanagerapp.Rental.RentalCodes.Requests;
 
 import lombok.*;
 
