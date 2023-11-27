@@ -1,10 +1,7 @@
 package com.example.rentalmanagerapp.Rental.Units;
 
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
@@ -16,5 +13,15 @@ public class UnitsController {
     @PostMapping("/create")
     public String createUnit(@RequestBody UnitsRequest createUnitPayload){
         return unitsService.createUnit(createUnitPayload);
+    }
+
+    @GetMapping("/getRental")
+    public String getRental (@RequestBody UnitsRequest.GetRentalRequest getRentalPayload){
+        return unitsService.getRentalWithCode(getRentalPayload);
+    }
+
+    @PatchMapping ("/update")
+    public String updateUnit (@RequestBody Units updateUnitsPayload){
+        return unitsService.updateUnit(updateUnitsPayload);
     }
 }
