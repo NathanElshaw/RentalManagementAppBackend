@@ -1,6 +1,7 @@
 package com.example.rentalmanagerapp.Rental.RentalCodes;
 
 import com.example.rentalmanagerapp.Rental.Rental;
+import com.example.rentalmanagerapp.Rental.Units.Units;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +31,7 @@ public class UnitCodes {
     private Long id;
     private String unitCode;
     @OneToOne
-    private Rental rental_id;
+    private Units parentRental;
     private LocalDateTime confirmedAt;
     private LocalDateTime issuedAt;
     private LocalDateTime expiresAt;
@@ -39,5 +40,10 @@ public class UnitCodes {
 
     }
 
-
+    public UnitCodes(String unitCode, LocalDateTime issuedAt, LocalDateTime expiresAt, Units parentUnitId) {
+        this.unitCode = unitCode;
+        this.issuedAt = issuedAt;
+        this.expiresAt = expiresAt;
+        this.parentRental = parentUnitId;
+    }
 }
