@@ -41,4 +41,13 @@ public class UnitsService {
         return "Success";
     }
 
+    public String getRentalWithCode(UnitsRequest.GetRentalRequest addRenterPayload){
+        //Todo Validate unitcode then return unit to user to confirm if its the correct one.
+        return "";
+    }
+
+    public String updateUnit(Units updateUnitPayload){
+        return "";
+    }
+
 }
