@@ -1,4 +1,4 @@
-package com.example.rentalmanagerapp.Rental.Units;
+package com.example.rentalmanagerapp.Rental.Units.Requests;
 
 import com.example.rentalmanagerapp.User.User;
 import lombok.AllArgsConstructor;
