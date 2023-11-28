@@ -57,7 +57,7 @@ public class UnitsService {
 
     //UserRequests
 
-    public String userIdGetUnits (GetUnitRequest requestPayload){
+    public Units userIdGetUnits (GetUnitRequest requestPayload){
         User getUser = userRepository.findById(requestPayload.getUserId()).orElseThrow(
                 ()->new IllegalStateException("User not found")
         );
@@ -65,7 +65,20 @@ public class UnitsService {
                 ()->new IllegalStateException("User is not apart of any units")
         );
 
-        return targetUnit.toString();
+        Units returnUnit = new Units(
+                targetUnit.getUnitNumber(),
+                targetUnit.getBeds(),
+                targetUnit.getBaths(),
+                targetUnit.getUnitAddress(),
+                targetUnit.getHasPets(),
+                targetUnit.getRentAmount(),
+                targetUnit.getRentDueDate().toString(),
+                targetUnit.getLeaseStart().toString(),
+                targetUnit.getLeaseEnd().toString(),
+                targetUnit.getParentUnitId()
+        );
+
+        return returnUnit;
     }
 
 }
