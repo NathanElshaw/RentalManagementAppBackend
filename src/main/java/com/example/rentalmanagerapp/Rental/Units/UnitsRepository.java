@@ -13,6 +13,9 @@ import java.util.Optional;
 @Repository
 public interface UnitsRepository extends JpaRepository<Units, Long> {
 
+    @Query("select u from Units u where u.renter = ?1")
+    Optional<Units> getUnitByUserId(User userid);
+
     @Query("select u.unitCode from Units u where u.unitAddress = ?1 and u.unitNumber = ?2 ")
     Optional<UnitCodes> getUnitCodeParent(String unitAddress, int unitNumber);
 
