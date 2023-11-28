@@ -1,5 +1,7 @@
 package com.example.rentalmanagerapp.Rental.Units;
 
+import com.example.rentalmanagerapp.Rental.Units.Requests.GetUnitRequest;
+import com.example.rentalmanagerapp.Rental.Units.Requests.UnitsRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,5 +25,11 @@ public class UnitsController {
     @PatchMapping ("/update")
     public String updateUnit (@RequestBody Units updateUnitsPayload){
         return unitsService.updateUnit(updateUnitsPayload);
+    }
+
+    //UserRequests
+    @GetMapping("/userIdGetRental")
+    public String userIdGetUnits(@RequestBody GetUnitRequest userId){
+        return unitsService.userIdGetUnits(userId);
     }
 }
