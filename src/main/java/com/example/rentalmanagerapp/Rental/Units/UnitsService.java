@@ -2,6 +2,10 @@ package com.example.rentalmanagerapp.Rental.Units;
 
 import com.example.rentalmanagerapp.Rental.Rental;
 import com.example.rentalmanagerapp.Rental.RentalRepository;
+import com.example.rentalmanagerapp.Rental.Units.Requests.GetUnitRequest;
+import com.example.rentalmanagerapp.Rental.Units.Requests.UnitsRequest;
+import com.example.rentalmanagerapp.User.User;
+import com.example.rentalmanagerapp.User.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +13,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UnitsService {
 
+    private final UserRepository userRepository;
     private final UnitsRepository unitsRepository;
     private final RentalRepository rentalRepository;
 
@@ -48,6 +53,19 @@ public class UnitsService {
 
     public String updateUnit(Units updateUnitPayload){
         return "";
+    }
+
+    //UserRequests
+
+    public String userIdGetUnits (GetUnitRequest requestPayload){
+        User getUser = userRepository.findById(requestPayload.getUserId()).orElseThrow(
+                ()->new IllegalStateException("User not found")
+        );
+        Units targetUnit = unitsRepository.getUnitByUserId(getUser).orElseThrow(
+                ()->new IllegalStateException("User is not apart of any units")
+        );
+
+        return targetUnit.toString();
     }
 
 }
