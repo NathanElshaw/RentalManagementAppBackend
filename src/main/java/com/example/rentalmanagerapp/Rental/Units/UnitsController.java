@@ -29,7 +29,7 @@ public class UnitsController {
 
     //UserRequests
     @GetMapping("/userIdGetRental")
-    public String userIdGetUnits(@RequestBody GetUnitRequest userId){
+    public Units userIdGetUnits(@RequestBody GetUnitRequest userId){
         return unitsService.userIdGetUnits(userId);
     }
 }
