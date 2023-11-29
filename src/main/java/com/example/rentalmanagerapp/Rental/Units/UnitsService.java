@@ -47,7 +47,7 @@ public class UnitsService {
     }
 
     public String getRentalWithCode(UnitsRequest.GetRentalRequest addRenterPayload){
-        //Todo Validate unitcode then return unit to user to confirm if its the correct one.
+        //Todo Validate unitCode then return unit to user to confirm if its the correct one.
         return "";
     }
 
@@ -57,7 +57,7 @@ public class UnitsService {
 
     //UserRequests
 
-    public Units userIdGetUnits (GetUnitRequest requestPayload){
+    public Units.ReturnGetUnitsRequest userIdGetUnits (GetUnitRequest requestPayload){
         User getUser = userRepository.findById(requestPayload.getUserId()).orElseThrow(
                 ()->new IllegalStateException("User not found")
         );
@@ -65,20 +65,19 @@ public class UnitsService {
                 ()->new IllegalStateException("User is not apart of any units")
         );
 
-        Units returnUnit = new Units(
-                targetUnit.getUnitNumber(),
+        return new Units.ReturnGetUnitsRequest(
+                targetUnit.getUnitAddress(),
                 targetUnit.getBeds(),
                 targetUnit.getBaths(),
-                targetUnit.getUnitAddress(),
+                targetUnit.getUnitNumber(),
                 targetUnit.getHasPets(),
                 targetUnit.getRentAmount(),
-                targetUnit.getRentDueDate().toString(),
-                targetUnit.getLeaseStart().toString(),
-                targetUnit.getLeaseEnd().toString(),
-                targetUnit.getParentUnitId()
+                targetUnit.getRentDue(),
+                targetUnit.getRentPaid(),
+                targetUnit.getLeaseStart(),
+                targetUnit.getRentDueDate(),
+                targetUnit.getLeaseEnd()
         );
-
-        return returnUnit;
     }
 
 }
