@@ -57,6 +57,7 @@ public class Units {
 
         }
 
+        //Create Units Constructor
         public Units(int unitNumber,
                      int beds,
                      double baths,
@@ -77,5 +78,25 @@ public class Units {
                 this.leaseStart = LocalDate.parse(leaseStart);
                 this.leaseEnd = LocalDate.parse(leaseEnd);
                 this.parentUnitId = parentUnitId;
+        }
+
+        //Return unit constructor
+        @AllArgsConstructor
+        @Getter
+        @Setter
+        public static class ReturnGetUnitsRequest {
+                private String unitAddress;
+                private int beds;
+                private double baths;
+                private int unitNumber;
+                private Boolean hasPets;
+                private double rentAmount;
+                private double rentDue;
+                private double rentPaid;
+                private LocalDate leaseStart;
+                private LocalDate rentDueDate;
+                private LocalDate leaseEnd;
+
+                public ReturnGetUnitsRequest(){}
         }
 }
