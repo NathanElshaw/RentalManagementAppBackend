@@ -1,6 +1,7 @@
 package com.example.rentalmanagerapp.Rental.Units;
 
 import com.example.rentalmanagerapp.Rental.Units.Requests.GetUnitRequest;
+import com.example.rentalmanagerapp.Rental.Units.Requests.ReturnGetUnitsRequest;
 import com.example.rentalmanagerapp.Rental.Units.Requests.UnitsRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class UnitsController {
 
     //UserRequests
     @GetMapping("/userIdGetRental")
-    public Units userIdGetUnits(@RequestBody GetUnitRequest userId){
+    public Units.ReturnGetUnitsRequest userIdGetUnits(@RequestBody GetUnitRequest userId){
         return unitsService.userIdGetUnits(userId);
     }
 }
