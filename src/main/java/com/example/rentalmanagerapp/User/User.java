@@ -1,9 +1,7 @@
 package com.example.rentalmanagerapp.User;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -76,4 +74,15 @@ public class User {
         this.username = username;
         this.password = password;
     }
+
+    @Setter
+    @Getter
+    @ToString
+    @EqualsAndHashCode
+    @AllArgsConstructor
+    public static class UserLoginRequest{
+        private String username;
+        private String password;
+    }
+
 }
