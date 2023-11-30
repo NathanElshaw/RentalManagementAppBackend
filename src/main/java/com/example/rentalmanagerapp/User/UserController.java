@@ -26,4 +26,9 @@ public class UserController {
         //Todo validate jwt before updating
         return userService.updateUser(user);
     }
+
+    @PostMapping("/login")
+    public String loginUser(@RequestBody User.UserLoginRequest loginPayload){
+        return userService.userLogin(loginPayload);
+    }
 }
