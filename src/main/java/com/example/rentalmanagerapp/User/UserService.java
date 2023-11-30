@@ -57,4 +57,21 @@ public class UserService {
         }
         return "";
     }
+
+    public String userLogin(User.UserLoginRequest userLoginPayload){
+        User targetUser = userRepository.findByUsernameLogin(userLoginPayload.getUsername()).orElseThrow(
+                ()->new IllegalStateException("Invalid username or password")
+        );
+
+        String encodedPassword = bCryptPasswordEncoder.encode(userLoginPayload.getPassword());
+        System.out.println(targetUser.getPassword());
+        System.out.println(encodedPassword);
+
+        if(bCryptPasswordEncoder.matches(userLoginPayload.getPassword(), targetUser.getPassword())){
+            return "passwords match";
+        }
+
+        return "Invalid username or password 2";
+        //TODO create jwt on password match then create a session in the sessions table.
+    }
 }
