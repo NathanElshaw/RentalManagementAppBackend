@@ -2,29 +2,54 @@ package com.example.rentalmanagerapp.Sessions;
 
 import com.example.rentalmanagerapp.Sessions.JWT.JWT;
 import com.example.rentalmanagerapp.User.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.GenerationType.SEQUENCE;
+
 @Entity
 @AllArgsConstructor
+@Setter
+@Getter
 public class Sessions {
+    @SequenceGenerator(
+            name = "sessionSequence",
+            sequenceName = "sessionSequence",
+            allocationSize = 1
+    )
+
+    @GeneratedValue(
+            strategy = SEQUENCE,
+            generator = "sessionSequence"
+    )
     @Id
-    private long id;
-    @OneToOne
-    private JWT jwt;
+    private Long id;
+
     @OneToOne
     private User user;
-    private int sessionAmounts;
-    private LocalDate lastSession;
+    private int sessionAmount;
+    private LocalDateTime lastSessionStart;
     private LocalDateTime startOfSession;
 
     public Sessions () {
 
     }
 
+    public Sessions(User user, int sessionAmount, LocalDateTime lastSessionStart, LocalDateTime startOfSession) {
+        this.user = user;
+        this.sessionAmount = sessionAmount;
+        this.lastSessionStart = lastSessionStart;
+        this.startOfSession = startOfSession;
+    }
+
+    @Getter
+    @Setter
+    @ToString
+    @EqualsAndHashCode
+    public static class createSessionRequest{
+        private long userId;
+    }
 }
