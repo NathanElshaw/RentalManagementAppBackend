@@ -5,8 +5,11 @@ import com.example.rentalmanagerapp.Rental.RentalCodes.UnitCodes;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -25,11 +28,34 @@ public class RentalService {
                 rentalRequest.getRentalAddress(),
                 rentalRequest.getDescription(),
                 rentalRequest.getType(),
-                rentalRequest.getRentAmount(),
                 LocalDate.parse(rentalRequest.getDateAvailable())
         );
         rentalRepository.save(newRental);
         return "";
+    }
+
+    public List<Rental> getAllRentals(){
+        List<Rental> returnRentalList = new ArrayList<>();
+        List<Rental> rentals = rentalRepository.getAllUnits().orElseThrow(
+                ()->new IllegalStateException("No Rentals Exist")
+                );
+
+         rentals.forEach(listRental -> {
+            Rental returnRental = new Rental(
+                    listRental.getId(),
+                    listRental.getRentalAddress(),
+                    listRental.getDescription(),
+                    listRental.getType(),
+                    listRental.getTotalTenants(),
+                    listRental.getTotalUnits(),
+                    listRental.getAvgRentAmount(),
+                    listRental.getTotalRentIncome(),
+                    listRental.getDateAvailable()
+            );
+            returnRentalList.add(returnRental);
+        });
+
+        return returnRentalList;
     }
 
 }
