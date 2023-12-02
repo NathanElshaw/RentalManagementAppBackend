@@ -3,6 +3,8 @@ package com.example.rentalmanagerapp.Rental;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/rentals")
@@ -14,6 +16,11 @@ public class RentalController {
     public String createRental(@RequestBody RentalRequest rentalRequest){
         //Todo check priv, add service, validate jwt
         return rentalService.createRental(rentalRequest);
+    }
+
+    @GetMapping("/getAll")
+    public List<Rental> getAllUnits(){
+        return rentalService.getAllRentals();
     }
 
     @PutMapping("/update")
