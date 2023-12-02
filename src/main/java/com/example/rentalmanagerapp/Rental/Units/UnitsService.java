@@ -9,6 +9,9 @@ import com.example.rentalmanagerapp.User.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class UnitsService {
@@ -41,9 +44,46 @@ public class UnitsService {
                 parentRental
         );
 
+        rentalRepository.updateRentalOnNewUnit(createUnitPayload.getUnitAddress(),
+                ((parentRental.getAvgRentAmount() * parentRental.getTotalUnits() )+ createUnitPayload.getRentAmount())/ (parentRental.getTotalUnits() + 1),
+                parentRental.getTotalRentIncome() + createUnitPayload.getRentAmount(),
+                parentRental.getTotalUnits() + 1
+                );
+
         unitsRepository.save(newUnit);
 
         return "Success";
+    }
+
+    public List<Units> getAllUnitsByAddress(String payloadAddress){
+        List<Units> returnUnitsList = new ArrayList<>();
+
+        List<Units> returnedUnits = unitsRepository.getAllUnitByAddress(payloadAddress).orElseThrow(
+                ()-> new IllegalStateException("No units at that address")
+        );
+
+            returnedUnits.forEach(rental -> {
+                Units newUnit = new Units(
+                        rental.getId(),
+                        rental.getParentUnitId(),
+                        rental.getUnitCode(),
+                        rental.getRenter(),
+                        rental.getUnitAddress(),
+                        rental.getBeds(),
+                        rental.getBaths(),
+                        rental.getUnitNumber(),
+                        rental.getHasPets(),
+                        rental.getRentAmount(),
+                        rental.getRentDue(),
+                        rental.getRentPaid(),
+                        rental.getLeaseStart(),
+                        rental.getRentDueDate(),
+                        rental.getLeaseEnd()
+                );
+                returnUnitsList.add(newUnit);
+            });
+
+        return returnUnitsList;
     }
 
     public String getRentalWithCode(UnitsRequest.GetRentalRequest addRenterPayload){
