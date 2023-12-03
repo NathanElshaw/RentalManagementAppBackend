@@ -39,4 +39,7 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
 
     @Query("select u from Units u where u.unitAddress = ?1")
     Optional<List<Units>> getAllUnitByAddress(String address);
+
+    @Query("select u from Units u")
+    Optional<List<Units>> getAllUnits();
 }
