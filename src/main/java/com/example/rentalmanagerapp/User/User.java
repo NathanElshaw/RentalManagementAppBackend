@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -63,7 +64,15 @@ public class User {
 
     }
 
-    public User(String firstName, String lastName, String fullName, LocalDate birthDate, String address, String email, String telephone, String username, String password) {
+    public User(String firstName,
+                String lastName,
+                String fullName,
+                LocalDate birthDate,
+                String address,
+                String email,
+                String telephone,
+                String username,
+                String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.fullName = fullName;
@@ -83,6 +92,24 @@ public class User {
     public static class UserLoginRequest{
         private String username;
         private String password;
+    }
+
+    @Setter
+    @Getter
+    @AllArgsConstructor
+    public static class UnitUserRequest {
+        private Long id;
+        private String fullName;
+        private LocalDate birthDate;
+        private String email;
+        private String telephone;
+        private String username;
+        private UserRoles userRole;
+        private LocalDate rentDue;
+        private LocalDate rentLastPaid;
+        private LocalDate dateLeaseStarted;
+        private Long amountPaid;
+        private Long amountOwed;
     }
 
 }
