@@ -1,6 +1,7 @@
 package com.example.rentalmanagerapp.Rental.Units;
 
 import com.example.rentalmanagerapp.Rental.Rental;
+import com.example.rentalmanagerapp.Rental.RentalCodes.UnitCodes;
 import com.example.rentalmanagerapp.Rental.RentalRepository;
 import com.example.rentalmanagerapp.Rental.Units.Requests.GetUnitRequest;
 import com.example.rentalmanagerapp.Rental.Units.Requests.UnitsRequest;
@@ -118,6 +119,74 @@ public class UnitsService {
                 targetUnit.getRentDueDate(),
                 targetUnit.getLeaseEnd()
         );
+    }
+
+    public List<Units.GetAllUnitsWithDetails> getAllUnitsWithDetails (){
+        List<Units.GetAllUnitsWithDetails> returnedData = new ArrayList<>();
+
+        List<Units> returnedUnitsList = unitsRepository.getAllUnits().orElseThrow(
+                ()-> new IllegalStateException("No units exist")
+        );
+
+        returnedUnitsList.forEach(unit -> {
+            Rental parentRental = unit.getParentUnitId();
+            UnitCodes unitCode = unit.getUnitCode();
+            User renter = unit.getRenter();
+
+            Units.GetAllUnitsWithDetails addingUnit = new Units.GetAllUnitsWithDetails(
+                    unit.getId(),
+                    new Rental(
+                            parentRental.getId(),
+                            parentRental.getRentalAddress(),
+                            parentRental.getDescription(),
+                            parentRental.getType(),
+                            parentRental.getTotalTenants(),
+                            parentRental.getTotalUnits(),
+                            parentRental.getAvgRentAmount(),
+                            parentRental.getTotalRentIncome(),
+                            parentRental.getDateAvailable()
+                    ),
+                    //Omit Parent Rental pointer
+                    unit.getUnitCode() == null ? null : new UnitCodes(
+                            unitCode.getId(),
+                            unitCode.getUnitCode(),
+                            unitCode.getConfirmedAt(),
+                            unitCode.getIssuedAt(),
+                            unitCode.getExpiresAt()
+                    ),
+                    unit.getRenter() == null ? null : new User.UnitUserRequest(
+                            renter.getId(),
+                            renter.getFullName(),
+                            renter.getBirthDate(),
+                            renter.getEmail(),
+                            renter.getTelephone(),
+                            renter.getUsername(),
+                            renter.getUserRole(),
+                            renter.getRentDue(),
+                            renter.getRentLastPaid(),
+                            renter.getDateLeaseStarted(),
+                            renter.getAmountPaid(),
+                            renter.getAmountOwed()
+                    ),
+                    unit.getUnitAddress(),
+                    unit.getBeds(),
+                    unit.getBaths(),
+                    unit.getUnitNumber(),
+                    unit.getHasPets(),
+                    unit.getRentAmount(),
+                    unit.getRentDue(),
+                    unit.getRentPaid(),
+                    unit.getLeaseStart(),
+                    unit.getRentDueDate(),
+                    unit.getLeaseEnd()
+            );
+
+            returnedData.add(addingUnit);
+
+        });
+
+        return returnedData;
+
     }
 
 }
