@@ -99,4 +99,25 @@ public class Units {
 
                 public ReturnGetUnitsRequest(){}
         }
+
+        @Getter
+        @Setter
+        @AllArgsConstructor
+        public static class GetAllUnitsWithDetails{
+                private Long id;
+                private Rental parentUnitId;
+                private UnitCodes unitCode;
+                private User.UnitUserRequest renter;
+                private String unitAddress;
+                private int beds;
+                private double baths;
+                private int unitNumber;
+                private Boolean hasPets;
+                private double rentAmount;
+                private double rentDue;
+                private double rentPaid;
+                private LocalDate leaseStart;
+                private LocalDate rentDueDate;
+                private LocalDate leaseEnd;
+        }
 }
