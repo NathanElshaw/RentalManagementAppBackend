@@ -16,8 +16,11 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class UnitsService {
+
     private final UserRepository userRepository;
+
     private final UnitsRepository unitsRepository;
+
     private final RentalRepository rentalRepository;
 
     public String createUnit(

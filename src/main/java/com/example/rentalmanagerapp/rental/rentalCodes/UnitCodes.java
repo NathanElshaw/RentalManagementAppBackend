@@ -1,7 +1,12 @@
 package com.example.rentalmanagerapp.rental.rentalCodes;
 
 import com.example.rentalmanagerapp.rental.units.Units;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +19,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Getter
 @Setter
 @Entity
-@Table(name="rentalCodes")
+@Table(name="rental_codes")
 public class UnitCodes {
     @SequenceGenerator(
             name = "rentalCodeSequence",

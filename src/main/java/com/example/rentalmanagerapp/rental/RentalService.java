@@ -11,6 +11,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class RentalService {
+
     private final RentalRepository rentalRepository;
 
     public String createRental(

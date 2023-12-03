@@ -1,6 +1,9 @@
 package com.example.rentalmanagerapp.registration;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 

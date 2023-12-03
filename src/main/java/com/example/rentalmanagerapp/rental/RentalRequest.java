@@ -1,6 +1,10 @@
 package com.example.rentalmanagerapp.rental;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @Setter

@@ -1,6 +1,10 @@
 package com.example.rentalmanagerapp.rental;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +15,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @AllArgsConstructor
 @Entity
-@Table(name="RENTALS")
+@Table(name="rentals")
 @Getter
 @Setter
 public class Rental {
@@ -57,7 +61,6 @@ public class Rental {
         this.rentalAddress = rentalAddress;
         this.description = description;
         this.type = type;
-        this.avgRentAmount = avgRentAmount;
         this.dateAvailable = dateAvailable;
     }
 }

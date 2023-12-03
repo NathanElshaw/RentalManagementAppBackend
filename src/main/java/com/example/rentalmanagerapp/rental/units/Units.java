@@ -3,7 +3,14 @@ package com.example.rentalmanagerapp.rental.units;
 import com.example.rentalmanagerapp.rental.Rental;
 import com.example.rentalmanagerapp.rental.rentalCodes.UnitCodes;
 import com.example.rentalmanagerapp.user.User;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -120,7 +127,6 @@ public class Units {
 
                 private LocalDate leaseEnd;
 
-                public ReturnGetUnitsRequest(){}
         }
 
         @Getter

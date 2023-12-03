@@ -18,8 +18,11 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class UnitCodesService {
+
     private final UnitCodeRepository unitCodeRepository;
+
     private final UnitsRepository unitsRepository;
+
     private final UserRepository userRepository;
 
     public String createUnitCode(
