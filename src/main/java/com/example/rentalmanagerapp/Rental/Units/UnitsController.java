@@ -36,6 +36,11 @@ public class UnitsController {
         return unitsService.getAllUnitsByAddress(payloadAddress);
     }
 
+    @GetMapping("/getAllUnitDetailed")
+    public List<Units.GetAllUnitsWithDetails> getAllUnitsWithDetails(){
+        return unitsService.getAllUnitsWithDetails();
+    }
+
     //User Requests
     @GetMapping("/userIdGetRental")
     public Units.ReturnGetUnitsRequest userIdGetUnits(@RequestBody GetUnitRequest userId){
