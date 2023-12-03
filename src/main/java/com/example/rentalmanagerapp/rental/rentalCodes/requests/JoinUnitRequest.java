@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @ToString
 public class JoinUnitRequest{
-    private String unitCode;
-    private Long userId;
+    private final  String unitCode;
+
+    private final Long userId;
 }

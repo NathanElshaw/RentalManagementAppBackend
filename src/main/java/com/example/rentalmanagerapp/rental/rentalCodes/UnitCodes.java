@@ -28,11 +28,16 @@ public class UnitCodes {
     )
     @Id
     private Long id;
+
     private String unitCode;
+
     @OneToOne
     private Units parentRental;
+
     private LocalDateTime confirmedAt;
+
     private LocalDateTime issuedAt;
+
     private LocalDateTime expiresAt;
 
     public UnitCodes(){

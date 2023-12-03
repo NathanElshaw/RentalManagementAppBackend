@@ -23,12 +23,19 @@ public class Rentee {
     )
     @Id
     private Long id;
+
     private String tenantName;
+
     private String leaseTerm;
+
     private LocalDate leaseStart;
+
     private LocalDate leaseEnd;
+
     private int paymentInterval;
+
     private boolean hasPaid;
+
     private RiskFactor riskFactor;
 
     public Rentee() {

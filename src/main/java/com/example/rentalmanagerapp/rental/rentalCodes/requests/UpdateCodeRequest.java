@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @ToString
 public class UpdateCodeRequest {
-    private Long unitCodeId;
-    private Long validLength;
+    private final Long unitCodeId;
+
+    private final Long validLength;
 }

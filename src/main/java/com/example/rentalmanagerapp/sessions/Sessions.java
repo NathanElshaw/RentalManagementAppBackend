@@ -28,8 +28,11 @@ public class Sessions {
 
     @OneToOne
     private User user;
+
     private int sessionAmount;
+
     private LocalDateTime lastSessionStart;
+
     private LocalDateTime startOfSession;
 
     public Sessions () {
@@ -47,7 +50,8 @@ public class Sessions {
     @Setter
     @ToString
     @EqualsAndHashCode
+    @AllArgsConstructor
     public static class createSessionRequest{
-        private long userId;
+        private final long userId;
     }
 }

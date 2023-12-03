@@ -44,7 +44,6 @@ public class UserService {
 
             return UUID.randomUUID().toString();
         }catch(Exception e){
-            System.out.println(e.toString());
             throw new IllegalStateException(e);
         }
     }
@@ -62,9 +61,6 @@ public class UserService {
                 userLoginPayload.getUsername()).orElseThrow(
                 ()->new IllegalStateException("Invalid username or password")
         );
-
-        String encodedPassword = bCryptPasswordEncoder.encode(
-                userLoginPayload.getPassword());
 
         if(bCryptPasswordEncoder.matches(
                 userLoginPayload.getPassword(),

@@ -28,13 +28,21 @@ public class Rental {
 
     @Id
     private Long id;
+
     private String rentalAddress;
+
     private String description;
+
     private String type;
+
     private int totalTenants = 0;
+
     private int totalUnits = 0;
+
     private double avgRentAmount = 0;
+
     private double totalRentIncome = 0;
+
     private LocalDate dateAvailable;
 
 

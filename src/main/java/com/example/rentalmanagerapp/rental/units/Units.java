@@ -37,20 +37,33 @@ public class Units {
                 name = "parent_unit_id"
         )
         private Rental parentUnitId;
+
         @OneToOne
         private UnitCodes unitCode;
+
         @OneToOne
         private User renter;
+
         private String unitAddress;
+
         private int beds;
+
         private double baths;
+
         private int unitNumber;
+
         private Boolean hasPets;
+
         private double rentAmount;
+
         private double rentDue;
+
         private double rentPaid;
+
         private LocalDate leaseStart;
+
         private LocalDate rentDueDate;
+
         private LocalDate leaseEnd;
 
         public Units(){
@@ -86,15 +99,25 @@ public class Units {
         @Setter
         public static class ReturnGetUnitsRequest {
                 private String unitAddress;
+
                 private int beds;
+
                 private double baths;
+
                 private int unitNumber;
+
                 private Boolean hasPets;
+
                 private double rentAmount;
+
                 private double rentDue;
+
                 private double rentPaid;
+
                 private LocalDate leaseStart;
+
                 private LocalDate rentDueDate;
+
                 private LocalDate leaseEnd;
 
                 public ReturnGetUnitsRequest(){}
@@ -105,19 +128,33 @@ public class Units {
         @AllArgsConstructor
         public static class GetAllUnitsWithDetails{
                 private Long id;
+
                 private Rental parentUnitId;
+
                 private UnitCodes unitCode;
+
                 private User.UnitUserRequest renter;
+
                 private String unitAddress;
+
                 private int beds;
+
                 private double baths;
+
                 private int unitNumber;
+
                 private Boolean hasPets;
+
                 private double rentAmount;
+
                 private double rentDue;
+
                 private double rentPaid;
+
                 private LocalDate leaseStart;
+
                 private LocalDate rentDueDate;
+
                 private LocalDate leaseEnd;
         }
 }

@@ -30,32 +30,46 @@ public class User {
 
     //Basic Info
     private String firstName;
+
     private String lastName;
+
     private String fullName;
+
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
     //Contact Info
     private String address;
+
     private String email;
+
     private String telephone;
 
     //Credentials
     private String username;
+
     private String password;
 
     //Authority
     private Boolean isActive = false;
+
     private Boolean isLocked = false;
+
     private UserRoles userRole = UserRoles.User;
+
     private Boolean hasUnit = false;
 
     //Rental info
     private LocalDate rentDue = null;
+
     private LocalDate rentLastPaid = null;
+
     private LocalDate dateLeaseStarted = null;
+
     private Long amountPaid = 0L;
+
     private Long amountOwed = 0L;
+
     private String rentalAddress = null;
 
 
@@ -89,26 +103,26 @@ public class User {
     @EqualsAndHashCode
     @AllArgsConstructor
     public static class UserLoginRequest{
-        private String username;
-        private String password;
+        private final String username;
+        private final String password;
     }
 
     @Setter
     @Getter
     @AllArgsConstructor
     public static class UnitUserRequest {
-        private Long id;
-        private String fullName;
-        private LocalDate birthDate;
-        private String email;
-        private String telephone;
-        private String username;
-        private UserRoles userRole;
-        private LocalDate rentDue;
-        private LocalDate rentLastPaid;
-        private LocalDate dateLeaseStarted;
-        private Long amountPaid;
-        private Long amountOwed;
+        private final Long id;
+        private final  String fullName;
+        private final  LocalDate birthDate;
+        private final String email;
+        private final String telephone;
+        private final String username;
+        private final UserRoles userRole;
+        private final LocalDate rentDue;
+        private final LocalDate rentLastPaid;
+        private final LocalDate dateLeaseStarted;
+        private final Long amountPaid;
+        private final Long amountOwed;
     }
 
 }

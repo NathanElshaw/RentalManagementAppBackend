@@ -16,10 +16,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class WebSecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/**","/error", "/api/v*/user/register/**").permitAll();
+                    auth.requestMatchers("/**",
+                            "/error",
+                            "/api/v*/user/register/**").permitAll();
                 })
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(withDefaults())

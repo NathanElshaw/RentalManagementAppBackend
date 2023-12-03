@@ -8,8 +8,10 @@ import lombok.*;
 @Setter
 @ToString
 public class UnitCodesRequest {
-    private long expiresIn;
-    private String parentUnitAddress;
-    private int parentUnitNumber;
+    private final long expiresIn;
+
+    private final String parentUnitAddress;
+
+    private final int parentUnitNumber;
 
 }

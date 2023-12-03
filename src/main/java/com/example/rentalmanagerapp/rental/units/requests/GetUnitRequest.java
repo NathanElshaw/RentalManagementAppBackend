@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class GetUnitRequest {
-    private Long userId;
-    private String requestingUser;
+    private final Long userId;
+
+    private final String requestingUser;
 }
