@@ -40,6 +40,14 @@ public class UnitCodes {
 
     }
 
+    public UnitCodes(Long id, String unitCode, LocalDateTime confirmedAt, LocalDateTime issuedAt, LocalDateTime expiresAt) {
+        this.id = id;
+        this.unitCode = unitCode;
+        this.confirmedAt = confirmedAt;
+        this.issuedAt = issuedAt;
+        this.expiresAt = expiresAt;
+    }
+
     public UnitCodes(String unitCode, LocalDateTime issuedAt, LocalDateTime expiresAt, Units parentUnitId) {
         this.unitCode = unitCode;
         this.issuedAt = issuedAt;
