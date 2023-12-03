@@ -1,4 +1,4 @@
-package com.example.rentalmanagerapp.Rental.Rentee;
+package com.example.rentalmanagerapp.rental.rentee;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

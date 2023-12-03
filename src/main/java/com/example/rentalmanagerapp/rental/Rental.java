@@ -1,14 +1,11 @@
-package com.example.rentalmanagerapp.Rental;
+package com.example.rentalmanagerapp.rental;
 
-import com.example.rentalmanagerapp.Rental.Rentee.Rentee;
-import com.example.rentalmanagerapp.Rental.Units.Units;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 

@@ -1,7 +1,6 @@
-package com.example.rentalmanagerapp.Rental.RentalCodes;
+package com.example.rentalmanagerapp.rental.rentalCodes;
 
-import com.example.rentalmanagerapp.Rental.Rental;
-import com.example.rentalmanagerapp.Rental.Units.Units;
+import com.example.rentalmanagerapp.rental.units.Units;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

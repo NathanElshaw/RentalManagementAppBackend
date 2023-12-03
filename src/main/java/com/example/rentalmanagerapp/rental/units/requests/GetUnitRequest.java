@@ -1,4 +1,4 @@
-package com.example.rentalmanagerapp.Rental.Units.Requests;
+package com.example.rentalmanagerapp.rental.units.requests;
 
 import lombok.*;
 

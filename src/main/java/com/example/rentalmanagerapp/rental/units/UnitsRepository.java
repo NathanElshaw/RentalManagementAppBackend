@@ -1,7 +1,7 @@
-package com.example.rentalmanagerapp.Rental.Units;
+package com.example.rentalmanagerapp.rental.units;
 
-import com.example.rentalmanagerapp.Rental.RentalCodes.UnitCodes;
-import com.example.rentalmanagerapp.User.User;
+import com.example.rentalmanagerapp.rental.rentalCodes.UnitCodes;
+import com.example.rentalmanagerapp.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

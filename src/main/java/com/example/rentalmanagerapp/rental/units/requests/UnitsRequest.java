@@ -1,6 +1,6 @@
-package com.example.rentalmanagerapp.Rental.Units.Requests;
+package com.example.rentalmanagerapp.rental.units.requests;
 
-import com.example.rentalmanagerapp.User.User;
+import com.example.rentalmanagerapp.user.User;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,6 +21,7 @@ public class UnitsRequest {
     private String leaseStart;
     private String leaseEnd;
 
+    @AllArgsConstructor
     public static class GetRentalRequest{
         private User user;
         private String unitCode;

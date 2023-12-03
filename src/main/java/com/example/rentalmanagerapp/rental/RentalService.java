@@ -1,13 +1,10 @@
-package com.example.rentalmanagerapp.Rental;
+package com.example.rentalmanagerapp.rental;
 
-import com.example.rentalmanagerapp.Rental.RentalCodes.UnitCodesService;
-import com.example.rentalmanagerapp.Rental.RentalCodes.UnitCodes;
+import com.example.rentalmanagerapp.rental.rentalCodes.UnitCodesService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

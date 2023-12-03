@@ -1,14 +1,13 @@
-package com.example.rentalmanagerapp.Rental.RentalCodes;
+package com.example.rentalmanagerapp.rental.rentalCodes;
 
-import com.example.rentalmanagerapp.Rental.RentalCodes.Requests.JoinUnitRequest;
-import com.example.rentalmanagerapp.Rental.RentalCodes.Requests.UnitCodesRequest;
-import com.example.rentalmanagerapp.Rental.RentalCodes.Requests.UpdateCodeRequest;
-import com.example.rentalmanagerapp.Rental.Units.Units;
-import com.example.rentalmanagerapp.Rental.Units.UnitsRepository;
-import com.example.rentalmanagerapp.User.User;
-import com.example.rentalmanagerapp.User.UserRepository;
+import com.example.rentalmanagerapp.rental.rentalCodes.requests.JoinUnitRequest;
+import com.example.rentalmanagerapp.rental.rentalCodes.requests.UnitCodesRequest;
+import com.example.rentalmanagerapp.rental.rentalCodes.requests.UpdateCodeRequest;
+import com.example.rentalmanagerapp.rental.units.Units;
+import com.example.rentalmanagerapp.rental.units.UnitsRepository;
+import com.example.rentalmanagerapp.user.User;
+import com.example.rentalmanagerapp.user.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

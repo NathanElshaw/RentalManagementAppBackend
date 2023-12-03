@@ -1,6 +1,5 @@
-package com.example.rentalmanagerapp.Rental.Units.Requests;
+package com.example.rentalmanagerapp.rental.units.requests;
 
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,5 +21,5 @@ public class ReturnGetUnitsRequest {
     private LocalDate leaseStart;
     private LocalDate rentDueDate;
     private LocalDate leaseEnd;
-    
+
 }

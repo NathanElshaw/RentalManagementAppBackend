@@ -1,12 +1,12 @@
-package com.example.rentalmanagerapp.Rental.Units;
+package com.example.rentalmanagerapp.rental.units;
 
-import com.example.rentalmanagerapp.Rental.Rental;
-import com.example.rentalmanagerapp.Rental.RentalCodes.UnitCodes;
-import com.example.rentalmanagerapp.Rental.RentalRepository;
-import com.example.rentalmanagerapp.Rental.Units.Requests.GetUnitRequest;
-import com.example.rentalmanagerapp.Rental.Units.Requests.UnitsRequest;
-import com.example.rentalmanagerapp.User.User;
-import com.example.rentalmanagerapp.User.UserRepository;
+import com.example.rentalmanagerapp.rental.Rental;
+import com.example.rentalmanagerapp.rental.rentalCodes.UnitCodes;
+import com.example.rentalmanagerapp.rental.RentalRepository;
+import com.example.rentalmanagerapp.rental.units.requests.GetUnitRequest;
+import com.example.rentalmanagerapp.rental.units.requests.UnitsRequest;
+import com.example.rentalmanagerapp.user.User;
+import com.example.rentalmanagerapp.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

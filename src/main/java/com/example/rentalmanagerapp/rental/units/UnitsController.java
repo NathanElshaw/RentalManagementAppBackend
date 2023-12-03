@@ -1,8 +1,7 @@
-package com.example.rentalmanagerapp.Rental.Units;
+package com.example.rentalmanagerapp.rental.units;
 
-import com.example.rentalmanagerapp.Rental.Units.Requests.GetUnitRequest;
-import com.example.rentalmanagerapp.Rental.Units.Requests.ReturnGetUnitsRequest;
-import com.example.rentalmanagerapp.Rental.Units.Requests.UnitsRequest;
+import com.example.rentalmanagerapp.rental.units.requests.GetUnitRequest;
+import com.example.rentalmanagerapp.rental.units.requests.UnitsRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

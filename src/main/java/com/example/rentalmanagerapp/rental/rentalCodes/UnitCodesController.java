@@ -1,8 +1,8 @@
-package com.example.rentalmanagerapp.Rental.RentalCodes;
+package com.example.rentalmanagerapp.rental.rentalCodes;
 
-import com.example.rentalmanagerapp.Rental.RentalCodes.Requests.JoinUnitRequest;
-import com.example.rentalmanagerapp.Rental.RentalCodes.Requests.UnitCodesRequest;
-import com.example.rentalmanagerapp.Rental.RentalCodes.Requests.UpdateCodeRequest;
+import com.example.rentalmanagerapp.rental.rentalCodes.requests.JoinUnitRequest;
+import com.example.rentalmanagerapp.rental.rentalCodes.requests.UnitCodesRequest;
+import com.example.rentalmanagerapp.rental.rentalCodes.requests.UpdateCodeRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

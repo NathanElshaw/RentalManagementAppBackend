@@ -1,4 +1,4 @@
-package com.example.rentalmanagerapp.Rental;
+package com.example.rentalmanagerapp.rental;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
