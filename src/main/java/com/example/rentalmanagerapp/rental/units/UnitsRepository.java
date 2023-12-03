@@ -34,10 +34,16 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
             "where u.id = ?2 ")
     void addRenterToUnit(User userId, Long unitId);
 
-    @Query("select u from Units u where u.unitAddress = ?2 and u.unitNumber = ?1")
-    Optional<Units> findByUnitAddressAndUnitNumber(int unitNumber, String unitAddress);
+    @Query("select u from Units u " +
+            "where u.unitAddress = ?2 " +
+            "and u.unitNumber = ?1")
+    Optional<Units> findByUnitAddressAndUnitNumber(
+            int unitNumber,
+            String unitAddress);
 
-    @Query("select u from Units u where u.unitAddress = ?1")
+    @Query("select u " +
+            "from Units u " +
+            "where u.unitAddress = ?1")
     Optional<List<Units>> getAllUnitByAddress(String address);
 
     @Query("select u from Units u")

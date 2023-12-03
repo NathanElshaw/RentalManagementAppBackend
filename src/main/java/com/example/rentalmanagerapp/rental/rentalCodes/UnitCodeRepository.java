@@ -22,7 +22,9 @@ public interface UnitCodeRepository extends JpaRepository<UnitCodes, Long> {
     void updateConfirmedAt(String code,
                           LocalDateTime confirmedAt);
 
-    @Query("select parentRental from UnitCodes where unitCode = ?1")
+    @Query("select parentRental " +
+            "from UnitCodes " +
+            "where unitCode = ?1")
     Long getUnitWithCode(String code);
 
 }

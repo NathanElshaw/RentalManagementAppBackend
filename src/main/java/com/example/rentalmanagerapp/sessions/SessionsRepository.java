@@ -1,6 +1,6 @@
-package com.example.rentalmanagerapp.Sessions;
+package com.example.rentalmanagerapp.sessions;
 
-import com.example.rentalmanagerapp.User.User;
+import com.example.rentalmanagerapp.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,15 +12,23 @@ import java.util.Optional;
 
 @Repository
 public interface SessionsRepository extends JpaRepository<Sessions, Long> {
-    @Query("select s from Sessions s where s.user.id = ?1 ")
+    @Query("select s " +
+            "from Sessions s " +
+            "where s.user.id = ?1 ")
     Optional<Sessions> findByUserId(Long id);
 
     @Transactional
     @Modifying
     @Query("update Sessions s " +
-            "set s.sessionAmount = ?2, s.lastSessionStart = ?3, s.startOfSession = ?4 " +
+            "set s.sessionAmount = ?2, " +
+            "s.lastSessionStart = ?3, " +
+            "s.startOfSession = ?4 " +
             "where s.user = ?1 ")
-    void updateUserSession(User user, int sessionAmount, LocalDateTime lastSession, LocalDateTime sessionOfStart);
+    void updateUserSession(
+            User user,
+            int sessionAmount,
+            LocalDateTime lastSession,
+            LocalDateTime sessionOfStart);
 
 
 }

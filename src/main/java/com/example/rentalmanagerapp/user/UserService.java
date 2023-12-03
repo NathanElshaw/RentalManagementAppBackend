@@ -1,6 +1,5 @@
-package com.example.rentalmanagerapp.User;
+package com.example.rentalmanagerapp.user;
 
-import com.example.rentalmanagerapp.Security.PasswordEncoder;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,7 +10,6 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class UserService {
-
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -58,16 +56,19 @@ public class UserService {
         return "";
     }
 
-    public String userLogin(User.UserLoginRequest userLoginPayload){
-        User targetUser = userRepository.findByUsernameLogin(userLoginPayload.getUsername()).orElseThrow(
+    public String userLogin(
+            User.UserLoginRequest userLoginPayload){
+        User targetUser = userRepository.findByUsernameLogin(
+                userLoginPayload.getUsername()).orElseThrow(
                 ()->new IllegalStateException("Invalid username or password")
         );
 
-        String encodedPassword = bCryptPasswordEncoder.encode(userLoginPayload.getPassword());
-        System.out.println(targetUser.getPassword());
-        System.out.println(encodedPassword);
+        String encodedPassword = bCryptPasswordEncoder.encode(
+                userLoginPayload.getPassword());
 
-        if(bCryptPasswordEncoder.matches(userLoginPayload.getPassword(), targetUser.getPassword())){
+        if(bCryptPasswordEncoder.matches(
+                userLoginPayload.getPassword(),
+                targetUser.getPassword())){
             return "passwords match";
         }
 

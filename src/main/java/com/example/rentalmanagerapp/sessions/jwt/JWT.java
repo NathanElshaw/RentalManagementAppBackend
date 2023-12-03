@@ -1,6 +1,4 @@
-package com.example.rentalmanagerapp.Sessions.JWT;
-
-import jakarta.persistence.Entity;
+package com.example.rentalmanagerapp.sessions.jwt;
 
 public class JWT {
 }

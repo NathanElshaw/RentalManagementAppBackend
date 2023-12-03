@@ -1,7 +1,7 @@
-package com.example.rentalmanagerapp.Sessions;
+package com.example.rentalmanagerapp.sessions;
 
-import com.example.rentalmanagerapp.User.User;
-import com.example.rentalmanagerapp.User.UserRepository;
+import com.example.rentalmanagerapp.user.User;
+import com.example.rentalmanagerapp.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,15 +10,18 @@ import java.time.LocalDateTime;
 @Service
 @AllArgsConstructor
 public class SessionsServices {
-
     private final SessionsRepository sessionsRepository;
     private final UserRepository userRepository;
 
-    public String createSession(Long userId){
-         if(sessionsRepository.findByUserId(userId).isEmpty()){
-             User targetUser = userRepository.findById(userId).orElseThrow(
+    public String createSession(
+            Long userId){
+         if(sessionsRepository.findByUserId(
+                 userId).isEmpty()){
+             User targetUser = userRepository.findById(userId)
+                     .orElseThrow(
                      ()->new IllegalStateException("User not found")
              );
+
              Sessions newSession = new Sessions(
                      targetUser,
                      1,
@@ -34,12 +37,15 @@ public class SessionsServices {
          }
     }
 
-    public String updateSession(Long userId){
-        User targetUser = userRepository.findById(userId).orElseThrow(
+    public String updateSession(
+            Long userId){
+        User targetUser = userRepository.findById(
+                userId).orElseThrow(
                 ()->new IllegalStateException("User not found")
         );
 
-        Sessions targetSession = sessionsRepository.findByUserId(userId).orElseThrow(
+        Sessions targetSession = sessionsRepository.findByUserId(
+                userId).orElseThrow(
                 ()->new IllegalStateException("Session not found")
         );
 
@@ -49,7 +55,10 @@ public class SessionsServices {
                 targetSession.getStartOfSession(),
                 LocalDateTime.now());
 
-        return "Session created for 2" + targetUser.getFirstName() + " " + targetUser.getLastName();
+        return "Session created for 2" +
+                targetUser.getFirstName() +
+                " " +
+                targetUser.getLastName();
 
     }
 

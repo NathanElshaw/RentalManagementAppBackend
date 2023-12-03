@@ -1,4 +1,4 @@
-package com.example.rentalmanagerapp.User;
+package com.example.rentalmanagerapp.user;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -11,24 +11,28 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public String createUser(@RequestBody UserSignUpRequest user){
+    public String createUser(
+            @RequestBody UserSignUpRequest user){
         return userService.createUser(user);
     }
 
     @DeleteMapping("/delete")
-    public String deleteUser(@RequestParam("User") String username){
+    public String deleteUser(
+            @RequestParam("User") String username){
         //Todo validate jwt , add delete service
         return "";
     }
 
     @PutMapping("/update")
-    public String updateUser(@RequestBody User user){
+    public String updateUser(
+            @RequestBody User user){
         //Todo validate jwt before updating
         return userService.updateUser(user);
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestBody User.UserLoginRequest loginPayload){
+    public String loginUser(
+            @RequestBody User.UserLoginRequest loginPayload){
         return userService.userLogin(loginPayload);
     }
 }

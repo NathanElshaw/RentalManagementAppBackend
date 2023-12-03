@@ -17,9 +17,15 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
     @Transactional
     @Modifying
     @Query("update Rental r " +
-            "set r.avgRentAmount = ?2, r.totalRentIncome = ?3, r.totalUnits = ?4 " +
+            "set r.avgRentAmount = ?2, " +
+            "r.totalRentIncome = ?3, " +
+            "r.totalUnits = ?4 " +
             "where r.rentalAddress = ?1 ")
-    void updateRentalOnNewUnit(String rentalAddress, double newAvgRent, double newRentalRent, int newRentalAmount);
+    void updateRentalOnNewUnit(
+            String rentalAddress,
+            double newAvgRent,
+            double newRentalRent,
+            int newRentalAmount);
 
     @Query("select r from Rental r")
     Optional<List<Rental>> getAllUnits();

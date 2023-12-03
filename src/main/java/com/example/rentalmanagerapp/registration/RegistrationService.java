@@ -1,4 +1,4 @@
-package com.example.rentalmanagerapp.Registration;
+package com.example.rentalmanagerapp.registration;
 
 import org.springframework.stereotype.Service;
 
@@ -7,7 +7,8 @@ public class RegistrationService {
 
     private EmailValidator email;
 
-    public String createAccount(RegistrationRequest request){
+    public String createAccount(
+            RegistrationRequest request){
         boolean emailIsValid = email.validate(request.getEmail());
 
         if(!emailIsValid || request.getEmail() == null){
@@ -18,11 +19,13 @@ public class RegistrationService {
         return "";
     }
 
-    public String sendToken(String email){
+    public String sendToken(
+            String email){
         return "";
     }
 
-    public String confirmToken(String token){
+    public String confirmToken(
+            String token){
         return "";
     }
 

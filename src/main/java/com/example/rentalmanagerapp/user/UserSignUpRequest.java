@@ -1,4 +1,4 @@
-package com.example.rentalmanagerapp.User;
+package com.example.rentalmanagerapp.user;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

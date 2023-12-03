@@ -1,11 +1,9 @@
-package com.example.rentalmanagerapp.Sessions;
+package com.example.rentalmanagerapp.sessions;
 
-import com.example.rentalmanagerapp.Sessions.JWT.JWT;
-import com.example.rentalmanagerapp.User.User;
+import com.example.rentalmanagerapp.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;

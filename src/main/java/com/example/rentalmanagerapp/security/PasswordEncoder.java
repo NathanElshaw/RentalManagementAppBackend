@@ -1,4 +1,4 @@
-package com.example.rentalmanagerapp.Security;
+package com.example.rentalmanagerapp.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
