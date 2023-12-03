@@ -12,10 +12,12 @@ import java.util.List;
 @AllArgsConstructor
 public class RentalService {
     private final RentalRepository rentalRepository;
-    private final UnitCodesService unitCodeService;
 
-    public String createRental(RentalRequest rentalRequest) {
-        boolean addressExists = rentalRepository.findByRentalAddress(rentalRequest.getRentalAddress()).isPresent();
+    public String createRental(
+            RentalRequest rentalRequest
+    ){
+        boolean addressExists = rentalRepository.findByRentalAddress(
+                rentalRequest.getRentalAddress()).isPresent();
 
         if (addressExists) {
             throw new IllegalStateException("Address already exists");
@@ -25,15 +27,19 @@ public class RentalService {
                 rentalRequest.getRentalAddress(),
                 rentalRequest.getDescription(),
                 rentalRequest.getType(),
-                LocalDate.parse(rentalRequest.getDateAvailable())
+                LocalDate.parse(
+                        rentalRequest.getDateAvailable()
+                )
         );
+
         rentalRepository.save(newRental);
-        return "";
+        return "New Rental Saved";
     }
 
     public List<Rental> getAllRentals(){
         List<Rental> returnRentalList = new ArrayList<>();
-        List<Rental> rentals = rentalRepository.getAllUnits().orElseThrow(
+        List<Rental> rentals = rentalRepository.getAllUnits()
+                .orElseThrow(
                 ()->new IllegalStateException("No Rentals Exist")
                 );
 
@@ -49,7 +55,9 @@ public class RentalService {
                     listRental.getTotalRentIncome(),
                     listRental.getDateAvailable()
             );
+
             returnRentalList.add(returnRental);
+
         });
 
         return returnRentalList;

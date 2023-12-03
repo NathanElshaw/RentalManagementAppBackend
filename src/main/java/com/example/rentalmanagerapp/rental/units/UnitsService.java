@@ -16,20 +16,22 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class UnitsService {
-
     private final UserRepository userRepository;
     private final UnitsRepository unitsRepository;
     private final RentalRepository rentalRepository;
 
-    public String createUnit(UnitsRequest createUnitPayload){
-        boolean doesExist = unitsRepository.findByUnitAddressAndUnitNumber(createUnitPayload.getUnitNumber(),
+    public String createUnit(
+            UnitsRequest createUnitPayload){
+        boolean doesExist = unitsRepository.findByUnitAddressAndUnitNumber(
+                createUnitPayload.getUnitNumber(),
                 createUnitPayload.getUnitAddress()).isPresent();
 
         if(doesExist){
             throw new IllegalStateException("Unit Already Exists");
         }
 
-        Rental parentRental = rentalRepository.findByRentalAddress(createUnitPayload.getUnitAddress()).orElseThrow(()->
+        Rental parentRental = rentalRepository.findByRentalAddress(
+                createUnitPayload.getUnitAddress()).orElseThrow(()->
                 new IllegalStateException("Parent Rental doesnt exist"));
 
         Units newUnit = new Units(
@@ -45,23 +47,29 @@ public class UnitsService {
                 parentRental
         );
 
-        rentalRepository.updateRentalOnNewUnit(createUnitPayload.getUnitAddress(),
-                ((parentRental.getAvgRentAmount() * parentRental.getTotalUnits() )+ createUnitPayload.getRentAmount())/ (parentRental.getTotalUnits() + 1),
-                parentRental.getTotalRentIncome() + createUnitPayload.getRentAmount(),
-                parentRental.getTotalUnits() + 1
-                );
+        rentalRepository.updateRentalOnNewUnit(
+                createUnitPayload.getUnitAddress(),
+                (
+                        (parentRental.getAvgRentAmount() *
+                                parentRental.getTotalUnits()) +
+                                createUnitPayload.getRentAmount()) /
+                        (parentRental.getTotalUnits() + 1),
+                parentRental.getTotalRentIncome() +
+                              createUnitPayload.getRentAmount(),
+                parentRental.getTotalUnits() + 1);
 
         unitsRepository.save(newUnit);
 
         return "Success";
     }
 
-    public List<Units> getAllUnitsByAddress(String payloadAddress){
+    public List<Units> getAllUnitsByAddress(
+            String payloadAddress){
         List<Units> returnUnitsList = new ArrayList<>();
 
-        List<Units> returnedUnits = unitsRepository.getAllUnitByAddress(payloadAddress).orElseThrow(
-                ()-> new IllegalStateException("No units at that address")
-        );
+        List<Units> returnedUnits = unitsRepository.getAllUnitByAddress(
+                payloadAddress).orElseThrow(
+                ()-> new IllegalStateException("No units at that address"));
 
             returnedUnits.forEach(rental -> {
                 Units newUnit = new Units(
@@ -79,32 +87,36 @@ public class UnitsService {
                         rental.getRentPaid(),
                         rental.getLeaseStart(),
                         rental.getRentDueDate(),
-                        rental.getLeaseEnd()
-                );
+                        rental.getLeaseEnd());
+
                 returnUnitsList.add(newUnit);
             });
 
         return returnUnitsList;
     }
 
-    public String getRentalWithCode(UnitsRequest.GetRentalRequest addRenterPayload){
+    public String getRentalWithCode(
+            UnitsRequest.GetRentalRequest addRenterPayload){
         //Todo Validate unitCode then return unit to user to confirm if its the correct one.
         return "";
     }
 
-    public String updateUnit(Units updateUnitPayload){
+    public String updateUnit(
+            Units updateUnitPayload){
         return "";
     }
 
     //UserRequests
 
-    public Units.ReturnGetUnitsRequest userIdGetUnits (GetUnitRequest requestPayload){
-        User getUser = userRepository.findById(requestPayload.getUserId()).orElseThrow(
-                ()->new IllegalStateException("User not found")
-        );
-        Units targetUnit = unitsRepository.getUnitByUserId(getUser).orElseThrow(
-                ()->new IllegalStateException("User is not apart of any units")
-        );
+    public Units.ReturnGetUnitsRequest userIdGetUnits (
+            GetUnitRequest requestPayload){
+        User getUser = userRepository.findById(
+                requestPayload.getUserId()).orElseThrow(
+                ()->new IllegalStateException("User not found"));
+
+        Units targetUnit = unitsRepository.getUnitByUserId(
+                getUser).orElseThrow(
+                ()->new IllegalStateException("User is not apart of any units"));
 
         return new Units.ReturnGetUnitsRequest(
                 targetUnit.getUnitAddress(),
@@ -117,20 +129,21 @@ public class UnitsService {
                 targetUnit.getRentPaid(),
                 targetUnit.getLeaseStart(),
                 targetUnit.getRentDueDate(),
-                targetUnit.getLeaseEnd()
-        );
+                targetUnit.getLeaseEnd());
     }
 
     public List<Units.GetAllUnitsWithDetails> getAllUnitsWithDetails (){
         List<Units.GetAllUnitsWithDetails> returnedData = new ArrayList<>();
 
-        List<Units> returnedUnitsList = unitsRepository.getAllUnits().orElseThrow(
-                ()-> new IllegalStateException("No units exist")
-        );
+        List<Units> returnedUnitsList = unitsRepository.getAllUnits()
+                .orElseThrow(
+                ()-> new IllegalStateException("No units exist"));
 
         returnedUnitsList.forEach(unit -> {
             Rental parentRental = unit.getParentUnitId();
+
             UnitCodes unitCode = unit.getUnitCode();
+
             User renter = unit.getRenter();
 
             Units.GetAllUnitsWithDetails addingUnit = new Units.GetAllUnitsWithDetails(
@@ -144,17 +157,18 @@ public class UnitsService {
                             parentRental.getTotalUnits(),
                             parentRental.getAvgRentAmount(),
                             parentRental.getTotalRentIncome(),
-                            parentRental.getDateAvailable()
-                    ),
-                    //Omit Parent Rental pointer
-                    unit.getUnitCode() == null ? null : new UnitCodes(
+                            parentRental.getDateAvailable()),
+                    unit.getUnitCode() == null ?
+                            null :
+                            new UnitCodes(
                             unitCode.getId(),
                             unitCode.getUnitCode(),
                             unitCode.getConfirmedAt(),
                             unitCode.getIssuedAt(),
-                            unitCode.getExpiresAt()
-                    ),
-                    unit.getRenter() == null ? null : new User.UnitUserRequest(
+                            unitCode.getExpiresAt()),
+                    unit.getRenter() == null ?
+                            null :
+                            new User.UnitUserRequest(
                             renter.getId(),
                             renter.getFullName(),
                             renter.getBirthDate(),
@@ -166,8 +180,7 @@ public class UnitsService {
                             renter.getRentLastPaid(),
                             renter.getDateLeaseStarted(),
                             renter.getAmountPaid(),
-                            renter.getAmountOwed()
-                    ),
+                            renter.getAmountOwed()),
                     unit.getUnitAddress(),
                     unit.getBeds(),
                     unit.getBaths(),

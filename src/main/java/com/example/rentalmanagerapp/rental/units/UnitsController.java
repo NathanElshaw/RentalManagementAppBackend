@@ -11,27 +11,30 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/units")
 public class UnitsController {
-
     private final UnitsService unitsService;
 
     @PostMapping("/create")
-    public String createUnit(@RequestBody UnitsRequest createUnitPayload){
+    public String createUnit(
+            @RequestBody UnitsRequest createUnitPayload){
         return unitsService.createUnit(createUnitPayload);
     }
 
     @GetMapping("/getRental")
-    public String getRental (@RequestBody UnitsRequest.GetRentalRequest getRentalPayload){
+    public String getRental (
+            @RequestBody UnitsRequest.GetRentalRequest getRentalPayload){
         return unitsService.getRentalWithCode(getRentalPayload);
     }
 
     @PatchMapping ("/update")
-    public String updateUnit (@RequestBody Units updateUnitsPayload){
+    public String updateUnit (
+            @RequestBody Units updateUnitsPayload){
         return unitsService.updateUnit(updateUnitsPayload);
     }
 
     //Admin Requests
     @GetMapping("/getAllUnitByAddress")
-    public List<Units> getAllUnitsByAddress(@RequestParam("Address") String payloadAddress){
+    public List<Units> getAllUnitsByAddress(
+            @RequestParam("Address") String payloadAddress){
         return unitsService.getAllUnitsByAddress(payloadAddress);
     }
 
@@ -42,7 +45,8 @@ public class UnitsController {
 
     //User Requests
     @GetMapping("/userIdGetRental")
-    public Units.ReturnGetUnitsRequest userIdGetUnits(@RequestBody GetUnitRequest userId){
+    public Units.ReturnGetUnitsRequest userIdGetUnits(
+            @RequestBody GetUnitRequest userId){
         return unitsService.userIdGetUnits(userId);
     }
 }

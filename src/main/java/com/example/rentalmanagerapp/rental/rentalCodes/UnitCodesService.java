@@ -18,12 +18,12 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class UnitCodesService {
-
     private final UnitCodeRepository unitCodeRepository;
     private final UnitsRepository unitsRepository;
     private final UserRepository userRepository;
 
-    public String createUnitCode(UnitCodesRequest unitCodesPayload){
+    public String createUnitCode(
+            UnitCodesRequest unitCodesPayload){
         Units parentUnit = unitsRepository.findByUnitAddressAndUnitNumber(
                 unitCodesPayload.getParentUnitNumber(),
                 unitCodesPayload.getParentUnitAddress()).orElseThrow(
@@ -36,9 +36,10 @@ public class UnitCodesService {
         UnitCodes newUnitCodePayload = new UnitCodes(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
-                LocalDateTime.now().plusHours(unitCodesPayload.getExpiresIn()),
-                parentUnit
-        );
+                LocalDateTime.now().plusHours(
+                        unitCodesPayload.getExpiresIn()
+                ),
+                parentUnit);
 
         unitCodeRepository.save(newUnitCodePayload);
 
@@ -50,30 +51,48 @@ public class UnitCodesService {
     }
 
 
-    public String joinUnit(JoinUnitRequest joinUnitPayload){
-        UnitCodes targetUnitCode = unitCodeRepository.findByUnitCode(joinUnitPayload.getUnitCode()).orElseThrow(
-                ()->new IllegalStateException("Code is invalid")
-        );
-        Units targetUnit = unitsRepository.findById(targetUnitCode.getId()).orElseThrow(
-                ()-> new IllegalStateException("Unit is invalid")
-        );
-        User targetUser = userRepository.findById(joinUnitPayload.getUserId()).orElseThrow(
-                ()->new IllegalStateException("User not found")
-        );
+    public String joinUnit(
+            JoinUnitRequest joinUnitPayload){
+        UnitCodes targetUnitCode = unitCodeRepository.findByUnitCode(
+                joinUnitPayload.getUnitCode()).orElseThrow(
+                ()->new IllegalStateException("Code is invalid"));
 
-        unitCodeRepository.updateConfirmedAt(joinUnitPayload.getUnitCode(), LocalDateTime.now());
-        unitsRepository.addRenterToUnit(targetUser, targetUnit.getId());
+        Units targetUnit = unitsRepository.findById(
+                targetUnitCode.getId()).orElseThrow(
+                ()-> new IllegalStateException("Unit is invalid"));
 
-        return "Successfully added user " + targetUser.getFirstName() + " " + targetUser.getLastName() + " To unit";
+        User targetUser = userRepository.findById(
+                joinUnitPayload.getUserId()).orElseThrow(
+                ()->new IllegalStateException("User not found"));
+
+        unitCodeRepository.updateConfirmedAt(
+                joinUnitPayload.getUnitCode(), LocalDateTime.now());
+
+        unitsRepository.addRenterToUnit(
+                targetUser, targetUnit.getId());
+
+        return "Successfully added user " +
+                targetUser.getFirstName() +
+                " " +
+                targetUser.getLastName() +
+                " To unit";
     }
 
-    public String updateCode(UpdateCodeRequest updateCodePayload){
-        UnitCodes targetUnitCode = unitCodeRepository.findById(updateCodePayload.getUnitCodeId()).orElseThrow(
-                ()->new IllegalStateException("Code not found")
-        );
-        targetUnitCode.setUnitCode(UUID.randomUUID().toString());
-        targetUnitCode.setIssuedAt(LocalDateTime.now());
-        targetUnitCode.setExpiresAt(LocalDateTime.now().plusHours(updateCodePayload.getValidLength()));
+    public String updateCode(
+            UpdateCodeRequest updateCodePayload){
+        UnitCodes targetUnitCode = unitCodeRepository.findById(
+                updateCodePayload.getUnitCodeId()).orElseThrow(
+                ()->new IllegalStateException("Code not found"));
+
+        targetUnitCode.setUnitCode(
+                UUID.randomUUID().toString());
+
+        targetUnitCode.setIssuedAt(
+                LocalDateTime.now());
+
+        targetUnitCode.setExpiresAt(
+                LocalDateTime.now().plusHours(
+                        updateCodePayload.getValidLength()));
 
         unitCodeRepository.save(targetUnitCode);
 
@@ -81,9 +100,9 @@ public class UnitCodesService {
     }
 
     public String deleteUnitCode(Long unitCodeId){
-        UnitCodes targetUnitCode = unitCodeRepository.findById(unitCodeId).orElseThrow(
-                ()->new IllformedLocaleException("Unit code doesnt exist")
-        );
+        UnitCodes targetUnitCode = unitCodeRepository.findById(unitCodeId)
+                .orElseThrow(
+                ()->new IllformedLocaleException("Unit code doesnt exist"));
 
         unitCodeRepository.delete(targetUnitCode);
         return "Successfully removed unit code";
@@ -91,7 +110,8 @@ public class UnitCodesService {
 
 
     //Used to check if that is the unit they want to join before calling join unit
-    public Optional<UnitCodes> findByCode(String code){
+    public Optional<UnitCodes> findByCode(
+            String code){
         return unitCodeRepository.findByUnitCode(code);
     }
 

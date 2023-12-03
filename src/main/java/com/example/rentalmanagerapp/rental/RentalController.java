@@ -13,7 +13,9 @@ public class RentalController {
     private final RentalService rentalService;
 
     @PostMapping("/create")
-    public String createRental(@RequestBody RentalRequest rentalRequest){
+    public String createRental(
+            @RequestBody RentalRequest rentalRequest
+    ){
         //Todo check priv, add service, validate jwt
         return rentalService.createRental(rentalRequest);
     }
