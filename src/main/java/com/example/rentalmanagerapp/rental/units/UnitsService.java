@@ -1,7 +1,7 @@
 package com.example.rentalmanagerapp.rental.units;
 
 import com.example.rentalmanagerapp.rental.Rental;
-import com.example.rentalmanagerapp.rental.rentalCodes.UnitCodes;
+import com.example.rentalmanagerapp.rental.unitcode.UnitCodes;
 import com.example.rentalmanagerapp.rental.RentalRepository;
 import com.example.rentalmanagerapp.rental.units.requests.GetUnitRequest;
 import com.example.rentalmanagerapp.rental.units.requests.UnitsRequest;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -25,7 +26,8 @@ public class UnitsService {
 
     public String createUnit(
             UnitsRequest createUnitPayload){
-        boolean doesExist = unitsRepository.findByUnitAddressAndUnitNumber(
+        boolean doesExist =
+                unitsRepository.findByUnitAddressAndUnitNumber(
                 createUnitPayload.getUnitNumber(),
                 createUnitPayload.getUnitAddress()).isPresent();
 
@@ -33,9 +35,12 @@ public class UnitsService {
             throw new IllegalStateException("Unit Already Exists");
         }
 
-        Rental parentRental = rentalRepository.findByRentalAddress(
-                createUnitPayload.getUnitAddress()).orElseThrow(()->
-                new IllegalStateException("Parent Rental doesnt exist"));
+        Rental parentRental =
+                rentalRepository.findByRentalAddress(
+                createUnitPayload.getUnitAddress())
+                        .orElseThrow(()->
+                        new IllegalStateException(
+                            "Parent Rental doesnt exist"));
 
         Units newUnit = new Units(
                 createUnitPayload.getUnitNumber(),
@@ -70,9 +75,11 @@ public class UnitsService {
             String payloadAddress){
         List<Units> returnUnitsList = new ArrayList<>();
 
-        List<Units> returnedUnits = unitsRepository.getAllUnitByAddress(
+        List<Units> returnedUnits =
+                unitsRepository.getAllUnitByAddress(
                 payloadAddress).orElseThrow(
-                ()-> new IllegalStateException("No units at that address"));
+                ()-> new IllegalStateException(
+                        "No units at that address"));
 
             returnedUnits.forEach(rental -> {
                 Units newUnit = new Units(
@@ -105,21 +112,43 @@ public class UnitsService {
     }
 
     public String updateUnit(
-            Units updateUnitPayload){
-        return "";
-    }
+            Units unitPayload){
 
-    //UserRequests
+        unitsRepository.findById(
+                unitPayload.getId()
+        ).orElseThrow(
+                ()-> new IllegalStateException("Unit does not exist")
+        );
+
+        unitsRepository.updateUnit(
+                unitPayload.getId(),
+                unitPayload.getUnitAddress(),
+                unitPayload.getBeds(),
+                unitPayload.getBaths(),
+                unitPayload.getUnitNumber(),
+                unitPayload.getHasPets(),
+                unitPayload.getRentAmount(),
+                unitPayload.getRentDue(),
+                unitPayload.getRentPaid(),
+                unitPayload.getLeaseStart(),
+                unitPayload.getRentDueDate(),
+                unitPayload.getLeaseEnd()
+        );
+
+        return "Successful Update";
+    }
 
     public Units.ReturnGetUnitsRequest userIdGetUnits (
             GetUnitRequest requestPayload){
-        User getUser = userRepository.findById(
+        User getUser =
+                userRepository.findById(
                 requestPayload.getUserId()).orElseThrow(
                 ()->new IllegalStateException("User not found"));
 
         Units targetUnit = unitsRepository.getUnitByUserId(
                 getUser).orElseThrow(
-                ()->new IllegalStateException("User is not apart of any units"));
+                ()->new IllegalStateException(
+                        "User is not apart of any units"));
 
         return new Units.ReturnGetUnitsRequest(
                 targetUnit.getUnitAddress(),
