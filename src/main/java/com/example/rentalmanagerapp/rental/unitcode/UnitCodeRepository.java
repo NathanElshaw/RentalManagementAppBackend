@@ -1,4 +1,4 @@
-package com.example.rentalmanagerapp.rental.rentalCodes;
+package com.example.rentalmanagerapp.rental.unitcode;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

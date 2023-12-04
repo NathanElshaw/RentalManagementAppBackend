@@ -1,4 +1,4 @@
-package com.example.rentalmanagerapp.registration.confirmToken;
+package com.example.rentalmanagerapp.registration.confirmtoken;
 
 public class ConfirmToken {
 }

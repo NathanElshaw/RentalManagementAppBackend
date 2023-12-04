@@ -1,6 +1,5 @@
 package com.example.rentalmanagerapp.rental;
 
-import com.example.rentalmanagerapp.rental.rentalCodes.UnitCodesService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

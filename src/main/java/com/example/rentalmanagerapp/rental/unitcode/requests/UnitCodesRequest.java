@@ -1,4 +1,4 @@
-package com.example.rentalmanagerapp.rental.rentalCodes.requests;
+package com.example.rentalmanagerapp.rental.unitcode.requests;
 
 import lombok.Getter;
 import lombok.Setter;

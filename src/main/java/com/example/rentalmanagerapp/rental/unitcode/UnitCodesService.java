@@ -1,8 +1,8 @@
-package com.example.rentalmanagerapp.rental.rentalCodes;
+package com.example.rentalmanagerapp.rental.unitcode;
 
-import com.example.rentalmanagerapp.rental.rentalCodes.requests.JoinUnitRequest;
-import com.example.rentalmanagerapp.rental.rentalCodes.requests.UnitCodesRequest;
-import com.example.rentalmanagerapp.rental.rentalCodes.requests.UpdateCodeRequest;
+import com.example.rentalmanagerapp.rental.unitcode.requests.JoinUnitRequest;
+import com.example.rentalmanagerapp.rental.unitcode.requests.UnitCodesRequest;
+import com.example.rentalmanagerapp.rental.unitcode.requests.UpdateCodeRequest;
 import com.example.rentalmanagerapp.rental.units.Units;
 import com.example.rentalmanagerapp.rental.units.UnitsRepository;
 import com.example.rentalmanagerapp.user.User;
@@ -30,10 +30,12 @@ public class UnitCodesService {
         Units parentUnit = unitsRepository.findByUnitAddressAndUnitNumber(
                 unitCodesPayload.getParentUnitNumber(),
                 unitCodesPayload.getParentUnitAddress()).orElseThrow(
-                        ()-> new IllegalStateException("Parent unit not found"));
+                        ()-> new IllegalStateException(
+                                "Parent unit not found"));
 
         if(parentUnit.getUnitCode() != null){
-            throw new IllegalStateException("Invalid address or unit number");
+            throw new IllegalStateException(
+                    "Invalid address or unit number");
         }
 
         UnitCodes newUnitCodePayload = new UnitCodes(
@@ -46,9 +48,10 @@ public class UnitCodesService {
 
         unitCodeRepository.save(newUnitCodePayload);
 
-        unitsRepository.addUnitCodeToRental(newUnitCodePayload,
-                                            unitCodesPayload.getParentUnitAddress(),
-                                            unitCodesPayload.getParentUnitNumber());
+        unitsRepository.addUnitCodeToRental(
+                newUnitCodePayload,
+                unitCodesPayload.getParentUnitAddress(),
+                unitCodesPayload.getParentUnitNumber());
 
         return "Success";
     }
@@ -58,15 +61,18 @@ public class UnitCodesService {
             JoinUnitRequest joinUnitPayload){
         UnitCodes targetUnitCode = unitCodeRepository.findByUnitCode(
                 joinUnitPayload.getUnitCode()).orElseThrow(
-                ()->new IllegalStateException("Code is invalid"));
+                ()->new IllegalStateException(
+                        "Code is invalid"));
 
         Units targetUnit = unitsRepository.findById(
                 targetUnitCode.getId()).orElseThrow(
-                ()-> new IllegalStateException("Unit is invalid"));
+                ()-> new IllegalStateException(
+                        "Unit is invalid"));
 
         User targetUser = userRepository.findById(
                 joinUnitPayload.getUserId()).orElseThrow(
-                ()->new IllegalStateException("User not found"));
+                ()->new IllegalStateException(
+                        "User not found"));
 
         unitCodeRepository.updateConfirmedAt(
                 joinUnitPayload.getUnitCode(), LocalDateTime.now());
@@ -85,7 +91,8 @@ public class UnitCodesService {
             UpdateCodeRequest updateCodePayload){
         UnitCodes targetUnitCode = unitCodeRepository.findById(
                 updateCodePayload.getUnitCodeId()).orElseThrow(
-                ()->new IllegalStateException("Code not found"));
+                ()->new IllegalStateException(
+                        "Code not found"));
 
         targetUnitCode.setUnitCode(
                 UUID.randomUUID().toString());
@@ -105,14 +112,13 @@ public class UnitCodesService {
     public String deleteUnitCode(Long unitCodeId){
         UnitCodes targetUnitCode = unitCodeRepository.findById(unitCodeId)
                 .orElseThrow(
-                ()->new IllformedLocaleException("Unit code doesnt exist"));
+                ()->new IllformedLocaleException(
+                        "Unit code doesnt exist"));
 
         unitCodeRepository.delete(targetUnitCode);
         return "Successfully removed unit code";
     }
 
-
-    //Used to check if that is the unit they want to join before calling join unit
     public Optional<UnitCodes> findByCode(
             String code){
         return unitCodeRepository.findByUnitCode(code);

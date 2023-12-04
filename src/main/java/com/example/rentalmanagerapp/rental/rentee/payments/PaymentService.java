@@ -14,5 +14,5 @@ public class PaymentService {
     //get how much was paid
     //then get unit via user id
     // add payment amount to unit and subtract amount owed from payment
-    // add amount paid to rental total income 
+    // add amount paid to rental total income
 }

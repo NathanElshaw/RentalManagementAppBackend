@@ -1,4 +1,4 @@
-package com.example.rentalmanagerapp.rental.rentalCodes;
+package com.example.rentalmanagerapp.rental.unitcode;
 
 import com.example.rentalmanagerapp.rental.units.Units;
 import jakarta.persistence.Entity;
@@ -49,7 +49,12 @@ public class UnitCodes {
 
     }
 
-    public UnitCodes(Long id, String unitCode, LocalDateTime confirmedAt, LocalDateTime issuedAt, LocalDateTime expiresAt) {
+    public UnitCodes(
+            Long id,
+            String unitCode,
+            LocalDateTime confirmedAt,
+            LocalDateTime issuedAt,
+            LocalDateTime expiresAt) {
         this.id = id;
         this.unitCode = unitCode;
         this.confirmedAt = confirmedAt;
@@ -57,7 +62,11 @@ public class UnitCodes {
         this.expiresAt = expiresAt;
     }
 
-    public UnitCodes(String unitCode, LocalDateTime issuedAt, LocalDateTime expiresAt, Units parentUnitId) {
+    public UnitCodes(
+            String unitCode,
+            LocalDateTime issuedAt,
+            LocalDateTime expiresAt,
+            Units parentUnitId) {
         this.unitCode = unitCode;
         this.issuedAt = issuedAt;
         this.expiresAt = expiresAt;
