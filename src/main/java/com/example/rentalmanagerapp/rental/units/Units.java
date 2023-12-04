@@ -1,7 +1,7 @@
 package com.example.rentalmanagerapp.rental.units;
 
 import com.example.rentalmanagerapp.rental.Rental;
-import com.example.rentalmanagerapp.rental.rentalCodes.UnitCodes;
+import com.example.rentalmanagerapp.rental.unitcode.UnitCodes;
 import com.example.rentalmanagerapp.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
