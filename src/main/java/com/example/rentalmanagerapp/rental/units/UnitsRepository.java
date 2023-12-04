@@ -1,6 +1,6 @@
 package com.example.rentalmanagerapp.rental.units;
 
-import com.example.rentalmanagerapp.rental.rentalCodes.UnitCodes;
+import com.example.rentalmanagerapp.rental.unitcode.UnitCodes;
 import com.example.rentalmanagerapp.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +42,36 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
     Optional<Units> findByUnitAddressAndUnitNumber(
             int unitNumber,
             String unitAddress);
+
+    @Transactional
+    @Modifying
+    @Query("update Units u " +
+            "set u.unitAddress = ?2, " +
+            "u.beds = ?3, " +
+            "u.baths = ?4, " +
+            "u.unitNumber = ?5, " +
+            "u.hasPets = ?6, " +
+            "u.rentAmount = ?7, " +
+            "u.rentDue = ?8, " +
+            "u.rentPaid = ?9, " +
+            "u.leaseStart = ?10, " +
+            "u.rentDueDate = ?11, " +
+            "u.leaseEnd = ?12 " +
+            "where u.id = ?1 ")
+    void updateUnit(
+            Long id,
+            String address,
+            int beds,
+            double baths,
+            int unitNumber,
+            boolean hasPets,
+            double rentAmount,
+            double rentDue,
+            double rentPaid,
+            LocalDate leaseStart,
+            LocalDate rentDueDate,
+            LocalDate leaseEnd
+    );
 
     @Query("select u " +
             "from Units u " +
