@@ -22,6 +22,9 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
     @Query("select u.unitCode from Units u where u.unitAddress = ?1 and u.unitNumber = ?2 ")
     Optional<UnitCodes> getUnitCodeParent(String unitAddress, int unitNumber);
 
+    @Query("select u from Units u where u.renter = ?1 ")
+    Optional<Units> findByUser(User user);
+
     @Transactional
     @Modifying
     @Query("update Units u " +
@@ -72,6 +75,14 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
             LocalDate rentDueDate,
             LocalDate leaseEnd
     );
+
+    @Transactional
+    @Modifying
+    @Query("update Units u " +
+            "set u.rentPaid = ?2, " +
+            " u.rentDue = ?3 " +
+            "where u.renter = ?1")
+    void userPayment(User userId, double rentPaid, double rentDue);
 
     @Query("select u " +
             "from Units u " +
