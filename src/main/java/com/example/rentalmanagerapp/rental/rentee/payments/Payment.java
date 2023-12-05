@@ -8,8 +8,10 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,13 +42,39 @@ public class Payment {
 
     private double amountPaid;
 
-    private String method; //Probably stripe for now
+    private String method = "Stripe"; //Probably stripe for now
 
     private LocalDateTime paymentTime;
+
+    private String stripePaymentId;
 
 
     public Payment(){
 
+    }
+
+    public Payment(
+            User user,
+            double amountPaid,
+            LocalDateTime paymentTime,
+            String stripePaymentId) {
+        this.user = user;
+        this.amountPaid = amountPaid;
+        this.paymentTime = paymentTime;
+        this.stripePaymentId = stripePaymentId;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @ToString
+    @EqualsAndHashCode
+    public static class UserPaymentRequest {
+        private final Long userId;
+
+        private final double paymentAmount;
+
+        private final String stripeTransactionId;
     }
 
 }
