@@ -27,6 +27,13 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
             double newRentalRent,
             int newRentalAmount);
 
+    @Transactional
+    @Modifying
+    @Query("update Rental  r " +
+            "set r.totalRentIncome = ?2 " +
+            "where r.id = ?1 ")
+    void updateRentalIncome(Long id, double newIncome);
+
     @Query("select r from Rental r")
     Optional<List<Rental>> getAllUnits();
 
