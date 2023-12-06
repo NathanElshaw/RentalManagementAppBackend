@@ -15,6 +15,7 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -48,6 +49,8 @@ public class Payment {
 
     private String stripePaymentId;
 
+    private Month paymentMonth;
+
 
     public Payment(){
 
@@ -57,11 +60,13 @@ public class Payment {
             User user,
             double amountPaid,
             LocalDateTime paymentTime,
-            String stripePaymentId) {
+            String stripePaymentId,
+            Month paymentMonth) {
         this.user = user;
         this.amountPaid = amountPaid;
         this.paymentTime = paymentTime;
         this.stripePaymentId = stripePaymentId;
+        this.paymentMonth = paymentMonth;
     }
 
     @Getter
@@ -75,6 +80,8 @@ public class Payment {
         private final double paymentAmount;
 
         private final String stripeTransactionId;
+
+        private final int paymentMonth;
     }
 
 }
