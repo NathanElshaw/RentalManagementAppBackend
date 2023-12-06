@@ -78,7 +78,7 @@ public class UnitCodesService {
                 joinUnitPayload.getUnitCode(), LocalDateTime.now());
 
         unitsRepository.addRenterToUnit(
-                targetUser, targetUnit.getId());
+                targetUser, targetUnit.getId(), targetUnit.getRentAmount());
 
         return "Successfully added user " +
                 targetUser.getFirstName() +
