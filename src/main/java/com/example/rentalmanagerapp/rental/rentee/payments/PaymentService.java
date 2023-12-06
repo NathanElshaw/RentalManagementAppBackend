@@ -1,5 +1,7 @@
 package com.example.rentalmanagerapp.rental.rentee.payments;
 
+import com.example.rentalmanagerapp.rental.Rental;
+import com.example.rentalmanagerapp.rental.RentalRepository;
 import com.example.rentalmanagerapp.rental.units.Units;
 import com.example.rentalmanagerapp.rental.units.UnitsRepository;
 import com.example.rentalmanagerapp.user.User;
@@ -8,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 
 @Service
 @AllArgsConstructor
@@ -18,6 +21,8 @@ public class PaymentService {
     private final UserRepository userRepository;
 
     private final UnitsRepository unitsRepository;
+
+    private final RentalRepository rentalRepository;
 
     public String createPayment(
         Payment.UserPaymentRequest paymentPayload
@@ -32,13 +37,21 @@ public class PaymentService {
                 ()->new IllegalStateException("User has no unit")
         );
 
+        Rental rental = rentalRepository.findByRentalAddress(
+                unit.getUnitAddress()).orElseThrow(
+                ()-> new IllegalStateException("Rental doesn't exist")
+        );
+
         //Todo: Validate Stripe payment here and check for dupes
 
         Payment newPayment = new Payment(
                 user,
                 paymentPayload.getPaymentAmount(),
                 LocalDateTime.now(),
-                paymentPayload.getStripeTransactionId()
+                paymentPayload.getStripeTransactionId(),
+                Month.of(
+                        paymentPayload.getPaymentMonth()
+                )
         );
 
         unitsRepository.userPayment(
@@ -47,12 +60,18 @@ public class PaymentService {
                 unit.getRentDue() -
                         paymentPayload.getPaymentAmount());
 
+        rentalRepository.updateRentalIncome(
+                rental.getId(),
+                rental.getTotalRentIncome() +
+                paymentPayload.getPaymentAmount());
+
         paymentRepository.save(newPayment);
 
         return "Successfully paid";
     }
 
     //Todo:
+    //Make sure if no money is needed prevent from making payments for this month.
     //Call this api after payment confirmed
     //get how much was paid
     //then get unit via user id
