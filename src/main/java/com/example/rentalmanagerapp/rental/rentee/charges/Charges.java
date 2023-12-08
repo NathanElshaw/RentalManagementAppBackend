@@ -8,6 +8,9 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -62,4 +65,20 @@ public class Charges {
 
     }
 
+
+    @AllArgsConstructor
+    @Getter
+    @ToString
+    @EqualsAndHashCode
+    public static class createChargeRequest{
+        private final Long userId;
+
+        private final String reason;
+
+        private final double chargeAmount;
+
+        private final LocalDateTime paidAt;
+
+        private final LocalDate dueBy;
+    }
 }
