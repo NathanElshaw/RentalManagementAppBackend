@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
@@ -20,6 +21,8 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Entity
 @AllArgsConstructor
 @Table(name="charges")
+@Getter
+@Setter
 public class Charges {
     @SequenceGenerator(
             name = "chargesSequence",
@@ -58,6 +61,8 @@ public class Charges {
 
     private LocalDateTime updatedAt;
 
+    private String chargeId;
+
     private String transactionId = null;
 
 
@@ -80,5 +85,7 @@ public class Charges {
         private final LocalDateTime paidAt;
 
         private final LocalDate dueBy;
+
+        private final String chargeId;
     }
 }
