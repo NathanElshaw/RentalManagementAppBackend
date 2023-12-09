@@ -82,6 +82,8 @@ public class Payment {
         private final String stripeTransactionId;
 
         private final int paymentMonth;
+
+        private final String chargeId;
     }
 
 }
