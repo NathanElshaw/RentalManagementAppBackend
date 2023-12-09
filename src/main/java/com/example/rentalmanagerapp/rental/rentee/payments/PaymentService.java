@@ -2,6 +2,8 @@ package com.example.rentalmanagerapp.rental.rentee.payments;
 
 import com.example.rentalmanagerapp.rental.Rental;
 import com.example.rentalmanagerapp.rental.RentalRepository;
+import com.example.rentalmanagerapp.rental.rentee.charges.Charges;
+import com.example.rentalmanagerapp.rental.rentee.charges.ChargesRepository;
 import com.example.rentalmanagerapp.rental.units.Units;
 import com.example.rentalmanagerapp.rental.units.UnitsRepository;
 import com.example.rentalmanagerapp.user.User;
@@ -23,6 +25,8 @@ public class PaymentService {
     private final UnitsRepository unitsRepository;
 
     private final RentalRepository rentalRepository;
+
+    private final ChargesRepository chargesRepository;
 
     public String createPayment(
         Payment.UserPaymentRequest paymentPayload
@@ -53,6 +57,24 @@ public class PaymentService {
                         paymentPayload.getPaymentMonth()
                 )
         );
+
+        if(paymentPayload.getChargeId() != null){
+            Charges targetCharge = chargesRepository.findByChargeId(
+                    paymentPayload.getChargeId()).orElseThrow(
+                    ()->new IllegalStateException("Charge not found")
+            );
+
+            double amountOwed = targetCharge.getAmountOwed() -
+                    paymentPayload.getPaymentAmount();
+
+            chargesRepository.makePayment(
+                    targetCharge.getChargeId(),
+                    paymentPayload.getPaymentAmount(),
+                    amountOwed,
+                    amountOwed >= 0,
+                    LocalDateTime.now()
+                    );
+        }
 
         unitsRepository.userPayment(
                 user,
