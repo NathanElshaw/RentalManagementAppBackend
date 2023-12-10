@@ -14,4 +14,14 @@ public class ChargesService {
         return "";
     }
 
+    public String deleteCharge (Long chargeId){
+        Charges targetCharge = chargesRepository.findById(chargeId)
+                .orElseThrow(
+                        ()->new IllegalStateException("Charge not found"));
+
+        chargesRepository.delete(targetCharge);
+
+        return "Successfully removed";
+    }
+
 }
