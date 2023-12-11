@@ -43,11 +43,11 @@ public class Payment {
 
     private double amountPaid;
 
-    private String method = "Stripe"; //Probably stripe for now
+    private PaymentTypes paymentMethod = null;
 
     private LocalDateTime paymentTime;
 
-    private String stripePaymentId;
+    private String stripePaymentId = null;
 
     private Month paymentMonth;
 
@@ -59,13 +59,28 @@ public class Payment {
     public Payment(
             User user,
             double amountPaid,
+            PaymentTypes paymentMethod,
             LocalDateTime paymentTime,
             String stripePaymentId,
             Month paymentMonth) {
         this.user = user;
         this.amountPaid = amountPaid;
+        this.paymentMethod = paymentMethod;
         this.paymentTime = paymentTime;
         this.stripePaymentId = stripePaymentId;
+        this.paymentMonth = paymentMonth;
+    }
+
+    public Payment(
+            User user,
+            double amountPaid,
+            PaymentTypes paymentMethod,
+            LocalDateTime paymentTime,
+            Month paymentMonth) {
+        this.user = user;
+        this.amountPaid = amountPaid;
+        this.paymentMethod = paymentMethod;
+        this.paymentTime = paymentTime;
         this.paymentMonth = paymentMonth;
     }
 
@@ -78,6 +93,8 @@ public class Payment {
         private final Long userId;
 
         private final double paymentAmount;
+
+        private final PaymentTypes paymentMethod;
 
         private final String stripeTransactionId;
 
