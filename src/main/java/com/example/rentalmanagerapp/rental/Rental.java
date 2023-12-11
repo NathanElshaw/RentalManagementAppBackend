@@ -1,6 +1,8 @@
 package com.example.rentalmanagerapp.rental;
 
+import com.example.rentalmanagerapp.user.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -48,6 +51,13 @@ public class Rental {
     private double totalRentIncome = 0;
 
     private LocalDate dateAvailable;
+
+    @OneToOne
+    private User createdBy;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    private LocalDateTime updatedAt;
 
 
     public Rental() {
