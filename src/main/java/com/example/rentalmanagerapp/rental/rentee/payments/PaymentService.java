@@ -31,6 +31,8 @@ public class PaymentService {
     public String createPayment(
         Payment.UserPaymentRequest paymentPayload
     ){
+        Payment newPayment;
+
         User user = userRepository.findById(
                 paymentPayload.getUserId()).orElseThrow(
                 ()-> new IllegalStateException("User not found")
@@ -48,15 +50,30 @@ public class PaymentService {
 
         //Todo: Validate Stripe payment here and check for dupes
 
-        Payment newPayment = new Payment(
-                user,
-                paymentPayload.getPaymentAmount(),
-                LocalDateTime.now(),
-                paymentPayload.getStripeTransactionId(),
-                Month.of(
-                        paymentPayload.getPaymentMonth()
-                )
-        );
+        if(paymentPayload.getPaymentMethod() != PaymentTypes.Stripe){
+            newPayment = new Payment(
+                    user,
+                    paymentPayload.getPaymentAmount(),
+                    paymentPayload.getPaymentMethod(),
+                    LocalDateTime.now(),
+                    Month.of(
+                            paymentPayload.getPaymentMonth()
+                    )
+            );
+
+        }else{
+            newPayment = new Payment(
+                    user,
+                    paymentPayload.getPaymentAmount(),
+                    paymentPayload.getPaymentMethod(),
+                    LocalDateTime.now(),
+                    paymentPayload.getStripeTransactionId(),
+                    Month.of(
+                            paymentPayload.getPaymentMonth()
+                    )
+            );
+        }
+
 
         if(paymentPayload.getChargeId() != null){
             Charges targetCharge = chargesRepository.findByChargeId(
