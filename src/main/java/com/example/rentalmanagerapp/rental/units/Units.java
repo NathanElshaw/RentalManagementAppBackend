@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -72,6 +73,13 @@ public class Units {
         private LocalDate rentDueDate;
 
         private LocalDate leaseEnd;
+
+        @OneToOne
+        private User createdBy;
+
+        private LocalDateTime createdAt;
+
+        private LocalDateTime updatedAt;
 
         public Units(){
 
