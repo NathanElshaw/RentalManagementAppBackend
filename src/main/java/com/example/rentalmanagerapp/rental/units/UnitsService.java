@@ -97,7 +97,10 @@ public class UnitsService {
                         rental.getRentPaid(),
                         rental.getLeaseStart(),
                         rental.getRentDueDate(),
-                        rental.getLeaseEnd());
+                        rental.getLeaseEnd(),
+                        rental.getCreatedBy(),
+                        rental.getCreatedAt(),
+                        rental.getUpdatedAt());
 
                 returnUnitsList.add(newUnit);
             });
@@ -189,7 +192,10 @@ public class UnitsService {
                             parentRental.getTotalUnits(),
                             parentRental.getAvgRentAmount(),
                             parentRental.getTotalRentIncome(),
-                            parentRental.getDateAvailable()),
+                            parentRental.getDateAvailable(),
+                            parentRental.getCreatedBy(),
+                            parentRental.getCreatedAt(),
+                            parentRental.getUpdatedAt()),
                     unit.getUnitCode() == null ?
                             null :
                             new UnitCodes(
