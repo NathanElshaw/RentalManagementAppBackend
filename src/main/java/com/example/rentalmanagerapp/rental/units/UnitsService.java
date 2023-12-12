@@ -192,7 +192,7 @@ public class UnitsService {
                             parentRental.getTotalUnits(),
                             parentRental.getAvgRentAmount(),
                             parentRental.getTotalRentIncome(),
-                            parentRental.getDateAvailable(),
+                            parentRental.getAssignedManager(),
                             parentRental.getCreatedBy(),
                             parentRental.getCreatedAt(),
                             parentRental.getUpdatedAt()),
