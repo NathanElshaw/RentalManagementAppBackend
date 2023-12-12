@@ -53,7 +53,7 @@ public class RentalService {
                     listRental.getTotalUnits(),
                     listRental.getAvgRentAmount(),
                     listRental.getTotalRentIncome(),
-                    listRental.getDateAvailable(),
+                    listRental.getAssignedManager(),
                     listRental.getCreatedBy(),
                     listRental.getCreatedAt(),
                     listRental.getUpdatedAt()
