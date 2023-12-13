@@ -1,5 +1,7 @@
 package com.example.rentalmanagerapp.rental;
 
+import com.example.rentalmanagerapp.user.User;
+import com.example.rentalmanagerapp.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,8 @@ import java.util.List;
 public class RentalService {
 
     private final RentalRepository rentalRepository;
+
+    private final UserRepository userRepository;
 
     public String createRental(
             RentalRequest rentalRequest
@@ -64,6 +68,40 @@ public class RentalService {
         });
 
         return returnRentalList;
+    }
+
+    public List<Rental> getPropertyMangerRentals(Long userId){
+
+        List<Rental> returnedList = new ArrayList<>();
+
+         User manager = userRepository.findById(userId).orElseThrow(
+                ()->new IllegalStateException("User not found")
+        );
+
+         List<Rental> getManagedRentals = rentalRepository.getRentalByAssignedManager(manager)
+                 .orElseThrow(
+                         ()->new IllegalStateException("User doesnt manage any rentals")
+         );
+
+         getManagedRentals.forEach(rental ->
+                 {
+                     Rental managedRental = new Rental(
+                             rental.getId(),
+                             rental.getRentalAddress(),
+                             rental.getDescription(),
+                             rental.getType(),
+                             rental.getTotalTenants(),
+                             rental.getTotalUnits(),
+                             rental.getAssignedManager(),
+                             rental.getCreatedBy(),
+                             rental.getUpdatedAt()
+                     );
+
+                     returnedList.add(managedRental);
+                 }
+         );
+
+         return returnedList;
     }
 
 }
