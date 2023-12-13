@@ -30,6 +30,12 @@ public class RentalController {
         return rentalService.getAllRentals();
     }
 
+    @GetMapping("/manager/getUnits")
+    public List<Rental> getPropertyManagerUnits(
+            @RequestBody Long userId){
+        return rentalService.getPropertyMangerRentals(userId);
+    }
+
     @PutMapping("/update")
     public String updateRental(){
         //Todo check priv, add service, validate
