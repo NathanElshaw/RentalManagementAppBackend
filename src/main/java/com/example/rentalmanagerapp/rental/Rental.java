@@ -77,4 +77,25 @@ public class Rental {
         this.description = description;
         this.type = type;
     }
+
+    public Rental(
+            Long id,
+            String rentalAddress,
+            String description,
+            String type,
+            int totalTenants,
+            int totalUnits,
+            User assignedManager,
+            User createdBy,
+            LocalDateTime updatedAt) {
+        this.id = id;
+        this.rentalAddress = rentalAddress;
+        this.description = description;
+        this.type = type;
+        this.totalTenants = totalTenants;
+        this.totalUnits = totalUnits;
+        this.assignedManager = assignedManager;
+        this.createdBy = createdBy;
+        this.updatedAt = updatedAt;
+    }
 }
