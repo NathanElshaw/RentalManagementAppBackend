@@ -1,2 +1,7 @@
-package com.example.rentalmanagerapp.rental.issues;public enum IssuePriority {
+package com.example.rentalmanagerapp.rental.issues.enums;
+
+public enum IssuePriority {
+    Low,
+    Medium,
+    High
 }
