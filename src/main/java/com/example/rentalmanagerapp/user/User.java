@@ -1,6 +1,8 @@
 package com.example.rentalmanagerapp.user;
 
+import com.example.rentalmanagerapp.rental.units.Units;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.GeneratedValue;
@@ -81,6 +83,8 @@ public class User {
 
     private String rentalAddress = null;
 
+    @OneToOne
+    private Units usersUnit = null;
 
     public User() {
 
