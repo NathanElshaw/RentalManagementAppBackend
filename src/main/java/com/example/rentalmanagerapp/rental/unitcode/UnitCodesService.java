@@ -77,6 +77,10 @@ public class UnitCodesService {
         unitCodeRepository.updateConfirmedAt(
                 joinUnitPayload.getUnitCode(), LocalDateTime.now());
 
+        userRepository.addUnitToUser(
+                targetUser, targetUnit
+        );
+
         unitsRepository.addRenterToUnit(
                 targetUser, targetUnit.getId(), targetUnit.getRentAmount());
 
