@@ -18,6 +18,7 @@ import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
+import static com.example.rentalmanagerapp.rental.issues.enums.IssueStatus.Sent;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Entity
@@ -52,7 +53,7 @@ public class Issues {
 
     private IssuePriority issuePriority;
 
-    private IssueStatus issueStatus;
+    private IssueStatus issueStatus = Sent;
 
     private String adminNotes = " ";
 
@@ -66,11 +67,13 @@ public class Issues {
 
     }
 
-    public Issues(User createdBy, Units unit, IssuePriority issuePriority, IssueStatus issueStatus, String issueBody) {
+    public Issues(User createdBy,
+                  Units unit,
+                  IssuePriority issuePriority,
+                  String issueBody) {
         this.createdBy = createdBy;
         this.unit = unit;
         this.issuePriority = issuePriority;
-        this.issueStatus = issueStatus;
         this.issueBody = issueBody;
     }
 
