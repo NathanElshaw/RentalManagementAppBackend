@@ -51,6 +51,10 @@ public class Issues {
     @OneToOne
     private Units unit;
 
+    private int unitNumber;
+
+    private String unitAddress;
+
     private IssuePriority issuePriority;
 
     private IssueStatus issueStatus = Sent;
@@ -69,12 +73,32 @@ public class Issues {
 
     public Issues(User createdBy,
                   Units unit,
+                  int unitNumber,
                   IssuePriority issuePriority,
-                  String issueBody) {
+                  String issueBody,
+                  String unitAddress) {
         this.createdBy = createdBy;
         this.unit = unit;
+        this.unitNumber = unitNumber;
         this.issuePriority = issuePriority;
         this.issueBody = issueBody;
+        this.unitAddress = unitAddress;
+    }
+
+    public Issues(User createdBy,
+                  int unitNumber,
+                  IssuePriority issuePriority,
+                  String issueBody,
+                  IssueStatus issueStatus,
+                  String adminNotes
+                  ) {
+        this.createdBy = createdBy;
+        this.unitNumber = unitNumber;
+        this.issuePriority = issuePriority;
+        this.issueStatus = issueStatus;
+        this.issueBody = issueBody;
+        this.adminNotes = adminNotes;
+
     }
 
     @AllArgsConstructor
