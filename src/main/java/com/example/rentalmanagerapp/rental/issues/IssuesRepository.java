@@ -12,5 +12,7 @@ public interface IssuesRepository  extends JpaRepository<Issues, Long> {
     @Query("select i from Issues i where i.createdBy = ?1 ")
     Optional<List<Issues>> checkForIssue (Long userId);
 
-
+    @Query("select i from Issues i " +
+            "where i.unitAddress = ?1 ")
+    Optional<List<Issues>> getRentalsIssuesByAddress(String rentalAddress);
 }
