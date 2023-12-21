@@ -1,6 +1,5 @@
 package com.example.rentalmanagerapp.rental.issues;
 
-import com.example.rentalmanagerapp.rental.units.Units;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +65,30 @@ public class IssuesServices {
         );
 
         return returnList;
+    }
+
+    public String updateStatus(Issues.updateStatus updateStatus){
+        repository
+                .findById(updateStatus.getId())
+                .orElseThrow(()->new IllegalStateException("Issue not found"));
+
+        repository.updateStatus(
+                updateStatus.getId(),
+                updateStatus.getIssueStatus());
+
+        return "Success";
+
+    }
+
+    public String deleteIssue(Long issueId){
+        Issues targetIssue = repository.findById(issueId)
+                .orElseThrow(
+                        ()-> new IllegalStateException("Issue not found")
+                );
+
+        repository.delete(targetIssue);
+
+        return "Successfully Deleted";
     }
 
 }
