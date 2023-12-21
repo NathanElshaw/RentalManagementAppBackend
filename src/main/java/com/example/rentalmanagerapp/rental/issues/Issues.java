@@ -111,4 +111,13 @@ public class Issues {
         private final IssuePriority priority;
     }
 
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    @Setter
+    @Getter
+    public static class updateStatus {
+        private final Long id;
+        private final IssueStatus issueStatus;
+    }
+
 }
