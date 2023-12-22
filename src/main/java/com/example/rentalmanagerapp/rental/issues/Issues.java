@@ -119,5 +119,13 @@ public class Issues {
         private final Long id;
         private final IssueStatus issueStatus;
     }
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    @Setter
+    @Getter
+    public static class updateSeenBy {
+        private final Long issueId;
+        private final User userId;
+    }
 
 }
