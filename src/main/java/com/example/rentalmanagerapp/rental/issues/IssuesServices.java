@@ -12,19 +12,25 @@ public class IssuesServices {
 
     private final IssuesRepository repository;
 
-    public List<Issues> checkForIssue(Long userId){
+    private IllegalStateException issueNotFound (){
+        return new IllegalStateException("Issue not found");
+    }
+
+    private IllegalStateException throwError(String errorInfo){
+        return new IllegalStateException(errorInfo);
+    }
+
+    public List<Issues> checkForIssues(Long userId){
         return repository.checkForIssue(userId)
                 .orElseThrow(
-                        ()->new IllegalStateException("No Issues Found"));
+                        this::issueNotFound);
     }
 
     public String createIssue(
             Issues.createRequest issuePayload){
-        if(checkForIssue(
+        if(checkForIssues(
                 issuePayload.getUser().getId()).size() > 5){
-            throw  new IllegalStateException(
-                    "You have too many request open"
-            );
+            throw throwError("You have too many request open");
         }
 
         Issues newIssue = new Issues(
@@ -46,7 +52,8 @@ public class IssuesServices {
 
         List<Issues> rentalsIssues = repository
                 .getRentalsIssuesByAddress(rentalAddress)
-                .orElseThrow(()-> new IllegalStateException("No Issues exist under than rental"));
+                .orElseThrow(()-> throwError(
+                        "No Issues exist under than rental"));
 
 
         rentalsIssues.forEach(
@@ -67,10 +74,16 @@ public class IssuesServices {
         return returnList;
     }
 
+    public String updateSeenBy(Issues.updateSeenBy updateSeenBy){
+        repository
+                .findById(updateSeenBy.getIssueId())
+                .orElseThrow(this::issueNotFound);
+    }
+
     public String updateStatus(Issues.updateStatus updateStatus){
         repository
                 .findById(updateStatus.getId())
-                .orElseThrow(()->new IllegalStateException("Issue not found"));
+                .orElseThrow(this::issueNotFound);
 
         repository.updateStatus(
                 updateStatus.getId(),
@@ -82,9 +95,7 @@ public class IssuesServices {
 
     public String deleteIssue(Long issueId){
         Issues targetIssue = repository.findById(issueId)
-                .orElseThrow(
-                        ()-> new IllegalStateException("Issue not found")
-                );
+                .orElseThrow(this::issueNotFound);
 
         repository.delete(targetIssue);
 
