@@ -37,6 +37,11 @@ public class IssuesController {
         return issuesServices.deleteIssue(issueId);
     }
 
+    @PatchMapping("/updateSeenBy")
+    public String updateSeenBy(@RequestBody Issues.updateSeenBy updateSeenBy){
+        return issuesServices.updateSeenBy(updateSeenBy);
+    }
+
     @PatchMapping("/updateStatus")
     public String updateStatus(@RequestBody Issues.updateStatus updateStatus){
         return issuesServices.updateStatus(updateStatus);
