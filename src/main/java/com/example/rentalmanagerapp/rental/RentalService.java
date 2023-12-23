@@ -17,6 +17,14 @@ public class RentalService {
 
     private final UserRepository userRepository;
 
+    private IllegalStateException rentalNotFound(){
+        return new IllegalStateException("No Rentals Exist");
+    }
+
+    private IllegalStateException error(String s){
+        return new IllegalStateException(s);
+    }
+
     public String createRental(
             RentalRequest rentalRequest
     ){
@@ -24,7 +32,7 @@ public class RentalService {
                 rentalRequest.getRentalAddress()).isPresent();
 
         if (addressExists) {
-            throw new IllegalStateException("Address already exists");
+            throw error("Address already exists");
         }
 
         Rental newRental = new Rental(
@@ -43,9 +51,7 @@ public class RentalService {
     public List<Rental> getAllRentals(){
         List<Rental> returnRentalList = new ArrayList<>();
         List<Rental> rentals = rentalRepository.getAllUnits()
-                .orElseThrow(
-                ()->new IllegalStateException("No Rentals Exist")
-                );
+                .orElseThrow(this::rentalNotFound);
 
          rentals.forEach(listRental -> {
             Rental returnRental = new Rental(
