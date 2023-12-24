@@ -64,11 +64,6 @@ public class Rental {
 
     private LocalDateTime updatedAt;
 
-
-    public Rental() {
-
-    }
-
     public Rental(String rentalAddress,
                   String description,
                   String type,
