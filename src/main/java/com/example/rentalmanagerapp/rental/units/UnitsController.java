@@ -46,6 +46,7 @@ public class UnitsController {
 
     @GetMapping("/getAllUnitDetailed")
     public List<Units.GetAllUnitsWithDetails> getAllUnitsWithDetails(){
+
         return unitsService.getAllUnitsWithDetails();
     }
 
