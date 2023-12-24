@@ -1,6 +1,7 @@
 package com.example.rentalmanagerapp.rental;
 
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,21 +37,15 @@ public class RentalController {
         return rentalService.getPropertyMangerRentals(userId);
     }
 
-    @PutMapping("/update")
-    public String updateRental(){
-        //Todo check priv, add service, validate
-        return "";
-    }
-
-    @PutMapping("/addRenter")
-    public String addRenter(){
-        //Todo Admin version of joinRental
-        return "";
+    @PatchMapping("/update")
+    public String updateRental(
+            @RequestBody Rental updatePayload){
+        return rentalService.updateRental(updatePayload);
     }
 
     @DeleteMapping("/delete")
-    public String deleteRental(){
-        //Todo check priv, add service, validate
-        return "";
+    public String deleteRental(
+            @RequestBody Long rentalId){
+        return rentalService.deleteRental(rentalId);
     }
 }
