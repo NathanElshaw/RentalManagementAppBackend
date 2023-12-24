@@ -78,6 +78,13 @@ public class IssuesServices {
         repository
                 .findById(updateSeenBy.getIssueId())
                 .orElseThrow(this::issueNotFound);
+
+        repository.updateSeenBy(
+                updateSeenBy.getIssueId(),
+                updateSeenBy.getUserId()
+        );
+
+        return "Success";
     }
 
     public String updateStatus(Issues.updateStatus updateStatus){
