@@ -18,7 +18,7 @@ import java.time.Month;
 @AllArgsConstructor
 public class PaymentService {
 
-    private final PaymentRepository paymentRepository;
+    private final PaymentRepository repository;
 
     private final UserRepository userRepository;
 
@@ -28,6 +28,14 @@ public class PaymentService {
 
     private final ChargesRepository chargesRepository;
 
+    private IllegalStateException paymentNotFound(){
+        return new IllegalStateException("Payment not found");
+    }
+
+    private IllegalStateException error(String s){
+        return new IllegalStateException(s);
+    }
+
     public String createPayment(
         Payment.UserPaymentRequest paymentPayload
     ){
@@ -35,18 +43,15 @@ public class PaymentService {
 
         User user = userRepository.findById(
                 paymentPayload.getUserId()).orElseThrow(
-                ()-> new IllegalStateException("User not found")
-        );
+                ()-> error("User not found"));
 
-        Units unit = unitsRepository.findByUser(
-                user).orElseThrow(
-                ()->new IllegalStateException("User has no unit")
-        );
+        Units unit = unitsRepository
+                .findByUser(user)
+                .orElseThrow(()->error("User has no unit"));
 
-        Rental rental = rentalRepository.findByRentalAddress(
-                unit.getUnitAddress()).orElseThrow(
-                ()-> new IllegalStateException("Rental doesn't exist")
-        );
+        Rental rental = rentalRepository
+                .findByRentalAddress(unit.getUnitAddress())
+                .orElseThrow(()->error("Rental doesn't exist"));
 
         //Todo: Validate Stripe payment here and check for dupes
 
@@ -76,10 +81,10 @@ public class PaymentService {
 
 
         if(paymentPayload.getChargeId() != null){
-            Charges targetCharge = chargesRepository.findByChargeId(
-                    paymentPayload.getChargeId()).orElseThrow(
-                    ()->new IllegalStateException("Charge not found")
-            );
+            Charges targetCharge = chargesRepository
+                    .findByChargeId(paymentPayload.getChargeId())
+                    .orElseThrow(
+                    ()->error("Charge not found"));
 
             double amountOwed = targetCharge.getAmountOwed() -
                     paymentPayload.getPaymentAmount();
@@ -104,7 +109,7 @@ public class PaymentService {
                 rental.getTotalRentIncome() +
                 paymentPayload.getPaymentAmount());
 
-        paymentRepository.save(newPayment);
+        repository.save(newPayment);
 
         return "Successfully paid";
     }
