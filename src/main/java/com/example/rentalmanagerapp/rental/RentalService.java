@@ -29,8 +29,10 @@ public class RentalService {
     public String createRental(
             RentalRequest rentalRequest
     ){
-        boolean addressExists = repository.findByRentalAddress(
-                rentalRequest.getRentalAddress()).isPresent();
+        boolean addressExists = repository
+                .findByRentalAddress(
+                rentalRequest.getRentalAddress())
+                .isPresent();
 
         if (addressExists) {
             throw error("Address already exists");
