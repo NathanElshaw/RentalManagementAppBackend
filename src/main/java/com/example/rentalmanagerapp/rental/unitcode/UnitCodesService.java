@@ -19,23 +19,28 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UnitCodesService {
 
-    private final UnitCodeRepository unitCodeRepository;
+    private final UnitCodeRepository repository;
 
     private final UnitsRepository unitsRepository;
 
     private final UserRepository userRepository;
+
+    private IllegalStateException codeNotFound(){
+        return new IllegalStateException("Code is invalid");
+    }
+
+    private IllegalStateException error(String s){
+        return new IllegalStateException(s);
+    }
 
     public String createUnitCode(
             UnitCodesRequest unitCodesPayload){
         Units parentUnit = unitsRepository.findByUnitAddressAndUnitNumber(
                 unitCodesPayload.getParentUnitNumber(),
                 unitCodesPayload.getParentUnitAddress()).orElseThrow(
-                        ()-> new IllegalStateException(
-                                "Parent unit not found"));
-
+                        ()-> error("Parent unit not found"));
         if(parentUnit.getUnitCode() != null){
-            throw new IllegalStateException(
-                    "Invalid address or unit number");
+            throw error("Invalid address or unit number");
         }
 
         UnitCodes newUnitCodePayload = new UnitCodes(
@@ -46,7 +51,7 @@ public class UnitCodesService {
                 ),
                 parentUnit);
 
-        unitCodeRepository.save(newUnitCodePayload);
+        repository.save(newUnitCodePayload);
 
         unitsRepository.addUnitCodeToRental(
                 newUnitCodePayload,
@@ -59,22 +64,21 @@ public class UnitCodesService {
 
     public String joinUnit(
             JoinUnitRequest joinUnitPayload){
-        UnitCodes targetUnitCode = unitCodeRepository.findByUnitCode(
-                joinUnitPayload.getUnitCode()).orElseThrow(
-                ()->new IllegalStateException(
-                        "Code is invalid"));
+        UnitCodes targetUnitCode = repository.findByUnitCode(
+                joinUnitPayload.getUnitCode())
+                .orElseThrow(this::codeNotFound);
 
-        Units targetUnit = unitsRepository.findById(
-                targetUnitCode.getId()).orElseThrow(
-                ()-> new IllegalStateException(
-                        "Unit is invalid"));
+        Units targetUnit = unitsRepository
+                .findById(targetUnitCode.getId())
+                .orElseThrow(
+                ()->error( "Unit is invalid"));
 
-        User targetUser = userRepository.findById(
-                joinUnitPayload.getUserId()).orElseThrow(
-                ()->new IllegalStateException(
-                        "User not found"));
+        User targetUser = userRepository
+                .findById(joinUnitPayload.getUserId())
+                .orElseThrow(
+                ()->error("User not found"));
 
-        unitCodeRepository.updateConfirmedAt(
+        repository.updateConfirmedAt(
                 joinUnitPayload.getUnitCode(), LocalDateTime.now());
 
         userRepository.addUnitToUser(
@@ -93,10 +97,9 @@ public class UnitCodesService {
 
     public String updateCode(
             UpdateCodeRequest updateCodePayload){
-        UnitCodes targetUnitCode = unitCodeRepository.findById(
-                updateCodePayload.getUnitCodeId()).orElseThrow(
-                ()->new IllegalStateException(
-                        "Code not found"));
+        UnitCodes targetUnitCode = repository
+                .findById(updateCodePayload.getUnitCodeId())
+                .orElseThrow(this::codeNotFound);
 
         targetUnitCode.setUnitCode(
                 UUID.randomUUID().toString());
@@ -108,24 +111,24 @@ public class UnitCodesService {
                 LocalDateTime.now().plusHours(
                         updateCodePayload.getValidLength()));
 
-        unitCodeRepository.save(targetUnitCode);
+        repository.save(targetUnitCode);
 
         return "Successfully Reissued";
     }
 
     public String deleteUnitCode(Long unitCodeId){
-        UnitCodes targetUnitCode = unitCodeRepository.findById(unitCodeId)
+        UnitCodes targetUnitCode = repository
+                .findById(unitCodeId)
                 .orElseThrow(
-                ()->new IllformedLocaleException(
-                        "Unit code doesnt exist"));
+                ()->error("Unit code not found"));
 
-        unitCodeRepository.delete(targetUnitCode);
+        repository.delete(targetUnitCode);
         return "Successfully removed unit code";
     }
 
     public Optional<UnitCodes> findByCode(
             String code){
-        return unitCodeRepository.findByUnitCode(code);
+        return repository.findByUnitCode(code);
     }
 
 }
