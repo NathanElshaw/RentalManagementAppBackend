@@ -110,6 +110,13 @@ public class User {
         this.password = password;
     }
 
+    public User(
+            String firstName,
+            String email) {
+        this.firstName = firstName;
+        this.email = email;
+    }
+
     @Setter
     @Getter
     @ToString

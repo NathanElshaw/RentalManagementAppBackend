@@ -13,13 +13,13 @@ import java.util.Optional;
 
 @Repository
 public interface IssuesRepository  extends JpaRepository<Issues, Long> {
-    @Query("select i from Issues i where i.createdBy = ?1 ")
+    @Query("select i from Issues i " +
+            "where i.createdBy = ?1 ")
     Optional<List<Issues>> checkForIssue (Long userId);
 
     @Query("select i from Issues i " +
             "where i.unitAddress = ?1 ")
     Optional<List<Issues>> getRentalsIssuesByAddress(String rentalAddress);
-
 
     @Transactional
     @Modifying
@@ -34,4 +34,5 @@ public interface IssuesRepository  extends JpaRepository<Issues, Long> {
             "set i.seenBy = ?2 " +
             "where i.id = ?1 ")
     void updateSeenBy(Long id, User user);
+
 }

@@ -12,11 +12,11 @@ public class IssuesServices {
 
     private final IssuesRepository repository;
 
-    private IllegalStateException issueNotFound (){
+    private RuntimeException issueNotFound (){
         return new IllegalStateException("Issue not found");
     }
 
-    private IllegalStateException throwError(String errorInfo){
+    private  RuntimeException throwError(String errorInfo){
         return new IllegalStateException(errorInfo);
     }
 
@@ -52,8 +52,7 @@ public class IssuesServices {
 
         List<Issues> rentalsIssues = repository
                 .getRentalsIssuesByAddress(rentalAddress)
-                .orElseThrow(()-> throwError(
-                        "No Issues exist under than rental"));
+                .orElseThrow(()-> throwError("No Issues exist under than rental"));
 
 
         rentalsIssues.forEach(
@@ -101,7 +100,8 @@ public class IssuesServices {
     }
 
     public String deleteIssue(Long issueId){
-        Issues targetIssue = repository.findById(issueId)
+        Issues targetIssue = repository
+                .findById(issueId)
                 .orElseThrow(this::issueNotFound);
 
         repository.delete(targetIssue);
