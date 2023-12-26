@@ -16,14 +16,24 @@ import java.util.Optional;
 @Repository
 public interface UnitsRepository extends JpaRepository<Units, Long> {
 
-    @Query("select u from Units u where u.renter = ?1")
+    @Query("select u from Units u " +
+            "where u.renter = ?1")
     Optional<Units> getUnitByUserId(User userid);
 
-    @Query("select u.unitCode from Units u where u.unitAddress = ?1 and u.unitNumber = ?2 ")
+    @Query("select u.unitCode " +
+            "from Units u " +
+            "where u.unitAddress = ?1 " +
+            "and u.unitNumber = ?2 ")
     Optional<UnitCodes> getUnitCodeParent(String unitAddress, int unitNumber);
 
-    @Query("select u from Units u where u.renter = ?1 ")
+    @Query("select u from Units u " +
+            "where u.renter = ?1 ")
     Optional<Units> findByUser(User user);
+
+
+    @Query("select  u from Units u " +
+            "where u.parentUnitId = ?1")
+    Optional<List<Units>> getUnitsByParentId(Long parentId);
 
     @Transactional
     @Modifying
