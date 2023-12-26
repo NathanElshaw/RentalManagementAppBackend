@@ -37,6 +37,13 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
 
     @Transactional
     @Modifying
+    @Query("update Rental r " +
+            "set r = ?2 " +
+            "where r.id = ?1 ")
+    void updateRental (Long id, Rental updatedRental);
+
+    @Transactional
+    @Modifying
     @Query("update  Rental  r " +
             "set r.assignedManager = ?2 " +
             "where r.id = ?1")

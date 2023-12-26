@@ -60,31 +60,11 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
     @Transactional
     @Modifying
     @Query("update Units u " +
-            "set u.unitAddress = ?2, " +
-            "u.beds = ?3, " +
-            "u.baths = ?4, " +
-            "u.unitNumber = ?5, " +
-            "u.hasPets = ?6, " +
-            "u.rentAmount = ?7, " +
-            "u.rentDue = ?8, " +
-            "u.rentPaid = ?9, " +
-            "u.leaseStart = ?10, " +
-            "u.rentDueDate = ?11, " +
-            "u.leaseEnd = ?12 " +
+            "set u = ?2 " +
             "where u.id = ?1 ")
     void updateUnit(
             Long id,
-            String address,
-            int beds,
-            double baths,
-            int unitNumber,
-            boolean hasPets,
-            double rentAmount,
-            double rentDue,
-            double rentPaid,
-            LocalDate leaseStart,
-            LocalDate rentDueDate,
-            LocalDate leaseEnd
+            Units updatedUnit
     );
 
     @Transactional

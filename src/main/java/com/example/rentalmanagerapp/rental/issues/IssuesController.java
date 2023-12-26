@@ -14,6 +14,7 @@ package com.example.rentalmanagerapp.rental.issues;
 * getIssues for manager of rental
 */
 
+import com.example.rentalmanagerapp.rental.issues.enums.IssueStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,21 @@ public class IssuesController {
     @PostMapping("/create")
     public String createIssue(@RequestBody Issues.createRequest issuesPayload){
         return issuesServices.createIssue(issuesPayload);
+    }
+
+    @DeleteMapping("/delete")
+    public String deleteIssue(@RequestBody Long issueId){
+        return issuesServices.deleteIssue(issueId);
+    }
+
+    @PatchMapping("/updateSeenBy")
+    public String updateSeenBy(@RequestBody Issues.updateSeenBy updateSeenBy){
+        return issuesServices.updateSeenBy(updateSeenBy);
+    }
+
+    @PatchMapping("/updateStatus")
+    public String updateStatus(@RequestBody Issues.updateStatus updateStatus){
+        return issuesServices.updateStatus(updateStatus);
     }
 
     @GetMapping("/manger/getRentalIssues")

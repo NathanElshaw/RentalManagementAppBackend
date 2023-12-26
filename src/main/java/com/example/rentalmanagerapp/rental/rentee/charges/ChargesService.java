@@ -7,19 +7,34 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class ChargesService {
 
-    private final ChargesRepository chargesRepository;
+    private final ChargesRepository repository;
+
+    private IllegalStateException chargeNotFound(){
+        return new IllegalStateException("Charge not found");
+    }
 
     public String createCharge(
-            Charges.createChargeRequest chargePayload){
+            Charges.createChargeRequest chargeRequest){
         return "";
     }
 
-    public String deleteCharge (Long chargeId){
-        Charges targetCharge = chargesRepository.findById(chargeId)
-                .orElseThrow(
-                        ()->new IllegalStateException("Charge not found"));
+    public String updateCharge(
+            Charges chargeRequest
+    ){
+        repository
+                .findByChargeId(chargeRequest.getChargeId())
+                .orElseThrow(this::chargeNotFound);
 
-        chargesRepository.delete(targetCharge);
+
+        return"";
+    }
+
+    public String deleteCharge (Long chargeId){
+        Charges targetCharge = repository
+                .findById(chargeId)
+                .orElseThrow(this::chargeNotFound);
+
+        repository.delete(targetCharge);
 
         return "Successfully removed";
     }
