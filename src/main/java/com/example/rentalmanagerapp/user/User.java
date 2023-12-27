@@ -112,9 +112,11 @@ public class User {
 
     public User(
             String firstName,
-            String email) {
+            String email,
+            String username) {
         this.firstName = firstName;
         this.email = email;
+        this.username = username;
     }
 
     @Setter
