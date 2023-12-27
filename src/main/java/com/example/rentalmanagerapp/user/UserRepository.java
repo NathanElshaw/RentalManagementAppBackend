@@ -1,7 +1,6 @@
 package com.example.rentalmanagerapp.user;
 
 import com.example.rentalmanagerapp.rental.units.Units;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,13 +13,15 @@ import java.util.Optional;
 public interface UserRepository
         extends JpaRepository<User, Long> {
 
+    @Query("select u " +
+            "from User u " +
+            "where u.email = ?1 ")
     Optional<User> findByEmail(String email);
-    Optional<User> findByUsername(String username);
 
     @Query("select u " +
             "from User u " +
             "where u.username = ?1 ")
-    Optional<User> findByUsernameLogin(String username);
+    Optional<User> findByUsername(String username);
 
     @Transactional
     @Modifying
