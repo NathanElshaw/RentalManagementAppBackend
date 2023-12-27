@@ -59,7 +59,7 @@ public class UserService {
 
     public String userLogin(
             User.UserLoginRequest userLoginPayload){
-        User targetUser = userRepository.findByUsernameLogin(
+        User targetUser = userRepository.findByUsername(
                 userLoginPayload.getUsername()).orElseThrow(
                 ()->new IllegalStateException("Invalid username or password")
         );
