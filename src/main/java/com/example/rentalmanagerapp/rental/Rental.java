@@ -64,12 +64,22 @@ public class Rental {
 
     private LocalDateTime updatedAt;
 
+    public Rental(){
+
+    }
+
     public Rental(String rentalAddress,
                   String description,
                   String type,
                   LocalDate dateAvailable) {
         this.rentalAddress = rentalAddress;
         this.description = description;
+        this.type = type;
+    }
+
+    public Rental(String rentalAddress,
+                  String type){
+        this.rentalAddress = rentalAddress;
         this.type = type;
     }
 
