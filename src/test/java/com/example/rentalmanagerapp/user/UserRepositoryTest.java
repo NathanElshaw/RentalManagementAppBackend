@@ -113,10 +113,10 @@ public class UserRepositoryTest {
         underTest.addUnitToUser(dbUser, testUnits);
 
         User testUser = underTest
-                .findById(1L)
+                .findByEmail(email)
                 .orElseThrow(()->new IllegalStateException(""));
 
-        System.out.println(testUser.getUsersUnit());
+        System.out.println(testUser);
         assertThat(testUser).isNotNull();
         assertThat(parentRental).isNotNull();
         assertThat(testUnits).isNotNull();
