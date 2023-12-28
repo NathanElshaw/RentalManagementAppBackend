@@ -1,5 +1,7 @@
 package com.example.rentalmanagerapp.rental.issues;
 
+import com.example.rentalmanagerapp.user.User;
+import com.example.rentalmanagerapp.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,16 +14,25 @@ public class IssuesServices {
 
     private final IssuesRepository repository;
 
+    private final UserRepository userRepository;
+
     private RuntimeException issueNotFound (){
         return new IllegalStateException("Issue not found");
     }
 
-    private  RuntimeException throwError(String errorInfo){
+    private  RuntimeException throwError(
+            String errorInfo){
         return new IllegalStateException(errorInfo);
     }
 
+
     public List<Issues> checkForIssues(Long userId){
-        return repository.checkForIssue(userId)
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(()->throwError("User not found"));
+
+
+        return repository.checkForIssue(user)
                 .orElseThrow(
                         this::issueNotFound);
     }
