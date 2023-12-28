@@ -28,14 +28,14 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Setter
 public class Issues {
     @SequenceGenerator(
-            name = "rentalSequence",
-            sequenceName = "rentalSequence",
+            name = "issuesSequence",
+            sequenceName = "issuesSequence",
             allocationSize = 1
     )
 
     @GeneratedValue(
             strategy = SEQUENCE,
-            generator = "rentalSequence"
+            generator = "issuesSequence"
     )
 
 
@@ -67,7 +67,7 @@ public class Issues {
 
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    public Issues(){
+    public Issues() {
 
     }
 
