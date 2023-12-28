@@ -69,7 +69,7 @@ public class UnitCodesService {
                 .orElseThrow(this::codeNotFound);
 
         Units targetUnit = unitsRepository
-                .findById(targetUnitCode.getId())
+                .findById(targetUnitCode.getParentRental().getId())
                 .orElseThrow(
                 ()->error( "Unit is invalid"));
 
