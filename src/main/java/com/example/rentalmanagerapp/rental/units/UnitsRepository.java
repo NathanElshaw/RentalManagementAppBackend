@@ -27,6 +27,11 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
     Optional<UnitCodes> getUnitCodeParent(String unitAddress, int unitNumber);
 
     @Query("select u from Units u " +
+            "where u.unitAddress = ?1 " +
+            "and u.unitNumber = ?2")
+    Optional<Units> findByAddressAndUnitNumber (String address, int unitNumber);
+
+    @Query("select u from Units u " +
             "where u.renter = ?1 ")
     Optional<Units> findByUser(User user);
 
