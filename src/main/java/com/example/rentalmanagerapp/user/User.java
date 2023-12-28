@@ -84,7 +84,7 @@ public class User {
     private String rentalAddress = null;
 
     @OneToOne
-    private Units usersUnit = null;
+    private Units usersUnit;
 
     public User() {
 
