@@ -2,6 +2,7 @@ package com.example.rentalmanagerapp.rental.issues;
 
 import com.example.rentalmanagerapp.rental.Rental;
 import com.example.rentalmanagerapp.rental.RentalRepository;
+import com.example.rentalmanagerapp.rental.issues.enums.IssueStatus;
 import com.example.rentalmanagerapp.rental.units.Units;
 import com.example.rentalmanagerapp.rental.units.UnitsRepository;
 import com.example.rentalmanagerapp.user.User;
@@ -106,11 +107,84 @@ class IssuesRepositoryTest {
 
     @Test
     void getRentalsIssuesByAddress() {
+
         spinUp();
+
+        User testUser = userRepository
+                .findByEmail(email)
+                .orElseThrow(()-> new IllegalStateException(""));
+
+        Units testUnit = unitsRepository
+                .findByAddressAndUnitNumber(
+                        address,
+                        unitNumber
+                ).orElseThrow(()-> new IllegalStateException(""));
+
+        Issues issues = new Issues(
+                testUser,
+                testUnit,
+                testUnit.getUnitNumber(),
+                Low,
+                "Issue Body test",
+                address
+        );
+
+        underTest.save(issues);
+
+        List<Issues> testIssues = underTest
+                .getRentalsIssuesByAddress(address)
+                .orElseThrow(()->new IllegalStateException(""));
+
+        assertThat(testIssues).isNotNull();
+        assertThat(testIssues.size()).isEqualTo(1);
+        assertThat(testIssues.get(0).getId()).isEqualTo(1L);
+        assertThat(testIssues.get(0).getIssueBody()).isEqualTo("Issue Body test");
+
     }
 
     @Test
-    void updateStatus() {
+    void updateStatus() throws InterruptedException {
+
+        spinUp();
+
+        User testUser = userRepository
+                .findByEmail(email)
+                .orElseThrow(()-> new IllegalStateException(""));
+
+        Units testUnit = unitsRepository
+                .findByAddressAndUnitNumber(
+                        address,
+                        unitNumber
+                ).orElseThrow(()-> new IllegalStateException(""));
+
+        Issues issues = new Issues(
+                testUser,
+                testUnit,
+                testUnit.getUnitNumber(),
+                Low,
+                "Issue Body test",
+                address
+        );
+
+        underTest.save(issues);
+
+        Issues targetIssue = underTest
+                .findById(1L)
+                        .orElseThrow(()->new IllegalStateException(""));
+
+        assertThat(targetIssue).isNotNull();
+
+        underTest.updateStatus(targetIssue.getId(), IssueStatus.Seen);
+
+        Thread.sleep(15);
+
+        Issues testIssue = underTest
+                .findById(1L)
+                .orElseThrow(()->new IllegalStateException(""));
+
+        assertThat(testIssue).isNotNull();
+        assertThat(testIssue.getIssueStatus()).isEqualTo(IssueStatus.Seen);
+
     }
 
     @Test
