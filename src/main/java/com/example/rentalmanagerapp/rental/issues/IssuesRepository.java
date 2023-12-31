@@ -24,16 +24,9 @@ public interface IssuesRepository  extends JpaRepository<Issues, Long> {
 
     @Transactional
     @Modifying
-    @Query("update Issues i " +
-            "set i.issueStatus = ?2 " +
-            "where i.id = ?1 ")
-    void updateStatus(Long issueId, IssueStatus newStatus);
-
-    @Transactional
-    @Modifying
     @Query(" update Issues i " +
-            "set i.seenBy = ?2 " +
+            "set i = ?2 " +
             "where i.id = ?1 ")
-    void updateSeenBy(Long id, User user);
+    void update(Long id, Issues issue);
 
 }
