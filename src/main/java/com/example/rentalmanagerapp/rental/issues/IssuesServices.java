@@ -16,21 +16,29 @@ public class IssuesServices {
 
     private final UserRepository userRepository;
 
+    private Boolean validateUser(String email){
+       return userRepository.findByEmail(email).isPresent();
+    }
+
     private RuntimeException issueNotFound (){
         return new IllegalStateException("Issue not found");
     }
 
-    private  RuntimeException throwError(
+    private  RuntimeException newError(
             String errorInfo){
         return new IllegalStateException(errorInfo);
     }
 
+    public List<Issues> getAllIssues(){
+        return repository.findAll();
+    }
 
-    public List<Issues> checkForIssues(Long userId){
-        User user = userRepository
-                .findById(userId)
-                .orElseThrow(()->throwError("User not found"));
 
+    public List<Issues> checkForIssues(User user){
+
+        if(!validateUser(user.getEmail())){
+            throw newError("User not found");
+        }
 
         return repository.checkForIssue(user)
                 .orElseThrow(
@@ -38,22 +46,9 @@ public class IssuesServices {
     }
 
     public String createIssue(
-            Issues.createRequest issuePayload){
-        if(checkForIssues(
-                issuePayload.getUser().getId()).size() > 5){
-            throw throwError("You have too many request open");
-        }
+            Issues issue){
 
-        Issues newIssue = new Issues(
-                issuePayload.getUser(),
-                issuePayload.getUser().getUsersUnit(),
-                issuePayload.getUser().getUsersUnit().getUnitNumber(),
-                issuePayload.getPriority(),
-                issuePayload.getIssueBody(),
-                issuePayload.getUser().getRentalAddress()
-        );
-
-        repository.save(newIssue);
+        repository.save(issue);
 
         return "";
     }
@@ -63,7 +58,7 @@ public class IssuesServices {
 
         List<Issues> rentalsIssues = repository
                 .getRentalsIssuesByAddress(rentalAddress)
-                .orElseThrow(()-> throwError("No Issues exist under than rental"));
+                .orElseThrow(()-> newError("No Issues exist under than rental"));
 
 
         rentalsIssues.forEach(

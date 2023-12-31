@@ -43,13 +43,13 @@ public class Issues {
     private Long id;
 
     @OneToOne
-    private User createdBy;
+    private User createdBy = null;
 
     @OneToOne
     private User seenBy = null;
 
     @OneToOne
-    private Units unit;
+    private Units unit = null;
 
     private int unitNumber;
 
@@ -69,6 +69,14 @@ public class Issues {
 
     public Issues() {
 
+    }
+
+    public Issues(String issueBody,
+                  IssuePriority issuePriority,
+                  int unitNumber){
+        this.issueBody = issueBody;
+        this.issuePriority = issuePriority;
+        this.unitNumber = unitNumber;
     }
 
     public Issues(User createdBy,

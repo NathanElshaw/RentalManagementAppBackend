@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface IssuesRepository  extends JpaRepository<Issues, Long> {
+
     @Query("select i from Issues i " +
             "where i.createdBy = ?1 ")
     Optional<List<Issues>> checkForIssue (User userId);

@@ -29,7 +29,9 @@ public class IssuesController {
 
     @PostMapping("/create")
     public String createIssue(@RequestBody Issues.createRequest issuesPayload){
-        return issuesServices.createIssue(issuesPayload);
+        //create Issue here
+        Issues issue = new Issues();
+        return issuesServices.createIssue(issue);
     }
 
     @DeleteMapping("/delete")
