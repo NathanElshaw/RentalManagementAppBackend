@@ -34,7 +34,7 @@ public class IssuesServices {
     }
 
 
-    public List<Issues> checkForIssues(User user){
+    public int checkForIssues(User user){
 
         if(!validateUser(user.getEmail())){
             throw newError("User not found");
@@ -42,7 +42,7 @@ public class IssuesServices {
 
         return repository.checkForIssue(user)
                 .orElseThrow(
-                        this::issueNotFound);
+                        this::issueNotFound).size();
     }
 
     public String createIssue(
@@ -50,7 +50,7 @@ public class IssuesServices {
 
         repository.save(issue);
 
-        return "";
+        return "Success";
     }
 
     public List<Issues> getRentalIssues(String rentalAddress){
@@ -79,38 +79,30 @@ public class IssuesServices {
         return returnList;
     }
 
-    public String updateSeenBy(Issues.updateSeenBy updateSeenBy){
-        repository
-                .findById(updateSeenBy.getIssueId())
-                .orElseThrow(this::issueNotFound);
+    public String updateIssue(Issues issue){
+        boolean doesExist = repository
+                .findById(issue.getId())
+                .isPresent();
 
-        repository.updateSeenBy(
-                updateSeenBy.getIssueId(),
-                updateSeenBy.getUserId()
-        );
+        if(!doesExist){
+            throw issueNotFound();
+        }
 
-        return "Success";
+        repository.update(issue.getId(), issue);
+
+        return "Update Success";
     }
 
-    public String updateStatus(Issues.updateStatus updateStatus){
-        repository
-                .findById(updateStatus.getId())
-                .orElseThrow(this::issueNotFound);
+    public String deleteIssue(Issues issue){
+        boolean doesExist = repository
+                .findById(issue.getId())
+                .isPresent();
 
-        repository.updateStatus(
-                updateStatus.getId(),
-                updateStatus.getIssueStatus());
+        if(!doesExist){
+            throw issueNotFound();
+        }
 
-        return "Success";
-
-    }
-
-    public String deleteIssue(Long issueId){
-        Issues targetIssue = repository
-                .findById(issueId)
-                .orElseThrow(this::issueNotFound);
-
-        repository.delete(targetIssue);
+        repository.delete(issue);
 
         return "Successfully Deleted";
     }
