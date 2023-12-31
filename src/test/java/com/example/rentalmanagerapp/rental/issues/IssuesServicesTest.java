@@ -87,6 +87,7 @@ class IssuesServicesTest {
         ArgumentCaptor<Issues> issuesArgumentCaptor = ArgumentCaptor.forClass(Issues.class);
 
 
+
     }
 
     @Test
@@ -104,4 +105,18 @@ class IssuesServicesTest {
     @Test
     void deleteIssue() {
     }
+
+    public boolean makeEqual(String[] words) {
+        int amount = 0;
+        for (String word : words) {
+            amount = amount + word.length();
+            System.out.println(amount);
+        }
+        if(amount == words.length) {
+            return false;
+        }else {
+            return amount % words.length == 0;
+        }
+    }
+}
 }

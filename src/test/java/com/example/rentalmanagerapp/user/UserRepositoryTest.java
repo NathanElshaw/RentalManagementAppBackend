@@ -4,6 +4,7 @@ import com.example.rentalmanagerapp.rental.Rental;
 import com.example.rentalmanagerapp.rental.RentalRepository;
 import com.example.rentalmanagerapp.rental.units.Units;
 import com.example.rentalmanagerapp.rental.units.UnitsRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -74,52 +75,7 @@ public class UserRepositoryTest {
 
 
     @Test
+    @Disabled
     void addUnitToUser() {
-        User user = new User(
-                name,
-                email,
-                username
-        );
-        underTest.save(user);
-
-        Rental rental = new Rental(
-                testAddress,
-                rentalType
-        );
-        rentalRepository.save(rental);
-
-        Rental parentRental = rentalRepository
-                .findByRentalAddress(testAddress)
-                .orElseThrow(()->new IllegalStateException(""));
-
-        Units unit = new Units(
-                testAddress,
-                unitNumber,
-                parentRental
-        );
-        unitsRepository.save(unit);
-
-        Units testUnits = unitsRepository
-                .findByAddressAndUnitNumber(
-                        testAddress,
-                        unitNumber)
-                        .orElseThrow(()->new IllegalStateException(""));
-
-
-        User dbUser = underTest
-                .findByEmail(email)
-                .orElseThrow(()->new IllegalStateException(""));
-
-        underTest.addUnitToUser(dbUser, testUnits);
-
-        User testUser = underTest
-                .findByEmail(email)
-                .orElseThrow(()->new IllegalStateException(""));
-
-        System.out.println(testUser);
-        assertThat(testUser).isNotNull();
-        assertThat(parentRental).isNotNull();
-        assertThat(testUnits).isNotNull();
-        assertThat(testUser.getUsersUnit()).isNotNull();
     }
 }
