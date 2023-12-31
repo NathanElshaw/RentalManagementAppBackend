@@ -14,7 +14,6 @@ package com.example.rentalmanagerapp.rental.issues;
 * getIssues for manager of rental
 */
 
-import com.example.rentalmanagerapp.rental.issues.enums.IssueStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,29 +28,33 @@ public class IssuesController {
 
     @PostMapping("/create")
     public String createIssue(@RequestBody Issues.createRequest issuesPayload){
+        int issueAmount = issuesServices.checkForIssues(issuesPayload.getUser());
+        if(issueAmount > 5){
+            throw new IllegalStateException("Too many issues active");
+        }
         //create Issue here
         Issues issue = new Issues();
         return issuesServices.createIssue(issue);
     }
 
     @DeleteMapping("/delete")
-    public String deleteIssue(@RequestBody Long issueId){
-        return issuesServices.deleteIssue(issueId);
+    public String deleteIssue(@RequestBody Issues issue){
+        return issuesServices.deleteIssue(issue);
     }
 
-    @PatchMapping("/updateSeenBy")
-    public String updateSeenBy(@RequestBody Issues.updateSeenBy updateSeenBy){
-        return issuesServices.updateSeenBy(updateSeenBy);
-    }
-
-    @PatchMapping("/updateStatus")
-    public String updateStatus(@RequestBody Issues.updateStatus updateStatus){
-        return issuesServices.updateStatus(updateStatus);
+    @PatchMapping("/update")
+    public String updateStatus(@RequestBody Issues issues){
+        return issuesServices.updateIssue(issues);
     }
 
     @GetMapping("/manger/getRentalIssues")
     public List<Issues> getRentalIssuesAsManager(String rentalAddress){
         return issuesServices.getRentalIssues(rentalAddress);
+    }
+
+    @GetMapping("/getAll")
+    public List<Issues> getAllIssues(){
+        return issuesServices.getAllIssues();
     }
 
 }
