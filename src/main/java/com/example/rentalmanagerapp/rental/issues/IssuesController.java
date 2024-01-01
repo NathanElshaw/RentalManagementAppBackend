@@ -15,6 +15,8 @@ package com.example.rentalmanagerapp.rental.issues;
 */
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,14 +29,15 @@ public class IssuesController {
     private final IssuesServices issuesServices;
 
     @PostMapping("/create")
-    public String createIssue(@RequestBody Issues.createRequest issuesPayload){
+    public ResponseEntity<?> createIssue(@RequestBody Issues.createRequest issuesPayload){
         int issueAmount = issuesServices.checkForIssues(issuesPayload.getUser());
         if(issueAmount > 5){
             throw new IllegalStateException("Too many issues active");
         }
         //create Issue here
         Issues issue = new Issues();
-        return issuesServices.createIssue(issue);
+         issuesServices.createIssue(issue);
+         return new ResponseEntity<String>(HttpStatusCode.valueOf(200));
     }
 
     @DeleteMapping("/delete")
