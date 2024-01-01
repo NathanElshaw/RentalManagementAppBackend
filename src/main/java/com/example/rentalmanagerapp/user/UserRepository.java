@@ -18,6 +18,12 @@ public interface UserRepository
             "where u.email = ?1 ")
     Optional<User> findByEmail(String email);
 
+    @Query("select case when count(u) > 0 then " +
+            "true else false end " +
+            "from User u " +
+            "where u.email = ?1 ")
+    boolean selectIfEmailExists(String email);
+
     @Query("select u " +
             "from User u " +
             "where u.username = ?1 ")
