@@ -93,8 +93,7 @@ class IssuesRepositoryTest {
         underTest.save(issues);
 
         List<Issues> testIssue = underTest
-                .checkForIssue(testUser)
-                .orElseThrow(()-> new IllegalStateException(""));
+                .checkForIssue(testUser);
 
         assertThat(testUser).isNotNull();
         assertThat(testUser.getId()).isEqualTo(1L);
@@ -131,8 +130,7 @@ class IssuesRepositoryTest {
         underTest.save(issues);
 
         List<Issues> testIssues = underTest
-                .getRentalsIssuesByAddress(address)
-                .orElseThrow(()->new IllegalStateException(""));
+                .getRentalsIssuesByAddress(address);
 
         assertThat(testIssues).isNotNull();
         assertThat(testIssues.size()).isEqualTo(1);
