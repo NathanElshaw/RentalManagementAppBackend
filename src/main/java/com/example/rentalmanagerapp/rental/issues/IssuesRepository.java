@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,12 +16,20 @@ import java.util.Optional;
 public interface IssuesRepository  extends JpaRepository<Issues, Long> {
 
     @Query("select i from Issues i " +
+            "where i.id = ?1 ")
+    Optional<Issues> getIssuesById(Issues issue);
+
+    @Query("select i from Issues i " +
             "where i.createdBy = ?1 ")
-    Optional<List<Issues>> checkForIssue (User userId);
+    List<Issues> checkForIssue (User userId);
+
+    @Query("select count(i) from Issues i " +
+            "where i.createdBy = ?1")
+    int getIssueAmount(User user);
 
     @Query("select i from Issues i " +
             "where i.unitAddress = ?1 ")
-    Optional<List<Issues>> getRentalsIssuesByAddress(String rentalAddress);
+    List<Issues> getRentalsIssuesByAddress(String rentalAddress);
 
     @Transactional
     @Modifying
