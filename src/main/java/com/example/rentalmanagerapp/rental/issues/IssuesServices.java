@@ -1,5 +1,6 @@
 package com.example.rentalmanagerapp.rental.issues;
 
+import com.example.rentalmanagerapp.exceptions.BadRequestException;
 import com.example.rentalmanagerapp.user.User;
 import com.example.rentalmanagerapp.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -16,10 +17,6 @@ public class IssuesServices {
 
     private final UserRepository userRepository;
 
-    private Boolean validateUser(String email){
-       return userRepository.findByEmail(email).isPresent();
-    }
-
     private RuntimeException issueNotFound (){
         return new IllegalStateException("Issue not found");
     }
@@ -35,30 +32,22 @@ public class IssuesServices {
 
 
     public int checkForIssues(User user){
-
-        if(!validateUser(user.getEmail())){
-            throw newError("User not found");
-        }
-
-        return repository.checkForIssue(user)
-                .orElseThrow(
-                        this::issueNotFound).size();
+        return repository.getIssueAmount(user);
     }
 
-    public String createIssue(
-            Issues issue){
-
+    public void createIssue(Issues issue){
         repository.save(issue);
-
-        return "Success";
     }
 
     public List<Issues> getRentalIssues(String rentalAddress){
         List<Issues> returnList = new ArrayList<>();
 
         List<Issues> rentalsIssues = repository
-                .getRentalsIssuesByAddress(rentalAddress)
-                .orElseThrow(()-> newError("No Issues exist under than rental"));
+                .getRentalsIssuesByAddress(rentalAddress);
+
+        if(rentalsIssues.isEmpty()){
+            throw new BadRequestException("No issues found");
+        }
 
 
         rentalsIssues.forEach(
@@ -95,7 +84,7 @@ public class IssuesServices {
 
     public String deleteIssue(Issues issue){
         boolean doesExist = repository
-                .findById(issue.getId())
+                .getIssuesById(issue)
                 .isPresent();
 
         if(!doesExist){
