@@ -1,6 +1,7 @@
 package com.example.rentalmanagerapp.rental.issues;
 
 
+import com.example.rentalmanagerapp.exceptions.BadRequestException;
 import com.example.rentalmanagerapp.user.User;
 import com.example.rentalmanagerapp.user.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -13,11 +14,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.example.rentalmanagerapp.globals.GlobalVars.*;
 import static com.example.rentalmanagerapp.rental.issues.enums.IssuePriority.Low;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -37,7 +38,7 @@ class IssuesServicesTest {
     @BeforeEach
     void setup(){
         autoCloseable = MockitoAnnotations.openMocks(this);
-        underTest = new IssuesServices(issuesRepository, userRepository);
+        underTest = new IssuesServices(issuesRepository);
 
     }
 
@@ -97,7 +98,7 @@ class IssuesServicesTest {
     }
 
     @Test
-    void getRentalIssues() {
+    void canGetRentalIssues() {
 
         List<Issues> fillerList = new ArrayList<>();
 
@@ -132,12 +133,73 @@ class IssuesServicesTest {
     }
 
     @Test
+    void getRentalIssueWillThrow(){
+
+        given(issuesRepository
+                .getRentalsIssuesByAddress(address))
+                .willReturn(new ArrayList<>());
+
+
+        assertThatThrownBy(()->underTest.getRentalIssues(address)).isInstanceOf(BadRequestException.class).hasMessage("No issues found");
+    }
+
+    @Test
     void canUpdateIssue() {
+        User user = new User(
+                name,
+                email,
+                username
+        );
+
+        Issues issue = new Issues(
+                user,
+                "Issue",
+                Low
+        );
+
+        given(issuesRepository
+                .assertIssueExists(issue))
+                .willReturn(true);
+
+        underTest.updateIssue(issue);
+
+        ArgumentCaptor<Long> stringArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+
+        ArgumentCaptor<Issues> issuesArgumentCaptor = ArgumentCaptor.forClass(Issues.class);
+
+        verify(issuesRepository)
+                .update(
+                        stringArgumentCaptor.capture(),
+                        issuesArgumentCaptor.capture());
+
+        assertThat(underTest.updateIssue(issue)).isEqualTo("Update Success");
 
     }
 
     @Test
-    void deleteIssue() {
+    void updateIssueWillThrow(){
+        User user = new User(
+                name,
+                email,
+                username
+        );
+
+        Issues issue = new Issues(
+                user,
+                "Issue",
+                Low
+        );
+
+        given(issuesRepository
+                .assertIssueExists(issue))
+                .willReturn(false);
+
+
+        assertThatThrownBy(()->underTest.updateIssue(issue)).isInstanceOf(IllegalStateException.class).hasMessage("Issue not found");
+    }
+
+    @Test
+    void canDeleteIssue() {
 
         User user = new User(
                 name,
@@ -152,11 +214,11 @@ class IssuesServicesTest {
                 Low
         );
 
-        issuesRepository.save(issue);
+        given(issuesRepository
+                .assertIssueExists(issue))
+                .willReturn(true);
 
         underTest.deleteIssue(issue);
-
-        given(issuesRepository.getIssuesById(issue)).willReturn(Optional.of(issue));
 
         ArgumentCaptor<Issues> issuesArgumentCaptor = ArgumentCaptor.forClass(Issues.class);
 
@@ -165,6 +227,30 @@ class IssuesServicesTest {
                         issuesArgumentCaptor.capture());
 
         assertThat(underTest.deleteIssue(issue)).isEqualTo("Successfully Deleted");
+
+    }
+
+    @Test
+    void deleteIssueWillThrow() {
+
+        User user = new User(
+                name,
+                email,
+                username
+        );
+
+        Issues issue = new Issues(
+                user,
+                "Issue",
+                Low
+        );
+
+        given(issuesRepository
+                .assertIssueExists(issue))
+                .willReturn(false);
+
+
+        assertThatThrownBy(()->underTest.deleteIssue(issue)).isInstanceOf(IllegalStateException.class).hasMessage("Issue not found");
 
     }
 
