@@ -15,15 +15,8 @@ public class IssuesServices {
 
     private final IssuesRepository repository;
 
-    private final UserRepository userRepository;
-
     private RuntimeException issueNotFound (){
         return new IllegalStateException("Issue not found");
-    }
-
-    private  RuntimeException newError(
-            String errorInfo){
-        return new IllegalStateException(errorInfo);
     }
 
     public List<Issues> getAllIssues(){
@@ -70,8 +63,7 @@ public class IssuesServices {
 
     public String updateIssue(Issues issue){
         boolean doesExist = repository
-                .findById(issue.getId())
-                .isPresent();
+                .assertIssueExists(issue);
 
         if(!doesExist){
             throw issueNotFound();
@@ -84,8 +76,7 @@ public class IssuesServices {
 
     public String deleteIssue(Issues issue){
         boolean doesExist = repository
-                .getIssuesById(issue)
-                .isPresent();
+                .assertIssueExists(issue);
 
         if(!doesExist){
             throw issueNotFound();
