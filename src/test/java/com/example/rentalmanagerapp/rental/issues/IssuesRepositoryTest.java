@@ -34,7 +34,6 @@ class IssuesRepositoryTest {
     @Autowired
     private RentalRepository rentalRepository;
 
-    @BeforeEach
     void spinUp(){
         userRepository.save(
                 new User(
@@ -70,6 +69,8 @@ class IssuesRepositoryTest {
 
     @Test
     void checkForIssues() {
+
+        spinUp();
 
         User testUser = userRepository
                 .findByEmail(email)
@@ -107,6 +108,8 @@ class IssuesRepositoryTest {
 
     @Test
     void getRentalsIssuesByAddress() {
+
+        spinUp();
 
         User testUser = userRepository
                 .findByEmail(email)
