@@ -15,9 +15,11 @@ import java.util.Optional;
 @Repository
 public interface IssuesRepository  extends JpaRepository<Issues, Long> {
 
-    @Query("select i from Issues i " +
-            "where i.id = ?1 ")
-    Optional<Issues> getIssuesById(Issues issue);
+    @Query("select case when count(i) > 0 then " +
+            "true else false end " +
+            "from Issues i " +
+            "where i = ?1 ")
+    Boolean assertIssueExists(Issues issues);
 
     @Query("select i from Issues i " +
             "where i.createdBy = ?1 ")
