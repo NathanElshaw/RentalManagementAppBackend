@@ -70,22 +70,22 @@ public class Charges {
 
     }
 
-
-    @AllArgsConstructor
-    @Getter
-    @ToString
-    @EqualsAndHashCode
-    public static class createChargeRequest{
-        private final Long userId;
-
-        private final String reason;
-
-        private final double chargeAmount;
-
-        private final LocalDateTime paidAt;
-
-        private final LocalDate dueBy;
-
-        private final String chargeId;
+    public Charges(
+            User user,
+            String reason,
+            User createdBy,
+            boolean hasPaid,
+            double amountOwed,
+            double amountPaid,
+            double chargeAmount,
+            String chargeId) {
+        this.user = user;
+        this.reason = reason;
+        this.createdBy = createdBy;
+        this.hasPaid = hasPaid;
+        this.amountOwed = amountOwed;
+        this.amountPaid = amountPaid;
+        this.chargeAmount = chargeAmount;
+        this.chargeId = chargeId;
     }
 }
