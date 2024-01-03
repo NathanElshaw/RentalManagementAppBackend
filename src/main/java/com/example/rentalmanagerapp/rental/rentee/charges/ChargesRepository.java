@@ -12,8 +12,22 @@ import java.util.Optional;
 @Repository
 public interface ChargesRepository extends JpaRepository<Charges, Long> {
 
-    @Query("select c from Charges c where c.chargeId = ?1 ")
+    @Query("select c from Charges c" +
+            " where c.chargeId = ?1 ")
     Optional<Charges> findByChargeId(String chargeId);
+
+    @Query("select case when count(c) > 0 then " +
+            "true else false end " +
+            "from Charges c " +
+            "where c = ?1 ")
+    boolean assertChargeExists(Charges charge);
+
+    @Modifying
+    @Transactional
+    @Query("update Charges c " +
+            "set c = ?2 " +
+            "where c.id = ?1 ")
+    void updateCharge(Long chargeId, Charges charge);
 
     @Modifying
     @Transactional
