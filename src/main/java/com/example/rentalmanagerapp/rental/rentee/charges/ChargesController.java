@@ -2,6 +2,7 @@ package com.example.rentalmanagerapp.rental.rentee.charges;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,14 +18,19 @@ public class ChargesController {
 
     @PostMapping("/create")
     public String createCharge(
-            @RequestBody Charges.createChargeRequest chargesPayload){
+            @RequestBody Charges chargesPayload){
         return chargesService.createCharge(chargesPayload);
+    }
+
+    @PatchMapping("/update")
+    public String updateCharge(@RequestBody Charges charge){
+        return  chargesService.updateCharge(charge);
     }
 
     @DeleteMapping("/delete")
     public String deleteCharge(
-            @RequestBody Long chargeId) {
-        return chargesService.deleteCharge(chargeId);
+            @RequestBody Charges charge) {
+        return chargesService.deleteCharge(charge);
     }
 
 }
