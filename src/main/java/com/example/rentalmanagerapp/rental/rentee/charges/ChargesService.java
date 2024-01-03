@@ -1,5 +1,6 @@
 package com.example.rentalmanagerapp.rental.rentee.charges;
 
+import com.example.rentalmanagerapp.exceptions.BadRequestException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,34 +10,41 @@ public class ChargesService {
 
     private final ChargesRepository repository;
 
-    private IllegalStateException chargeNotFound(){
-        return new IllegalStateException("Charge not found");
+    private BadRequestException chargeNotFound(){
+        return new BadRequestException("Charge not found");
     }
 
     public String createCharge(
-            Charges.createChargeRequest chargeRequest){
+            Charges charges){
+        repository.save(charges);
         return "";
     }
 
     public String updateCharge(
-            Charges chargeRequest
-    ){
-        repository
-                .findByChargeId(chargeRequest.getChargeId())
-                .orElseThrow(this::chargeNotFound);
+            Charges charge){
+        boolean chargeExists = repository
+                .assertChargeExists(charge);
 
+        if(!chargeExists){
+            throw chargeNotFound();
+        }
 
-        return"";
+        repository.updateCharge(charge.getId(), charge);
+
+        return "Successfully updated";
     }
 
-    public String deleteCharge (Long chargeId){
-        Charges targetCharge = repository
-                .findById(chargeId)
-                .orElseThrow(this::chargeNotFound);
+    public String deleteCharge (Charges charge){
+        boolean chargeExists = repository
+                .assertChargeExists(charge);
 
-        repository.delete(targetCharge);
+        if(!chargeExists){
+            throw chargeNotFound();
+        }
 
-        return "Successfully removed";
+        repository.delete(charge);
+
+        return "Successfully Deleted";
     }
 
 }
