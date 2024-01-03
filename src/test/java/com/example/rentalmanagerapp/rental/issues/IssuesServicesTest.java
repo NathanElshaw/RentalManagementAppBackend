@@ -3,7 +3,6 @@ package com.example.rentalmanagerapp.rental.issues;
 
 import com.example.rentalmanagerapp.exceptions.BadRequestException;
 import com.example.rentalmanagerapp.user.User;
-import com.example.rentalmanagerapp.user.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,8 +29,6 @@ class IssuesServicesTest {
 
     private AutoCloseable autoCloseable;
 
-    @Mock
-    private UserRepository userRepository;
 
     private IssuesServices underTest;
 
@@ -139,8 +136,9 @@ class IssuesServicesTest {
                 .getRentalsIssuesByAddress(address))
                 .willReturn(new ArrayList<>());
 
-
-        assertThatThrownBy(()->underTest.getRentalIssues(address)).isInstanceOf(BadRequestException.class).hasMessage("No issues found");
+        assertThatThrownBy(()->underTest.getRentalIssues(address))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("No issues found");
     }
 
     @Test
