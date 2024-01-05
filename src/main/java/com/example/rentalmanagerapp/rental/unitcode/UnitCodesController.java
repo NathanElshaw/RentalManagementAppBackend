@@ -19,8 +19,8 @@ public class UnitCodesController {
 
     @PostMapping("/createUnitCode")
     public String createUnitCodes (
-            @RequestBody UnitCodesRequest unitCodePayload){
-        return unitCodesService.createUnitCode(unitCodePayload);
+            @RequestBody UnitCodes unitCodes){
+        return unitCodesService.createUnitCode(unitCodes);
     }
 
     @PatchMapping("/joinUnit")
