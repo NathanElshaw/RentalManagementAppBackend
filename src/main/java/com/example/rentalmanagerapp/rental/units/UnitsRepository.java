@@ -20,11 +20,11 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
             "where u.renter = ?1")
     Optional<Units> getUnitByUserId(User userid);
 
-    @Query("select u.unitCode " +
+    @Query("select case when count(u) > 0 then " +
+            "true else false end " +
             "from Units u " +
-            "where u.unitAddress = ?1 " +
-            "and u.unitNumber = ?2 ")
-    Optional<UnitCodes> getUnitCodeParent(String unitAddress, int unitNumber);
+            "where u.id = ?1 ")
+    boolean assertUnitExistsById(Long unitId);
 
     @Query("select u from Units u " +
             "where u.unitAddress = ?1 " +
@@ -34,11 +34,6 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
     @Query("select u from Units u " +
             "where u.renter = ?1 ")
     Optional<Units> findByUser(User user);
-
-
-    @Query("select  u from Units u " +
-            "where u.parentUnitId = ?1")
-    Optional<List<Units>> getUnitsByParentId(Long parentId);
 
     @Transactional
     @Modifying
@@ -83,8 +78,8 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
     @Query("select u " +
             "from Units u " +
             "where u.unitAddress = ?1")
-    Optional<List<Units>> getAllUnitByAddress(String address);
+    List<Units> getAllUnitByAddress(String address);
 
     @Query("select u from Units u")
-    Optional<List<Units>> getAllUnits();
+    List<Units> getAllUnits();
 }
