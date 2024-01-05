@@ -12,6 +12,10 @@ import java.util.Optional;
 @Repository
 @Transactional(readOnly = true)
 public interface UnitCodeRepository extends JpaRepository<UnitCodes, Long> {
+
+    @Query("select c " +
+            "from UnitCodes c " +
+            "where c.unitCode = ?1 ")
     Optional<UnitCodes> findByUnitCode(String code);
 
     @Transactional
@@ -20,11 +24,6 @@ public interface UnitCodeRepository extends JpaRepository<UnitCodes, Long> {
             "set c.confirmedAt = ?2 "
             + "WHERE c.unitCode = ?1 ")
     void updateConfirmedAt(String code,
-                          LocalDateTime confirmedAt);
-
-    @Query("select parentRental " +
-            "from UnitCodes " +
-            "where unitCode = ?1")
-    Long getUnitWithCode(String code);
+                           LocalDateTime confirmedAt);
 
 }
