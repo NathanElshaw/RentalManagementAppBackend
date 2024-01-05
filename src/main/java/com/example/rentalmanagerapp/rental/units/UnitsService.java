@@ -84,8 +84,7 @@ public class UnitsService {
 
         List<Units> returnedUnits =
                 repository.getAllUnitByAddress(
-                payloadAddress).orElseThrow(
-                ()->throwUnitsError("No units at that address"));
+                payloadAddress);
 
             returnedUnits.forEach(rental -> {
                 Units newUnit = new Units(
@@ -185,8 +184,7 @@ public class UnitsService {
     public List<Units.GetAllUnitsWithDetails> getAllUnitsWithDetails (){
         List<Units.GetAllUnitsWithDetails> returnedData = new ArrayList<>();
 
-        List<Units> returnedUnitsList = repository.getAllUnits()
-                .orElseThrow(this::unitNotFound);
+        List<Units> returnedUnitsList = repository.getAllUnits();
 
         returnedUnitsList.forEach(unit -> {
             Rental parentRental = unit.getParentUnitId();
