@@ -2,12 +2,16 @@ package com.example.rentalmanagerapp.rental.unitcode;
 
 import com.example.rentalmanagerapp.rental.Rental;
 import com.example.rentalmanagerapp.rental.RentalRepository;
+import com.example.rentalmanagerapp.rental.unitcode.requests.UnitCodesRequest;
 import com.example.rentalmanagerapp.rental.units.Units;
+import com.example.rentalmanagerapp.rental.units.UnitsRepository;
 import com.example.rentalmanagerapp.user.User;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import java.util.UUID;
 
 import static com.example.rentalmanagerapp.globals.GlobalVars.address;
 import static com.example.rentalmanagerapp.globals.GlobalVars.email;
@@ -24,41 +28,66 @@ class UnitCodeRepositoryTest {
     @Autowired
     private RentalRepository rentalRepository;
 
-    void spinUp(){
+    @Autowired
+    private UnitsRepository unitsRepository;
+
+    @Autowired
+    private UnitCodeRepository unitCodeRepository;
+
+    private Units spinUp(){
+        Rental rental = new Rental(
+                address,
+                rentalType
+        );
+
+        rentalRepository.save(rental);
 
         Rental parentRental = rentalRepository
                 .findByRentalAddress(address)
-                .orElseThrow(()-> new IllegalStateException(""));
+                .orElseThrow(()->new IllegalStateException("A"));
 
-        assertThat(parentRental).isNotNull();
-        assertThat(parentRental.getId()).isEqualTo(1L);
+        Units unit =  new Units(
+                address,
+                unitNumber,
+                parentRental
+        );
+
+        unitsRepository.save(unit);
+
+        return unitsRepository
+                .findByAddressAndUnitNumber(
+                        address,
+                        unitNumber)
+                .orElseThrow(()->new IllegalStateException(""));
+
+
     }
 
     @Test
     void findByUnitCode() {
-        rentalRepository.save(
-                new Rental(
-                        address,
-                        rentalType
-                )
+        String code = UUID.randomUUID().toString();
+
+        Units parentUnit = spinUp();
+
+        UnitCodes unitCodes = new UnitCodes(
+                code,
+                parentUnit
         );
 
-        Rental testRental = rentalRepository
-                .findById(1L)
+        unitCodeRepository.save(unitCodes);
+
+        UnitCodes testUnitCode = unitCodeRepository
+                .findByUnitCode(unitCodes.getUnitCode())
                 .orElseThrow(()->new IllegalStateException(""));
 
-        assertThat(testRental).isNotNull();
-        assertThat(testRental.getId()).isEqualTo(1L);
-        assertThat(testRental.getRentalAddress()).isEqualTo(address);
-        assertThat(testRental.getType()).isEqualTo(rentalType);
+        assertThat(testUnitCode).isNotNull();
+        assertThat(testUnitCode.getId()).isEqualTo(1L);
+        assertThat(testUnitCode.getParentRental().getUnitAddress()).isEqualTo(address);
+        assertThat(testUnitCode.getUnitCode()).isEqualTo(code);
     }
 
     @Test
     @Disabled
     void updateConfirmedAt() {
-    }
-
-    @Test
-    void getUnitWithCode() {
     }
 }
