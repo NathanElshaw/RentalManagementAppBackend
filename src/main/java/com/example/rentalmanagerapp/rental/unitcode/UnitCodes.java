@@ -39,7 +39,7 @@ public class UnitCodes {
     @OneToOne
     private Units parentRental;
 
-    private LocalDateTime confirmedAt;
+    private LocalDateTime confirmedAt = null;
 
     private LocalDateTime issuedAt;
 
@@ -47,6 +47,11 @@ public class UnitCodes {
 
     public UnitCodes(){
 
+    }
+
+    public UnitCodes(String unitCode, Units parentRental) {
+        this.unitCode = unitCode;
+        this.parentRental = parentRental;
     }
 
     public UnitCodes(
