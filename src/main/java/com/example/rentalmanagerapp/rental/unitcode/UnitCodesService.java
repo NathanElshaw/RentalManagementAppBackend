@@ -34,29 +34,29 @@ public class UnitCodesService {
     }
 
     public String createUnitCode(
-            UnitCodesRequest unitCodesPayload){
-        Units parentUnit = unitsRepository.findByUnitAddressAndUnitNumber(
-                unitCodesPayload.getParentUnitNumber(),
-                unitCodesPayload.getParentUnitAddress()).orElseThrow(
-                        ()-> error("Parent unit not found"));
-        if(parentUnit.getUnitCode() != null){
-            throw error("Invalid address or unit number");
+            UnitCodes unitCodes){
+
+        boolean parentUnitExist = unitsRepository
+                .assertUnitExistsById(unitCodes
+                        .getParentRental().getId());
+
+        if(!parentUnitExist){
+            throw error("unit does not exist");
         }
 
-        UnitCodes newUnitCodePayload = new UnitCodes(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                LocalDateTime.now().plusHours(
-                        unitCodesPayload.getExpiresIn()
-                ),
-                parentUnit);
+        unitCodes.setIssuedAt(LocalDateTime.now());
+        unitCodes.setExpiresAt(LocalDateTime.now().plusHours(24));
 
-        repository.save(newUnitCodePayload);
+        repository.save(unitCodes);
+
+        //may need to then get from repo for correct id assignment for next func
 
         unitsRepository.addUnitCodeToRental(
-                newUnitCodePayload,
-                unitCodesPayload.getParentUnitAddress(),
-                unitCodesPayload.getParentUnitNumber());
+                unitCodes,
+                unitCodes.getParentRental()
+                        .getUnitAddress(),
+                unitCodes.getParentRental()
+                        .getUnitNumber());
 
         return "Success";
     }
@@ -124,11 +124,6 @@ public class UnitCodesService {
 
         repository.delete(targetUnitCode);
         return "Successfully removed unit code";
-    }
-
-    public Optional<UnitCodes> findByCode(
-            String code){
-        return repository.findByUnitCode(code);
     }
 
 }
