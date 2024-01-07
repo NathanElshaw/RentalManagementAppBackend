@@ -28,10 +28,6 @@ public class PaymentService {
 
     private final ChargesRepository chargesRepository;
 
-    private IllegalStateException paymentNotFound(){
-        return new IllegalStateException("Payment not found");
-    }
-
     private IllegalStateException error(String s){
         return new IllegalStateException(s);
     }

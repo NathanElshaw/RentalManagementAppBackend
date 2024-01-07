@@ -1,9 +1,7 @@
 package com.example.rentalmanagerapp.rental;
 
 import com.example.rentalmanagerapp.user.User;
-import com.example.rentalmanagerapp.user.UserRoles;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.SequenceGenerator;
@@ -16,8 +14,6 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static com.example.rentalmanagerapp.user.UserRoles.Admin;
-import static com.example.rentalmanagerapp.user.UserRoles.PropertyManger;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @AllArgsConstructor
@@ -70,8 +66,7 @@ public class Rental {
 
     public Rental(String rentalAddress,
                   String description,
-                  String type,
-                  LocalDate dateAvailable) {
+                  String type) {
         this.rentalAddress = rentalAddress;
         this.description = description;
         this.type = type;

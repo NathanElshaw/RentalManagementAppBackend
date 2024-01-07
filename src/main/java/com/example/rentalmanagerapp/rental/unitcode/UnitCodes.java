@@ -74,15 +74,4 @@ public class UnitCodes {
         this.issuedAt = issuedAt;
         this.expiresAt = expiresAt;
     }
-
-    public UnitCodes(
-            String unitCode,
-            LocalDateTime issuedAt,
-            LocalDateTime expiresAt,
-            Units parentUnitId) {
-        this.unitCode = unitCode;
-        this.issuedAt = issuedAt;
-        this.expiresAt = expiresAt;
-        this.parentRental = parentUnitId;
-    }
 }

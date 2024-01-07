@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import java.util.List;
@@ -20,7 +19,7 @@ public class RentalController {
 
     @PostMapping("/create")
     public String createRental(
-            @RequestBody RentalRequest rentalRequest
+            @RequestBody Rental rentalRequest
     ){
         //Todo check priv, add service, validate jwt
         return rentalService.createRental(rentalRequest);

@@ -1,21 +1,18 @@
 package com.example.rentalmanagerapp.rental.unitcode;
 
 import com.example.rentalmanagerapp.rental.Rental;
-import com.example.rentalmanagerapp.rental.RentalRepository;
 import com.example.rentalmanagerapp.rental.unitcode.requests.JoinUnitRequest;
 import com.example.rentalmanagerapp.rental.unitcode.requests.UpdateCodeRequest;
 import com.example.rentalmanagerapp.rental.units.Units;
 import com.example.rentalmanagerapp.rental.units.UnitsRepository;
 import com.example.rentalmanagerapp.user.User;
 import com.example.rentalmanagerapp.user.UserRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -29,7 +26,6 @@ import static com.example.rentalmanagerapp.globals.GlobalVars.rentalType;
 import static com.example.rentalmanagerapp.globals.GlobalVars.unitNumber;
 import static com.example.rentalmanagerapp.globals.GlobalVars.username;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -64,7 +60,7 @@ class UnitCodesServiceTest {
                 userRepository
         );
          user = new User(
-                 1l,
+                 1L,
                 name,
                 email,
                 username
@@ -149,9 +145,6 @@ class UnitCodesServiceTest {
 
         ArgumentCaptor<User> userArgumentCaptor =
                 ArgumentCaptor.forClass(User.class);
-
-        ArgumentCaptor<UnitCodes> unitCodesArgumentCaptor =
-                ArgumentCaptor.forClass(UnitCodes.class);
 
         ArgumentCaptor<Units> unitsArgumentCaptor =
                 ArgumentCaptor.forClass(Units.class);

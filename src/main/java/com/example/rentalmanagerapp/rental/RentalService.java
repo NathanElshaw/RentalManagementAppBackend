@@ -5,7 +5,6 @@ import com.example.rentalmanagerapp.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,7 @@ public class RentalService {
     }
 
     public String createRental(
-            RentalRequest rentalRequest
+            Rental rentalRequest
     ){
         boolean addressExists = repository
                 .findByRentalAddress(
@@ -38,21 +37,13 @@ public class RentalService {
             throw error("Address already exists");
         }
 
-        Rental newRental = new Rental(
-                rentalRequest.getRentalAddress(),
-                rentalRequest.getDescription(),
-                rentalRequest.getType(),
-                LocalDate.parse(
-                        rentalRequest.getDateAvailable()
-                )
-        );
-
-        repository.save(newRental);
+        repository.save(rentalRequest);
         return "New Rental Saved";
     }
 
     public String updateRental(
             Rental updatePayload){
+        //Todo reduce this;
         Rental targetRental =
                 repository.findById(
                 updatePayload.getId())

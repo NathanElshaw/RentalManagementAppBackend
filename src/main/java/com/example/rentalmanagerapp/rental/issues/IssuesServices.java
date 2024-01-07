@@ -2,7 +2,6 @@ package com.example.rentalmanagerapp.rental.issues;
 
 import com.example.rentalmanagerapp.exceptions.BadRequestException;
 import com.example.rentalmanagerapp.user.User;
-import com.example.rentalmanagerapp.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
