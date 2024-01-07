@@ -118,6 +118,18 @@ public class Units {
                 this.parentUnitId = parentUnitId;
         }
 
+        public Units(
+                long id,
+                String unitAddress,
+                int unitNumber,
+                Rental parentUnitId
+        ){
+                this.id = id;
+                this.unitAddress = unitAddress;
+                this.unitNumber = unitNumber;
+                this.parentUnitId = parentUnitId;
+        }
+
         //Return unit constructor
         @AllArgsConstructor
         @Getter
