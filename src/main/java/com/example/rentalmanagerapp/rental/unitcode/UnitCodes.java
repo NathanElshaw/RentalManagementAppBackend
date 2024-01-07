@@ -54,6 +54,14 @@ public class UnitCodes {
         this.parentRental = parentRental;
     }
 
+   public UnitCodes(Long id,
+                    String unitCode,
+                    Units parentRental) {
+        this.id = id;
+        this.unitCode = unitCode;
+        this.parentRental = parentRental;
+    }
+
     public UnitCodes(
             Long id,
             String unitCode,
