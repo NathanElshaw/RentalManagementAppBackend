@@ -2,6 +2,8 @@ package com.example.rentalmanagerapp.rental.unitcode;
 
 import com.example.rentalmanagerapp.rental.Rental;
 import com.example.rentalmanagerapp.rental.RentalRepository;
+import com.example.rentalmanagerapp.rental.unitcode.requests.JoinUnitRequest;
+import com.example.rentalmanagerapp.rental.unitcode.requests.UpdateCodeRequest;
 import com.example.rentalmanagerapp.rental.units.Units;
 import com.example.rentalmanagerapp.rental.units.UnitsRepository;
 import com.example.rentalmanagerapp.user.User;
@@ -9,9 +11,12 @@ import com.example.rentalmanagerapp.user.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -27,7 +32,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class UnitCodesServiceTest {
 
     @Mock
@@ -37,50 +44,53 @@ class UnitCodesServiceTest {
     private UnitsRepository unitsRepository;
 
     @Mock
-    private RentalRepository rentalRepository;
-
-    @Mock
     private UserRepository userRepository;
 
-    private AutoCloseable autoCloseable;
-
+    @InjectMocks
     private UnitCodesService underTest;
 
+    private User user;
+    private Units unit;
+
+    private UnitCodes testCode;
+
+    private final String code = UUID.randomUUID().toString();
+
     @BeforeEach
-    void setup(){
-        autoCloseable = MockitoAnnotations.openMocks(this);
+    void spinUp(){
         underTest = new UnitCodesService(
                 unitCodeRepository,
                 unitsRepository,
                 userRepository
         );
-    }
-
-    @AfterEach
-    void tearDown() throws Exception{
-        autoCloseable.close();
-    }
-
-    @Test
-    void createUnitCode() {
-
-        String code = UUID.randomUUID().toString();
+         user = new User(
+                 1l,
+                name,
+                email,
+                username
+        );
 
         Rental rental = new Rental(
                 address,
                 rentalType
         );
 
-        Units unit =  new Units(
+         unit =  new Units(
+                 1L,
                 address,
                 unitNumber,
                 rental
         );
 
-        UnitCodes testCode = new UnitCodes(
+         testCode = new UnitCodes(
+                 1L,
                 code,
                 unit
         );
+    }
+
+    @Test
+    void createUnitCode() {
 
         given(unitsRepository
                 .assertUnitExistsById(unit.
@@ -103,50 +113,27 @@ class UnitCodesServiceTest {
     @Test
     void joinUnit() {
 
-        String code = UUID.randomUUID().toString();
-
-        User user = new User(
-                name,
-                email,
-                username
-        );
-
-        Rental rental = new Rental(
-                address,
-                rentalType
-        );
-
-        Units unit =  new Units(
-                address,
-                unitNumber,
-                rental
-        );
-
-
-        UnitCodes testCode = new UnitCodes(
+        JoinUnitRequest req = new JoinUnitRequest(
                 code,
-                unit
+                user.getId()
         );
 
-        unitCodeRepository.save(testCode);
+        when(unitCodeRepository
+                .findByUnitCode(req.getUnitCode()))
+                .thenReturn(Optional.of(testCode));
 
-
-        given(unitCodeRepository
-                .findByUnitCode(code)).willReturn(Optional.of(testCode));
-
-        given(unitsRepository
+        when(unitsRepository
                 .findById(testCode
                         .getParentRental()
                         .getId()))
-                .willReturn(
-                        Optional.of(unit));
+                .thenReturn(Optional.of(unit));
 
-        given(userRepository
+        when(userRepository
                 .findById(
                         unit.getId()))
-                .willReturn(Optional.of(user));
+                .thenReturn(Optional.of(user));
 
-        underTest.createUnitCode(testCode);
+        underTest.joinUnit(req);
 
         ArgumentCaptor<String> stringArgumentCaptor =
                 ArgumentCaptor.forClass(String.class);
@@ -154,8 +141,8 @@ class UnitCodesServiceTest {
         ArgumentCaptor<Long> longArgumentCaptor =
                 ArgumentCaptor.forClass(Long.class);
 
-        ArgumentCaptor<Integer> intArgumentCaptor =
-                ArgumentCaptor.forClass(Integer.class);
+        ArgumentCaptor<Double> doubleArgumentCaptor =
+                ArgumentCaptor.forClass(Double.class);
 
         ArgumentCaptor<LocalDateTime> dateTimeArgumentCaptor =
                 ArgumentCaptor.forClass(LocalDateTime.class);
@@ -191,18 +178,58 @@ class UnitCodesServiceTest {
                 );
 
         verify(unitsRepository)
-                .addUnitCodeToRental(
-                        unitCodesArgumentCaptor.capture(),
-                        stringArgumentCaptor.capture(),
-                        intArgumentCaptor.capture()
+                .addRenterToUnit(
+                        userArgumentCaptor.capture(),
+                        longArgumentCaptor.capture(),
+                        doubleArgumentCaptor.capture()
                 );
     }
 
     @Test
     void updateCode() {
+
+        UpdateCodeRequest req = new UpdateCodeRequest(
+                testCode.getId(),
+                3L
+        );
+
+        when(unitCodeRepository
+                .findById(testCode.getId()))
+                .thenReturn(Optional.of(testCode));
+
+        underTest.updateCode(req);
+
+        ArgumentCaptor<Long> longArgumentCaptor =
+                ArgumentCaptor
+                        .forClass(Long.class);
+
+        ArgumentCaptor<UnitCodes> unitCodesArgumentCaptor =
+                ArgumentCaptor
+                        .forClass(UnitCodes.class);
+
+        verify(unitCodeRepository)
+                .update(
+                        longArgumentCaptor.capture(),
+                        unitCodesArgumentCaptor.capture());
+
+        UnitCodes unitCodeCaptor =
+                unitCodesArgumentCaptor.getValue();
+
+        assertThat(unitCodeCaptor).isNotNull();
     }
 
     @Test
     void deleteUnitCode() {
+        when(unitCodeRepository
+                .findById(testCode.getId()))
+                .thenReturn(Optional.of(testCode));
+
+        underTest.deleteUnitCode(testCode.getId());
+
+        ArgumentCaptor<UnitCodes> unitCodesArgumentCaptor =
+                ArgumentCaptor.forClass(UnitCodes.class);
+
+        verify(unitCodeRepository)
+                .delete(unitCodesArgumentCaptor.capture());
     }
 }
