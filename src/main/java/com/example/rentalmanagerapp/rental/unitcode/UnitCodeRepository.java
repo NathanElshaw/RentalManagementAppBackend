@@ -26,4 +26,10 @@ public interface UnitCodeRepository extends JpaRepository<UnitCodes, Long> {
     void updateConfirmedAt(String code,
                            LocalDateTime confirmedAt);
 
+    @Transactional
+    @Modifying
+    @Query("update UnitCodes c " +
+            "set c = ?2 " +
+            "where c.id = ?1 ")
+    void update(long id, UnitCodes update);
 }
