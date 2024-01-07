@@ -118,6 +118,16 @@ public class User {
         this.email = email;
         this.username = username;
     }
+    public User(
+            long id,
+            String firstName,
+            String email,
+            String username) {
+        this.id = id;
+        this.firstName = firstName;
+        this.email = email;
+        this.username = username;
+    }
 
     @Setter
     @Getter
