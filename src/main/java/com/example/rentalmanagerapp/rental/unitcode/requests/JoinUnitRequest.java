@@ -12,6 +12,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class JoinUnitRequest{
+
     private final  String unitCode;
 
     private final Long userId;
