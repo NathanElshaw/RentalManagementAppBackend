@@ -97,21 +97,24 @@ public class UnitCodesService {
 
     public String updateCode(
             UpdateCodeRequest updateCodePayload){
-        UnitCodes targetUnitCode = repository
+        UnitCodes updateUnitCode = repository
                 .findById(updateCodePayload.getUnitCodeId())
                 .orElseThrow(this::codeNotFound);
 
-        targetUnitCode.setUnitCode(
+        updateUnitCode.setUnitCode(
                 UUID.randomUUID().toString());
 
-        targetUnitCode.setIssuedAt(
+        updateUnitCode.setIssuedAt(
                 LocalDateTime.now());
 
-        targetUnitCode.setExpiresAt(
+        updateUnitCode.setExpiresAt(
                 LocalDateTime.now().plusHours(
                         updateCodePayload.getValidLength()));
 
-        repository.save(targetUnitCode);
+        repository.update(
+                updateCodePayload.getUnitCodeId(),
+                updateUnitCode
+        );
 
         return "Successfully Reissued";
     }
