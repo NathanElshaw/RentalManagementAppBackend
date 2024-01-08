@@ -46,7 +46,11 @@ public class Units {
         )
         private Rental parentUnitId;
 
-        @OneToOne
+        @ManyToOne
+        @JoinColumn(
+                nullable = true,
+                name = "unit_code_id"
+        )
         private UnitCodes unitCode;
 
         @OneToOne
@@ -120,11 +124,24 @@ public class Units {
 
         public Units(
                 long id,
+                User user,
                 String unitAddress,
                 int unitNumber,
                 Rental parentUnitId
         ){
                 this.id = id;
+                this.renter = user;
+                this.unitAddress = unitAddress;
+                this.unitNumber = unitNumber;
+                this.parentUnitId = parentUnitId;
+        }
+        public Units(
+                User user,
+                String unitAddress,
+                int unitNumber,
+                Rental parentUnitId
+        ){
+                this.renter = user;
                 this.unitAddress = unitAddress;
                 this.unitNumber = unitNumber;
                 this.parentUnitId = parentUnitId;
