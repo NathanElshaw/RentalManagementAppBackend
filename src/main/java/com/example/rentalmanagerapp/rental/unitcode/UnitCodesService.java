@@ -37,7 +37,7 @@ public class UnitCodesService {
                         .getParentRental().getId());
 
         if(!parentUnitExist){
-            throw error("unit does not exist");
+            throw error("Unit does not exist");
         }
 
         unitCodes.setIssuedAt(LocalDateTime.now());
