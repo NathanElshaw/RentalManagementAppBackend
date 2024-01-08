@@ -26,6 +26,7 @@ import static com.example.rentalmanagerapp.globals.GlobalVars.rentalType;
 import static com.example.rentalmanagerapp.globals.GlobalVars.unitNumber;
 import static com.example.rentalmanagerapp.globals.GlobalVars.username;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -72,7 +73,7 @@ class UnitCodesServiceTest {
         );
 
          unit =  new Units(
-                 1L,
+                 user,
                 address,
                 unitNumber,
                 rental
@@ -86,7 +87,7 @@ class UnitCodesServiceTest {
     }
 
     @Test
-    void createUnitCode() {
+    void canCreateUnitCode() {
 
         given(unitsRepository
                 .assertUnitExistsById(unit.
@@ -104,6 +105,16 @@ class UnitCodesServiceTest {
         assertThat(codesCaptor).isNotNull();
         assertThat(codesCaptor.getUnitCode()).isEqualTo(code);
         assertThat(codesCaptor.getConfirmedAt()).isNull();
+    }
+
+    @Test
+    void createUnitCodeWillThrow() {
+        when(unitsRepository.assertUnitExistsById(1L))
+                .thenReturn(false);
+
+        assertThatThrownBy(()->underTest.createUnitCode(testCode))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Unit does not exist");
     }
 
     @Test
@@ -179,7 +190,56 @@ class UnitCodesServiceTest {
     }
 
     @Test
-    void updateCode() {
+    void joinUnitWillThrowCodeInvalid(){
+        JoinUnitRequest req = new JoinUnitRequest(
+                testCode.getUnitCode(),
+                user.getId()
+        );
+
+        assertThatThrownBy(
+                ()->underTest.joinUnit(req))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Code is invalid");
+    }
+
+    @Test
+    void joinUnitWillThrowInvalidUnit(){
+        JoinUnitRequest req = new JoinUnitRequest(
+                testCode.getUnitCode(),
+                user.getId()
+        );
+
+        when(unitCodeRepository
+                .findByUnitCode(req.getUnitCode()))
+                .thenReturn(Optional.of(testCode));
+
+        assertThatThrownBy(()-> underTest.joinUnit(req))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Unit is invalid");
+    }
+
+    @Test
+    void joinUnitWillThrowInvalidUser(){
+        JoinUnitRequest req = new JoinUnitRequest(
+                testCode.getUnitCode(),
+                user.getId()
+        );
+
+        when(unitCodeRepository
+                .findByUnitCode(req.getUnitCode()))
+                .thenReturn(Optional.of(testCode));
+
+        when(unitsRepository
+                .findById(testCode.getParentRental().getId()))
+                .thenReturn(Optional.of(unit));
+
+        assertThatThrownBy(()->underTest.joinUnit(req))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("User not found");
+    }
+
+    @Test
+    void canUpdateCode() {
 
         UpdateCodeRequest req = new UpdateCodeRequest(
                 testCode.getId(),
@@ -212,7 +272,7 @@ class UnitCodesServiceTest {
     }
 
     @Test
-    void deleteUnitCode() {
+    void canDeleteUnitCode() {
         when(unitCodeRepository
                 .findById(testCode.getId()))
                 .thenReturn(Optional.of(testCode));
@@ -224,5 +284,13 @@ class UnitCodesServiceTest {
 
         verify(unitCodeRepository)
                 .delete(unitCodesArgumentCaptor.capture());
+    }
+
+    @Test
+    void deleteUnitCodeWillThrow() {
+        assertThatThrownBy(()->underTest
+                .deleteUnitCode(1L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Unit code not found");
     }
 }
