@@ -39,7 +39,8 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
     @Modifying
     @Query("update Units u " +
             "set u.unitCode = ?1 " +
-            "where u.unitAddress = ?2 and u.unitNumber = ?3")
+            "where u.unitAddress = ?2 " +
+            "and u.unitNumber = ?3 ")
     void addUnitCodeToRental(UnitCodes unitCodePayload, String unitAddress, int unitNumber);
 
     @Transactional
