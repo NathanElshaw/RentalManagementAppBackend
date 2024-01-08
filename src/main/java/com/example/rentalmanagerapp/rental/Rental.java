@@ -72,8 +72,17 @@ public class Rental {
         this.type = type;
     }
 
-    public Rental(String rentalAddress,
-                  String type){
+    public Rental(
+            String rentalAddress,
+            String type){
+        this.rentalAddress = rentalAddress;
+        this.type = type;
+    }
+    public Rental(
+            Long id,
+            String rentalAddress,
+            String type){
+        this.id = id;
         this.rentalAddress = rentalAddress;
         this.type = type;
     }
