@@ -21,7 +21,7 @@ public class UnitsController {
 
     @PostMapping("/create")
     public String createUnit(
-            @RequestBody UnitsRequest createUnitPayload){
+            @RequestBody Units createUnitPayload){
         return unitsService.createUnit(createUnitPayload);
     }
 
