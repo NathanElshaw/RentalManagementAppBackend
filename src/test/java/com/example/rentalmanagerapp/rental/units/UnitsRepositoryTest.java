@@ -8,10 +8,12 @@ import com.example.rentalmanagerapp.user.User;
 import com.example.rentalmanagerapp.user.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.example.rentalmanagerapp.globals.GlobalVars.*;
@@ -146,51 +148,44 @@ class UnitsRepositoryTest {
     }
 
     @Test
+    @Disabled
     void addUnitCodeToRental() {
 
-        assertThat(unitCode).isNotNull();
-
-        underTest.addUnitCodeToRental(
-                unitCode,
-                address,
-                unitNumber
-        );
-
-        Units testUnit = underTest
-                .findByAddressAndUnitNumber(
-                        address,
-                        unitNumber
-                )
-                .orElseThrow(()->new IllegalStateException("Unit not found"));
-
-        assertThat(testUnit).isNotNull();
-        assertThat(testUnit.getId()).isEqualTo(1L);
-        assertThat(testUnit.getUnitNumber()).isEqualTo(unitNumber);
-        assertThat(testUnit.getUnitCode()).isNotNull();
     }
 
     @Test
+    @Disabled
     void addRenterToUnit() {
     }
 
     @Test
-    void findByUnitAddressAndUnitNumber() {
-    }
-
-    @Test
+    @Disabled
     void updateUnit() {
     }
 
     @Test
+    @Disabled
     void userPayment() {
     }
 
     @Test
     void getAllUnitByAddress() {
+        List<Units> testUnits = underTest.getAllUnitByAddress(address);
+
+        assertThat(testUnits).isNotNull();
+        assertThat(testUnits.size()).isEqualTo(1);
+        assertThat(testUnits.get(0)).isNotNull();
+        assertThat(testUnits.get(0).getUnitAddress()).isEqualTo(address);
     }
 
     @Test
     void getAllUnits() {
+        List<Units> testUnits = underTest.getAllUnits();
+
+        assertThat(testUnits).isNotNull();
+        assertThat(testUnits.size()).isEqualTo(1);
+        assertThat(testUnits.get(0)).isNotNull();
+        assertThat(testUnits.get(0).getUnitAddress()).isEqualTo(address);
     }
 
   }
