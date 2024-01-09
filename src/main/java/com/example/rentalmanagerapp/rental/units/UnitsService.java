@@ -33,47 +33,39 @@ public class UnitsService {
     }
 
     public String createUnit(
-            UnitsRequest createUnitPayload){
+             Units unit){
         boolean doesExist =
-                repository.findByUnitAddressAndUnitNumber(
-                createUnitPayload.getUnitNumber(),
-                createUnitPayload.getUnitAddress()).isPresent();
+                repository.assertUnitExistByAddressAndNumber(
+                        unit.getUnitAddress(),
+                        unit.getUnitNumber()
+                );
 
         if(doesExist){
-            throw throwUnitsError("Unit Already Exists");
+            throw throwUnitsError("Unit already exists");
         }
 
         Rental parentRental =
-                rentalRepository.findByRentalAddress(
-                createUnitPayload.getUnitAddress())
-                        .orElseThrow(()->
-                                throwUnitsError("Parent Rental doesnt exist"));
+                    rentalRepository.findByRentalAddress(
+                                    unit.getUnitAddress())
+                            .orElseThrow(() ->
+                                    throwUnitsError("Parent Rental doesnt exist"));
 
-        Units newUnit = new Units(
-                createUnitPayload.getUnitNumber(),
-                createUnitPayload.getBeds(),
-                createUnitPayload.getBaths(),
-                createUnitPayload.getUnitAddress(),
-                createUnitPayload.isHasPets(),
-                createUnitPayload.getRentAmount(),
-                createUnitPayload.getRentDueDate(),
-                createUnitPayload.getLeaseStart(),
-                createUnitPayload.getLeaseEnd(),
-                parentRental
-        );
+        if(unit.getParentUnitId() == null) {
+            unit.setParentUnitId(parentRental);
+        }
 
         rentalRepository.updateRentalOnNewUnit(
-                createUnitPayload.getUnitAddress(),
+                unit.getUnitAddress(),
                 (
                         (parentRental.getAvgRentAmount() *
                                 parentRental.getTotalUnits()) +
-                                createUnitPayload.getRentAmount()) /
+                                unit.getRentAmount()) /
                         (parentRental.getTotalUnits() + 1),
                 parentRental.getTotalRentIncome() +
-                              createUnitPayload.getRentAmount(),
+                              unit.getRentAmount(),
                 parentRental.getTotalUnits() + 1);
 
-        repository.save(newUnit);
+        repository.save(unit);
 
         return "Success";
     }
@@ -126,30 +118,11 @@ public class UnitsService {
                 unitPayload.getId()
         ).orElseThrow(this::unitNotFound);
 
-        Units updatedUnit = new Units(
-                unitPayload.getId(),
-                unitPayload.getParentUnitId(),
-                unitPayload.getUnitCode(),
-                unitPayload.getRenter(),
-                unitPayload.getUnitAddress(),
-                unitPayload.getBeds(),
-                unitPayload.getBaths(),
-                unitPayload.getUnitNumber(),
-                unitPayload.getHasPets(),
-                unitPayload.getRentAmount(),
-                unitPayload.getRentDue(),
-                unitPayload.getRentPaid(),
-                unitPayload.getLeaseStart(),
-                unitPayload.getRentDueDate(),
-                unitPayload.getLeaseEnd(),
-                unitPayload.getCreatedBy(),
-                unitPayload.getCreatedAt(),
-                LocalDateTime.now()
-        );
+        unitPayload.setUpdatedAt(LocalDateTime.now());
 
         repository.updateUnit(
-                updatedUnit.getId(),
-                updatedUnit
+                unitPayload.getId(),
+                unitPayload
         );
 
         return "Successful Update";
