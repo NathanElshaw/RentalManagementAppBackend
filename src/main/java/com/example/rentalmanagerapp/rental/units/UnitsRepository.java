@@ -26,6 +26,13 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
             "where u.id = ?1 ")
     boolean assertUnitExistsById(Long unitId);
 
+    @Query("select case when counts(u) > 0 then " +
+            "true else false end " +
+            "from Units u " +
+            "where  u.unitAddress = ?1 " +
+            "and u.unitNumber = ?2")
+    boolean assertUnitExistByAddressAndNumber(String address, int unitNumber);
+
     @Query("select u from Units u " +
             "where u.unitAddress = ?1 " +
             "and u.unitNumber = ?2")
@@ -50,13 +57,6 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
             "u.rentDue = ?3 " +
             "where u.id = ?2 ")
     void addRenterToUnit(User userId, Long unitId, double rentOwed);
-
-    @Query("select u from Units u " +
-            "where u.unitAddress = ?2 " +
-            "and u.unitNumber = ?1")
-    Optional<Units> findByUnitAddressAndUnitNumber(
-            int unitNumber,
-            String unitAddress);
 
     @Transactional
     @Modifying
