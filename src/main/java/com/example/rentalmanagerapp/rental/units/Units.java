@@ -81,9 +81,9 @@ public class Units {
         @OneToOne
         private User createdBy;
 
-        private LocalDateTime createdAt;
+        private LocalDateTime createdAt = LocalDateTime.now();
 
-        private LocalDateTime updatedAt;
+        private LocalDateTime updatedAt = LocalDateTime.now();
 
         public Units(){
 
