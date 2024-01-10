@@ -24,6 +24,12 @@ public interface UserRepository
             "where u.email = ?1 ")
     boolean selectIfEmailExists(String email);
 
+    @Query("select  case when counts(u) > 0 then " +
+            "true else false end " +
+            "from User u " +
+            "where u.id = ?1 ")
+    boolean assertUserExists(Long userId);
+
     @Query("select u " +
             "from User u " +
             "where u.username = ?1 ")
