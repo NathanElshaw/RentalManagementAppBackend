@@ -1,7 +1,7 @@
 package com.example.rentalmanagerapp.rental.units;
 
-import com.example.rentalmanagerapp.rental.units.requests.GetUnitRequest;
 import com.example.rentalmanagerapp.rental.units.requests.UnitsRequest;
+import com.example.rentalmanagerapp.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,9 +26,9 @@ public class UnitsController {
     }
 
     @GetMapping("/getRental")
-    public String getRental (
-            @RequestBody UnitsRequest.GetRentalRequest getRentalPayload){
-        return unitsService.getRentalWithCode(getRentalPayload);
+    public Units getRental (
+            @RequestBody String unitCode){
+        return unitsService.getRentalWithCode(unitCode);
     }
 
     @PatchMapping ("/update")
@@ -53,7 +53,7 @@ public class UnitsController {
     //User Requests
     @GetMapping("/userIdGetRental")
     public Units.ReturnGetUnitsRequest userIdGetUnits(
-            @RequestBody GetUnitRequest userId){
-        return unitsService.userIdGetUnits(userId);
+            @RequestBody User user){
+        return unitsService.userIdGetUnits(user);
     }
 }
