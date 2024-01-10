@@ -2,6 +2,9 @@ package com.example.rentalmanagerapp.rental.units;
 
 import com.example.rentalmanagerapp.rental.Rental;
 import com.example.rentalmanagerapp.rental.RentalRepository;
+import com.example.rentalmanagerapp.rental.unitcode.UnitCodeRepository;
+import com.example.rentalmanagerapp.rental.unitcode.UnitCodes;
+import com.example.rentalmanagerapp.user.User;
 import com.example.rentalmanagerapp.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.example.rentalmanagerapp.globals.GlobalVars.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -35,6 +39,9 @@ class UnitsServiceTest {
     @Mock
     private RentalRepository rentalRepository;
 
+    @Mock
+    private UnitCodeRepository unitCodeRepository;
+
     @InjectMocks
     private UnitsService underTest;
 
@@ -42,17 +49,28 @@ class UnitsServiceTest {
 
     private Rental rental;
 
+    private User user;
+
+    private final String code = UUID.randomUUID().toString();
+
     @BeforeEach
      void spinUp(){
         underTest = new UnitsService(
                 unitsRepository,
                 userRepository,
-                rentalRepository
+                rentalRepository,
+                unitCodeRepository
         );
 
         rental = new Rental(
             address,
             rentalType
+        );
+
+        user = new User(
+                name,
+                email,
+                address
         );
 
         unit = new Units(
@@ -143,7 +161,46 @@ class UnitsServiceTest {
     }
 
     @Test
+    void getAllUnitsByAddressWillThrow(){
+        assertThatThrownBy(() -> underTest
+                .getAllUnitsByAddress(address))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("No units found");
+    }
+
+    @Test
     void getRentalWithCode() {
+
+        UnitCodes unitCode = new UnitCodes(
+                code,
+                unit
+        );
+
+        when(unitCodeRepository.findByUnitCode(code))
+                .thenReturn(Optional.of(unitCode));
+
+        underTest.getRentalWithCode(code);
+
+        ArgumentCaptor<String> stringArgumentCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        verify(unitCodeRepository)
+                .findByUnitCode(stringArgumentCaptor.capture());
+
+        Units testUnits = underTest.getRentalWithCode(code);
+
+        assertThat(testUnits).isNotNull();
+        assertThat(testUnits.getUnitNumber()).isEqualTo(unitNumber);
+        assertThat(testUnits.getUnitAddress()).isEqualTo(address);
+    }
+
+    @Test
+    void getRentalWithCodeWillThrow(){
+
+        assertThatThrownBy(()-> underTest
+                .getRentalWithCode(code))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Code is invalid");
     }
 
     @Test
@@ -171,10 +228,80 @@ class UnitsServiceTest {
     }
 
     @Test
-    void userIdGetUnits() {
+    void canUserIdGetUnits() {
+
+        when(userRepository.assertUserExists(user.getId()))
+                .thenReturn(true);
+
+        when(unitsRepository
+                .getUnitByUserId(user))
+                .thenReturn(Optional.of(unit));
+
+        underTest.userIdGetUnits(user);
+
+        ArgumentCaptor<User> userArgumentCaptor =
+                ArgumentCaptor.forClass(User.class);
+
+        verify(unitsRepository)
+                .getUnitByUserId(userArgumentCaptor.capture());
+
+        Units.ReturnGetUnitsRequest testUnits =
+                underTest.userIdGetUnits(user);
+
+        assertThat(testUnits).isNotNull();
+        assertThat(testUnits.getUnitNumber()).isEqualTo(unitNumber);
+        assertThat(testUnits.getHasPets()).isNull();
+    }
+
+    @Test
+    void userIdGetUnitWillThrowNoUser(){
+
+        when(userRepository.assertUserExists(user.getId()))
+                .thenReturn(false);
+
+        assertThatThrownBy(()->underTest
+                .userIdGetUnits(user))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("User not found");
+    }
+
+    @Test
+    void userIdGetUnitWillThrowNoUnit(){
+
+        when(userRepository.assertUserExists(user.getId()))
+                .thenReturn(true);
+
+        assertThatThrownBy(() -> underTest
+                .userIdGetUnits(user))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("User is not apart of any units");
     }
 
     @Test
     void getAllUnitsWithDetails() {
+
+        List<Units> unitsList = new ArrayList<>();
+
+        unitsList.add(unit);
+
+        when(unitsRepository.getAllUnits())
+                .thenReturn(unitsList);
+
+        underTest.getAllUnitsWithDetails();
+
+        List<Units.GetAllUnitsWithDetails> testUnits =
+                underTest.getAllUnitsWithDetails();
+
+        assertThat(testUnits).isNotNull();
+        assertThat(testUnits.size()).isEqualTo(1);
+        assertThat(testUnits.get(0).getUnitNumber()).isEqualTo(unitNumber);
+    }
+
+    @Test
+    void getAllUnitsWithDetailsWillThrow(){
+        assertThatThrownBy(() -> underTest
+                .getAllUnitsWithDetails())
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("No units Exist");
     }
 }
