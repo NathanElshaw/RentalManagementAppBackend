@@ -1,9 +1,9 @@
 package com.example.rentalmanagerapp.rental.units;
 
 import com.example.rentalmanagerapp.rental.Rental;
+import com.example.rentalmanagerapp.rental.unitcode.UnitCodeRepository;
 import com.example.rentalmanagerapp.rental.unitcode.UnitCodes;
 import com.example.rentalmanagerapp.rental.RentalRepository;
-import com.example.rentalmanagerapp.rental.units.requests.GetUnitRequest;
 import com.example.rentalmanagerapp.rental.units.requests.UnitsRequest;
 import com.example.rentalmanagerapp.user.User;
 import com.example.rentalmanagerapp.user.UserRepository;
@@ -23,6 +23,8 @@ public class UnitsService {
     private final UserRepository userRepository;
 
     private final RentalRepository rentalRepository;
+
+    private final UnitCodeRepository unitCodeRepository;
 
     private IllegalStateException unitNotFound(){
         return new IllegalStateException("Unit not found");
@@ -78,6 +80,10 @@ public class UnitsService {
                 repository.getAllUnitByAddress(
                 payloadAddress);
 
+        if(returnedUnits.isEmpty()){
+            throw throwUnitsError("No units found");
+        }
+
             returnedUnits.forEach(rental -> {
                 Units newUnit = new Units(
                         rental.getId(),
@@ -105,10 +111,15 @@ public class UnitsService {
         return returnUnitsList;
     }
 
-    public String getRentalWithCode(
-            UnitsRequest.GetRentalRequest addRenterPayload){
+    public Units getRentalWithCode(
+            String code){
+        return unitCodeRepository
+                .findByUnitCode(code)
+                .orElseThrow(()->
+                        throwUnitsError("Code is invalid"))
+                .getParentRental();
+
         //Todo Validate unitCode then return unit to user to confirm if its the correct one.
-        return "";
     }
 
     public String updateUnit(
@@ -129,14 +140,18 @@ public class UnitsService {
     }
 
     public Units.ReturnGetUnitsRequest userIdGetUnits (
-            GetUnitRequest requestPayload){
-        User getUser =
-                userRepository.findById(
-                requestPayload.getUserId()).orElseThrow(
-                ()->throwUnitsError("User not found"));
+            User user){
 
-        Units targetUnit = repository.getUnitByUserId(
-                getUser).orElseThrow(
+        boolean userExist = userRepository
+                .assertUserExists(user.getId());
+
+        if(!userExist){
+            throw throwUnitsError("User not found");
+        }
+
+        Units targetUnit = repository
+                .getUnitByUserId(user)
+                .orElseThrow(
                 ()->throwUnitsError(
                         "User is not apart of any units"));
 
@@ -158,6 +173,10 @@ public class UnitsService {
         List<Units.GetAllUnitsWithDetails> returnedData = new ArrayList<>();
 
         List<Units> returnedUnitsList = repository.getAllUnits();
+
+        if(returnedUnitsList.isEmpty()){
+            throw throwUnitsError("No units Exist");
+        }
 
         returnedUnitsList.forEach(unit -> {
             Rental parentRental = unit.getParentUnitId();
