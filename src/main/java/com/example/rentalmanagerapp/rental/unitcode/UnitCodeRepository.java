@@ -18,6 +18,12 @@ public interface UnitCodeRepository extends JpaRepository<UnitCodes, Long> {
             "where c.unitCode = ?1 ")
     Optional<UnitCodes> findByUnitCode(String code);
 
+    @Query("select case when count(u) > 0 then " +
+            "true else false end " +
+            "from UnitCodes  u " +
+            "where u.unitCode = ?1 ")
+    boolean assertByUnitCode(String code);
+
     @Transactional
     @Modifying
     @Query("UPDATE UnitCodes c " +
