@@ -28,6 +28,12 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
             double newRentalRent,
             int newRentalAmount);
 
+    @Query("select case when count(r) > 1 then " +
+            "true else false end " +
+            "from Rental r " +
+            "where r.rentalAddress = ?1 ")
+    boolean assertRentalByAddress(String address);
+
     @Transactional
     @Modifying
     @Query("update Rental  r " +
@@ -57,9 +63,9 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
     void addManagerToComplex(String address, User manager);
 
     @Query("select r from Rental r where r.assignedManager = ?1 ")
-    Optional<List<Rental>> getRentalByAssignedManager(User user);
+    List<Rental> getRentalByAssignedManager(User user);
 
     @Query("select r from Rental r")
-    Optional<List<Rental>> getAllUnits();
+    List<Rental> getAllUnits();
 
 }
