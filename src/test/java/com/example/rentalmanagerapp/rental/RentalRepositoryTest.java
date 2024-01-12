@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.List;
+
 import static com.example.rentalmanagerapp.globals.GlobalVars.address;
 import static com.example.rentalmanagerapp.globals.GlobalVars.rentalType;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -45,10 +47,17 @@ class RentalRepositoryTest {
 
     @Test
     void getRentalByAssignedManager() {
+        //Do later
     }
 
     @Test
     void getAllUnits() {
+        List<Rental> testRental = underTest
+                .getAllUnits();
+
+        assertThat(testRental).isNotNull();
+        assertThat(testRental.size()).isEqualTo(1);
+        assertThat(testRental.get(0).getRentalAddress()).isEqualTo(address);
     }
 
     @Test
