@@ -29,9 +29,8 @@ public class RentalService {
             Rental rentalRequest
     ){
         boolean addressExists = repository
-                .findByRentalAddress(
-                rentalRequest.getRentalAddress())
-                .isPresent();
+                .assertRentalByAddress(
+                        rentalRequest.getRentalAddress());
 
         if (addressExists) {
             throw error("Address already exists");
@@ -82,9 +81,9 @@ public class RentalService {
 
 
     public List<Rental> getAllRentals(){
+
         List<Rental> returnRentalList = new ArrayList<>();
-        List<Rental> rentals = repository.getAllUnits()
-                .orElseThrow(this::rentalNotFound);
+        List<Rental> rentals = repository.getAllUnits();
 
          rentals.forEach(listRental -> {
             Rental returnRental = new Rental(
@@ -117,10 +116,7 @@ public class RentalService {
                 ()->new IllegalStateException("User not found")
         );
 
-         List<Rental> getManagedRentals = repository.getRentalByAssignedManager(manager)
-                 .orElseThrow(
-                         ()->new IllegalStateException("User doesnt manage any rentals")
-         );
+         List<Rental> getManagedRentals = repository.getRentalByAssignedManager(manager);
 
          getManagedRentals.forEach(rental ->
                  {
