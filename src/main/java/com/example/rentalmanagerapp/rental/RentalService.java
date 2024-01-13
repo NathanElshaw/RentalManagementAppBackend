@@ -41,31 +41,18 @@ public class RentalService {
     }
 
     public String updateRental(
-            Rental updatePayload){
+            Rental updateRental){
         //Todo reduce this;
         Rental targetRental =
                 repository.findById(
-                updatePayload.getId())
+                updateRental.getId())
                 .orElseThrow(this::rentalNotFound);
 
-        Rental newRental = new Rental(
-                updatePayload.getId(),
-                updatePayload.getRentalAddress(),
-                updatePayload.getDescription(),
-                updatePayload.getType(),
-                updatePayload.getTotalTenants(),
-                updatePayload.getTotalUnits(),
-                updatePayload.getAvgRentAmount(),
-                updatePayload.getTotalRentIncome(),
-                updatePayload.getAssignedManager(),
-                updatePayload.getCreatedBy(),
-                updatePayload.getCreatedAt(),
-                LocalDateTime.now()
-        );
+        updateRental.setUpdatedAt(LocalDateTime.now());
 
         repository.updateRental(
-                updatePayload.getId(),
-                newRental);
+                updateRental.getId(),
+                targetRental);
 
         return "Success";
     }
