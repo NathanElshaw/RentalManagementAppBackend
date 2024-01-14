@@ -57,11 +57,15 @@ public class RentalService {
         return "Success";
     }
 
-    public String deleteRental(Long rentalId){
-        repository.findById(rentalId)
-                .orElseThrow(this::rentalNotFound);
+    public String deleteRental(Rental rental){
+        boolean rentalExists = repository
+                .assertRentalByAddress(rental.getRentalAddress());
 
-        repository.deleteById(rentalId);
+        if(!rentalExists){
+            throw rentalNotFound();
+        }
+
+        repository.delete(rental);
 
         return "Success";
     }
@@ -95,12 +99,14 @@ public class RentalService {
         return returnRentalList;
     }
 
-    public List<Rental> getPropertyMangerRentals(Long userId){
+    public List<Rental> getPropertyMangerRentals(User user){
 
         List<Rental> returnedList = new ArrayList<>();
 
-         User manager = userRepository.findById(userId).orElseThrow(
-                ()->new IllegalStateException("User not found")
+         User manager = userRepository
+                 .findById(user.getId())
+                 .orElseThrow(()->
+                         new IllegalStateException("User not found")
         );
 
          List<Rental> getManagedRentals = repository.getRentalByAssignedManager(manager);
