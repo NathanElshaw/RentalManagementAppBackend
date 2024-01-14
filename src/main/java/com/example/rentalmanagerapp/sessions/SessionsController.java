@@ -1,5 +1,6 @@
 package com.example.rentalmanagerapp.sessions;
 
+import com.example.rentalmanagerapp.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,13 +18,20 @@ public class SessionsController {
 
     @PostMapping("/create")
     public String createSession(
-            @RequestBody Sessions.createSessionRequest requestPayload){
-        return sessionsServices.createSession(requestPayload.getUserId());
+            @RequestBody User user){
+        return sessionsServices.createSession(user);
     }
 
     @PatchMapping("/update")
     public String updateSession(
-            @RequestBody Sessions.createSessionRequest requestPayload){
-        return sessionsServices.updateSession(requestPayload.getUserId());
+            @RequestBody User user){
+        return sessionsServices.updateSession(user);
+    }
+
+    @PatchMapping("/delete")
+    public String deleteSession(
+            @RequestBody User user
+    ){
+        return sessionsServices.deleteSession(user);
     }
 }
