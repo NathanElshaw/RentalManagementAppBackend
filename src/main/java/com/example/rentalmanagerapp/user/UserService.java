@@ -15,7 +15,7 @@ public class UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public String createUser(UserSignUpRequest user){
+    public String createUser(User user){
         try {
             boolean userExists = userRepository.findByUsername(user.getUsername()).isPresent();
             boolean emailExists = userRepository.findByEmail(user.getEmail()).isPresent();
@@ -28,21 +28,11 @@ public class UserService {
                 throw new IllegalStateException("Email already exists");
             }
 
-            LocalDate convertedBirthDate = LocalDate.parse(user.getBirthDate());
             String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
-            User creatingUser = new User(
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getFirstName() + " " + user.getLastName(),
-                    convertedBirthDate,
-                    user.getAddress(),
-                    user.getEmail(),
-                    user.getTelephone(),
-                    user.getUsername(),
-                    encodedPassword
-            );
-            userRepository.save(creatingUser);
+            user.setPassword(encodedPassword);
+
+            userRepository.save(user);
 
             return UUID.randomUUID().toString();
         }catch(Exception e){
