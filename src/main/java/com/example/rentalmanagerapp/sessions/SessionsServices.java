@@ -1,5 +1,6 @@
 package com.example.rentalmanagerapp.sessions;
 
+import com.example.rentalmanagerapp.exceptions.BadRequestException;
 import com.example.rentalmanagerapp.user.User;
 import com.example.rentalmanagerapp.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -16,10 +17,11 @@ public class SessionsServices {
     private final UserRepository userRepository;
 
     public String createSession(
-            Long userId){
+            User user){
          if(sessionsRepository.findByUserId(
-                 userId).isEmpty()){
-             User targetUser = userRepository.findById(userId)
+                 user.getId()).isEmpty()){
+             
+             User targetUser = userRepository.findById(user.getId())
                      .orElseThrow(
                      ()->new IllegalStateException("User not found")
              );
@@ -35,33 +37,53 @@ public class SessionsServices {
 
              return "Session created for " + targetUser.getFirstName() + " " + targetUser.getLastName();
          }else{
-             return updateSession(userId);
+             return updateSession(user);
          }
     }
 
-    public String updateSession(
-            Long userId){
-        User targetUser = userRepository.findById(
-                userId).orElseThrow(
-                ()->new IllegalStateException("User not found")
-        );
+    public String updateSession(User user){
+
+        boolean userExist = userRepository.assertUserExists(user.getId());
+
+        if(!userExist){
+            throw new IllegalStateException("User not found");
+        }
 
         Sessions targetSession = sessionsRepository.findByUserId(
-                userId).orElseThrow(
+                user.getId()).orElseThrow(
                 ()->new IllegalStateException("Session not found")
         );
 
+        targetSession.setSessionAmount(targetSession
+                .getSessionAmount() + 1);
+        targetSession.setLastSessionStart(targetSession
+                .getStartOfSession());
+        targetSession.setStartOfSession(LocalDateTime.now());
+
         sessionsRepository.updateUserSession(
-                targetUser,
-                targetSession.getSessionAmount() + 1,
-                targetSession.getStartOfSession(),
-                LocalDateTime.now());
+                targetSession.getId(),
+                targetSession);
 
         return "Session created for 2" +
-                targetUser.getFirstName() +
+                user.getFirstName() +
                 " " +
-                targetUser.getLastName();
+                user.getLastName();
 
+    }
+
+    public String deleteSession(User user){
+        boolean userExist = userRepository.assertUserExists(user.getId());
+
+        if(!userExist){
+           throw new BadRequestException("User not found");
+        }
+
+        sessionsRepository.changeSessionStatus(
+                user,
+                false
+        );
+
+        return "Status changed";
     }
 
 }
