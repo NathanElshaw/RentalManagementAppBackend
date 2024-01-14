@@ -20,15 +20,15 @@ public interface SessionsRepository extends JpaRepository<Sessions, Long> {
     @Transactional
     @Modifying
     @Query("update Sessions s " +
-            "set s.sessionAmount = ?2, " +
-            "s.lastSessionStart = ?3, " +
-            "s.startOfSession = ?4 " +
-            "where s.user = ?1 ")
-    void updateUserSession(
-            User user,
-            int sessionAmount,
-            LocalDateTime lastSession,
-            LocalDateTime sessionOfStart);
+            "set s = ?1 " +
+            "where s.id = ?1 ")
+    void updateUserSession(Long sessionId, Sessions newSession);
 
+    @Transactional
+    @Modifying
+    @Query("update Sessions s " +
+            "set s.isActive = ?2 " +
+            "where s.user = ?1 ")
+    void changeSessionStatus(User user, boolean bool);
 
 }
