@@ -39,6 +39,8 @@ public class Sessions {
 
     private int sessionAmount;
 
+    private boolean isActive;
+
     private LocalDateTime lastSessionStart;
 
     private LocalDateTime startOfSession;
@@ -52,14 +54,5 @@ public class Sessions {
         this.sessionAmount = sessionAmount;
         this.lastSessionStart = lastSessionStart;
         this.startOfSession = startOfSession;
-    }
-
-    @Getter
-    @Setter
-    @ToString
-    @EqualsAndHashCode
-    @AllArgsConstructor
-    public static class createSessionRequest{
-        private final long userId;
     }
 }
