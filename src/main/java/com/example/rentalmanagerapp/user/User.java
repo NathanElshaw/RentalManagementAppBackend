@@ -15,6 +15,7 @@ import lombok.ToString;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -85,6 +86,10 @@ public class User {
 
     @OneToOne
     private Units usersUnit;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     public User() {
 
