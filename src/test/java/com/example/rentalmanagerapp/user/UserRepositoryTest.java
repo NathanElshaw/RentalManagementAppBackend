@@ -76,6 +76,11 @@ public class UserRepositoryTest {
 
     @Test
     @Disabled
+    void updateUser(){
+    }
+
+    @Test
+    @Disabled
     void addUnitToUser() {
     }
 }
