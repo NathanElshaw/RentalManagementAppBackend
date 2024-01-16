@@ -5,6 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -16,12 +17,11 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public String createUser(User user){
-        try {
             boolean userExists = userRepository.findByUsername(user.getUsername()).isPresent();
             boolean emailExists = userRepository.findByEmail(user.getEmail()).isPresent();
 
             if(userExists){
-               throw new IllegalStateException("User already Exists");
+               throw new IllegalStateException("User already exists");
             }
 
             if(emailExists){
@@ -35,16 +35,35 @@ public class UserService {
             userRepository.save(user);
 
             return UUID.randomUUID().toString();
-        }catch(Exception e){
-            throw new IllegalStateException(e);
-        }
     }
 
     public String updateUser(User user){
-        if(user == null){
+
+        boolean userExists =
+                userRepository.assertUserExists(user.getId());
+
+        if(!userExists){
             throw new IllegalStateException("Cannot update");
         }
-        return "";
+
+        user.setUpdatedAt(LocalDateTime.now());
+
+        userRepository.updateUser(user.getId(), user);
+
+        return "Success";
+    }
+
+    public String deleteUser(User user){
+
+        boolean userExists = userRepository.assertUserExists(user.getId());
+
+        if(!userExists){
+            throw new IllegalStateException("User does not exist");
+        }
+
+        userRepository.delete(user);
+
+        return "Deleted user";
     }
 
     public String userLogin(
