@@ -37,6 +37,13 @@ public interface UserRepository
 
     @Transactional
     @Modifying
+    @Query("update User u " +
+            "set u = ?2 " +
+            "where u.id = ?1")
+    void updateUser(Long userId, User newUserInfo);
+
+    @Transactional
+    @Modifying
     @Query(" update  User  u " +
             "set u.usersUnit = ?2 " +
             "where u = ?1 ")
