@@ -18,15 +18,15 @@ public class UserController {
 
     @PostMapping("/register")
     public String createUser(
-            @RequestBody UserSignUpRequest user){
+            @RequestBody User user){
         return userService.createUser(user);
     }
 
     @DeleteMapping("/delete")
     public String deleteUser(
-            @RequestParam("User") String username){
+            @RequestBody User user){
         //Todo validate jwt , add delete service
-        return "";
+        return userService.deleteUser(user);
     }
 
     @PutMapping("/update")
