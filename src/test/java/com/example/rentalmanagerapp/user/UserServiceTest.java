@@ -141,8 +141,6 @@ class UserServiceTest {
     @Test
     void userLogin() {
 
-        CharSequence password = "password";
-
         String encodedPassword = encoder.encode("password");
 
         user.setPassword(encodedPassword);
@@ -150,11 +148,6 @@ class UserServiceTest {
         when(userRepository.findByUsername(username))
                 .thenReturn(Optional.of(user));
 
-
-        when(encoder.matches(
-                password,
-                encodedPassword
-        )).thenReturn(true);
 
         underTest.userLogin(login);
 
@@ -170,5 +163,26 @@ class UserServiceTest {
                         stringArgumentCaptor.capture()
                 );
 
+    }
+
+    @Test
+    void userLoginWillThrowUsername(){
+
+        assertThatThrownBy(()-> underTest.userLogin(login))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Invalid username or password");
+    }
+
+    @Test
+    void userLoginWillThrowPassword(){
+
+        when(userRepository.findByUsername(username))
+                .thenReturn(Optional.of(user));
+
+
+        assertThatThrownBy(()->
+                underTest.userLogin(login))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Invalid username or password");
     }
 }
