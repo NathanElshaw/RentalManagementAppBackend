@@ -148,6 +148,11 @@ class UserServiceTest {
         when(userRepository.findByUsername(username))
                 .thenReturn(Optional.of(user));
 
+        when(encoder.matches(
+                login.getPassword(),
+                user.getPassword()
+        )).thenReturn(true);
+
 
         underTest.userLogin(login);
 
