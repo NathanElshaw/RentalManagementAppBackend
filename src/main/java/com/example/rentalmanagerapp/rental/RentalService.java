@@ -1,5 +1,7 @@
 package com.example.rentalmanagerapp.rental;
 
+import com.example.rentalmanagerapp.exceptions.BadRequestException;
+import com.example.rentalmanagerapp.rental.units.UnitsRepository;
 import com.example.rentalmanagerapp.user.User;
 import com.example.rentalmanagerapp.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -17,6 +19,8 @@ public class RentalService {
 
     private final UserRepository userRepository;
 
+    private final UnitsRepository unitsRepository;
+
     private IllegalStateException rentalNotFound(){
         return new IllegalStateException("No Rentals Exist");
     }
@@ -26,8 +30,7 @@ public class RentalService {
     }
 
     public String createRental(
-            Rental rentalRequest
-    ){
+            Rental rentalRequest){
         boolean addressExists = repository
                 .assertRentalByAddress(
                         rentalRequest.getRentalAddress());
@@ -38,6 +41,20 @@ public class RentalService {
 
         repository.save(rentalRequest);
         return "New Rental Saved";
+    }
+
+    //make dto for user req
+    public Rental getUserRental(User user){
+        boolean userHasRental = unitsRepository
+                .assertUserHasRental(user.getId());
+
+        if(!userHasRental){
+            throw new BadRequestException("User doesnt have a unit");
+        }
+
+        return repository
+                .findByRentalAddress(user.getRentalAddress())
+                .orElseThrow(this::rentalNotFound);
     }
 
     public String updateRental(
