@@ -33,6 +33,12 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
             "and u.unitNumber = ?2")
     boolean assertUnitExistByAddressAndNumber(String address, int unitNumber);
 
+    @Query("select case when counts(u) > 0 then " +
+            "true else false end " +
+            "from Units u " +
+            "where u.renter = ?1 ")
+    boolean assertUserHasRental(Long userId);
+
     @Query("select u from Units u " +
             "where u.unitAddress = ?1 " +
             "and u.unitNumber = ?2")
