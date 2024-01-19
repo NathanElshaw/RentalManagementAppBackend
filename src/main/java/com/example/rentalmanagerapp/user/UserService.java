@@ -77,9 +77,10 @@ public class UserService {
                 userLoginPayload.getPassword(),
                 targetUser.getPassword())){
             return "passwords match";
+        }else{
+            throw new IllegalStateException("Invalid username or password");
         }
 
-        return "Invalid username or password 2";
         //TODO create jwt on password match then create a session in the sessions table.
     }
 }
