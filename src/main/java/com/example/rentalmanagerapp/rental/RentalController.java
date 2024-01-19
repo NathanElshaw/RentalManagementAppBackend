@@ -26,6 +26,12 @@ public class RentalController {
         return rentalService.createRental(rentalRequest);
     }
 
+    @GetMapping("/user/getRental")
+    public Rental getUsersRental(
+            @RequestBody User user){
+        return rentalService.getUserRental(user);
+    }
+
     @GetMapping("/getAll")
     public List<Rental> getAllUnits(){
         return rentalService.getAllRentals();
