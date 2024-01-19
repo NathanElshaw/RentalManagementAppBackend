@@ -1,12 +1,11 @@
 package com.example.rentalmanagerapp.rental.rentee.charges;
 
+import com.example.rentalmanagerapp.user.User;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/charges")
@@ -20,6 +19,16 @@ public class ChargesController {
     public String createCharge(
             @RequestBody Charges chargesPayload){
         return chargesService.createCharge(chargesPayload);
+    }
+
+    @GetMapping("/user/getCharges")
+    public List<Charges> getUserCharges(User user){
+        return new ArrayList<Charges>();
+    }
+
+    @PatchMapping("/user/pay")
+    public String makePayment(){
+        return "";
     }
 
     @PatchMapping("/update")
