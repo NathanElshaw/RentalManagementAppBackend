@@ -1,6 +1,9 @@
 package com.example.rentalmanagerapp.user;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +69,7 @@ public class UserService {
         return "Deleted user";
     }
 
-    public String userLogin(
+    public ResponseEntity<String> userLogin(
             User.UserLoginRequest userLoginPayload){
         User targetUser = userRepository.findByUsername(
                 userLoginPayload.getUsername()).orElseThrow(
@@ -76,7 +79,12 @@ public class UserService {
         if(bCryptPasswordEncoder.matches(
                 userLoginPayload.getPassword(),
                 targetUser.getPassword())){
-            return "passwords match";
+
+            HttpHeaders authHeader = new HttpHeaders();
+
+            authHeader.set("Jwt", "jwt");
+
+            return new ResponseEntity<String>("Good", authHeader, HttpStatus.CREATED);
         }else{
             throw new IllegalStateException("Invalid username or password");
         }
