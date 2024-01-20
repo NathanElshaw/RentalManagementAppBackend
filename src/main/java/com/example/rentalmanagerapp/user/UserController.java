@@ -1,6 +1,7 @@
 package com.example.rentalmanagerapp.user;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String loginUser(
+    public ResponseEntity<String> loginUser(
             @RequestBody User.UserLoginRequest loginPayload){
         return userService.userLogin(loginPayload);
     }
