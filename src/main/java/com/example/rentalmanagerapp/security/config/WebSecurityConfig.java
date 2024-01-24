@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,6 +40,8 @@ public class WebSecurityConfig {
         daoAuthenticationProvider.setUserDetailsService(userService.userDetailsService());
 
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder.bCryptPasswordEncoder());
+
+        return daoAuthenticationProvider;
     }
 
     @Bean
@@ -51,40 +54,50 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http) throws Exception {
         return http
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(
-                                    "/error",
-                                    "/api/v*/user/register/**",
-                                    "/api/v*/user/login")
-                            .permitAll()
-                            .anyRequest().authenticated();
-                })
-
-                .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(
-                                    "/admin/**",
-                                    "/api/v1/**")
-                        .hasAuthority(String.valueOf(UserRoles.Admin));
-                })
-                .authenticationProvider(authProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-
-                .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/api/v1/user",
-                                    "/api/v1/rentals/user/getRental",
-                                    "/api/v1/units/userIdGetRental",
-                                    "/api/v1/unitCodes/joinUnit",
-                                    "/api/v1/charges/user/**",
-                                    "/api/v1/issues/create",
-                                    "/api/v1/issues/update"
-                                    )
-                            .hasRole(String.valueOf(UserRoles.User));
+                .authenticationProvider(authProvider())
+                .authorizeHttpRequests(auth ->{
+                    auth.requestMatchers("/**")
+                            .permitAll()
+                            .anyRequest()
+                            .authenticated();
                 })
-
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(withDefaults())
+                .csrf(Customizer.withDefaults())
                 .build();
+
     }
 }
+
+//                .sessionManagement(session ->
+//                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .authenticationProvider(authProvider())
+//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+//
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .formLogin(withDefaults())
+//                .build();
+//                .authorizeHttpRequests(auth -> {
+//                    auth.requestMatchers(
+//                                    "/error",
+//                                    "/api/v*/user/register/**",
+//                                    "/api/v*/user/login")
+//                            .permitAll()
+//                            .anyRequest().authenticated();
+
+//                    auth.requestMatchers(
+//                                    "/admin/**",
+//                                    "/api/v1/**")
+//                            .hasAuthority(String.valueOf(UserRoles.Admin))
+//                            .anyRequest().authenticated();
+//
+//                    auth.requestMatchers("/api/v1/user",
+//                                    "/api/v1/rentals/user/getRental",
+//                                    "/api/v1/units/userIdGetRental",
+//                                    "/api/v1/unitCodes/joinUnit",
+//                                    "/api/v1/charges/user/**",
+//                                    "/api/v1/issues/create",
+//                                    "/api/v1/issues/update"
+//                            )
+//                            .hasRole(String.valueOf(UserRoles.User))
+//                            .anyRequest().authenticated();
+//                })
