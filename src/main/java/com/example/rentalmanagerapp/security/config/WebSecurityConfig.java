@@ -7,6 +7,7 @@ import com.example.rentalmanagerapp.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -54,17 +55,35 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http) throws Exception {
         return http
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .authenticationProvider(authProvider())
-                .authorizeHttpRequests(auth ->{
-                    auth.requestMatchers("/**")
-                            .permitAll()
-                            .anyRequest()
-                            .authenticated();
-                })
-                .csrf(Customizer.withDefaults())
-                .build();
+                .csrf(AbstractHttpConfigurer::disable)
 
+                .authorizeHttpRequests(auth ->
+                        auth
+                                    .requestMatchers(HttpMethod.POST, "/api/v*/user/register/**", "/api/v*/user/login")
+                                    .permitAll()
+                                    .anyRequest()
+                                    .authenticated()
+
+                )
+
+                .authorizeHttpRequests(auth ->
+                        auth
+                                .requestMatchers(HttpMethod.DELETE, "/api/v*/user/delete")
+                )
+
+
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                .authenticationProvider(authProvider())
+
+                .addFilterBefore(
+                        jwtAuthFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                )
+
+                .formLogin(withDefaults())
+                .build();
     }
 }
 
