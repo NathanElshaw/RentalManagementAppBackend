@@ -1,5 +1,6 @@
 package com.example.rentalmanagerapp.user;
 
+import com.example.rentalmanagerapp.security.jwt.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private final JwtService jwtService;
 
     public UserDetailsService userDetailsService(){
         return new UserDetailsService() {
@@ -97,7 +100,9 @@ public class UserService {
 
             HttpHeaders authHeader = new HttpHeaders();
 
-            authHeader.set("Jwt", "jwt");
+            authHeader.set("token", jwtService
+                    .generateToken(userDetailsService()
+                            .loadUserByUsername(userLoginPayload.getUsername())));
 
             return new ResponseEntity<String>("Good", authHeader, HttpStatus.CREATED);
         }else{
