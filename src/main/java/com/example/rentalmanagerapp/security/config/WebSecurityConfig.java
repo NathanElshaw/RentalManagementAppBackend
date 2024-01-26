@@ -29,6 +29,11 @@ public class WebSecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
 
+    private  final String[] urlList = {
+            "/api/v*/user/register/**",
+            "/api/v*/user/login"
+    };
+
     private final UserService userService;
 
     private final PasswordEncoder passwordEncoder;
@@ -54,23 +59,20 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http) throws Exception {
+
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
 
-                .authorizeHttpRequests(auth ->
-                        auth
-                                    .requestMatchers(HttpMethod.POST, "/api/v*/user/register/**", "/api/v*/user/login")
-                                    .permitAll()
-                                    .anyRequest()
-                                    .authenticated()
+                .authorizeHttpRequests(req ->
+                        req
+                                .requestMatchers(urlList)
+                                .permitAll()
+                                .requestMatchers(HttpMethod.DELETE,  "/api/v*/user/delete").hasAnyRole(String.valueOf(UserRoles.User))
+                                .anyRequest()
+                                .authenticated()
 
                 )
-
-                .authorizeHttpRequests(auth ->
-                        auth
-                                .requestMatchers(HttpMethod.DELETE, "/api/v*/user/delete")
-                )
-
 
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
