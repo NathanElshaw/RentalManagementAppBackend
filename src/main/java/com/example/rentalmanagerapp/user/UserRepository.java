@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -29,6 +30,10 @@ public interface UserRepository
             "from User u " +
             "where u.id = ?1 ")
     boolean assertUserExists(Long userId);
+
+    @Query("select u " +
+            "from User u")
+    List<User> getAllUsers();
 
     @Query("select u " +
             "from User u " +
