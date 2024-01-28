@@ -2,13 +2,10 @@ package com.example.rentalmanagerapp.user;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -25,9 +22,14 @@ public class UserController {
 
     @DeleteMapping("/delete")
     public String deleteUser(
-            @RequestBody User user){
+            Principal user){
         //Todo validate jwt , add delete service
         return userService.deleteUser(user);
+    }
+
+    @GetMapping("/getAll")
+    public List<User> getAllUsers(){
+        return userService.getAllUsers();
     }
 
     @PutMapping("/update")
