@@ -20,6 +20,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.example.rentalmanagerapp.user.Permissions.*;
+import static com.example.rentalmanagerapp.user.UserRoles.*;
+import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @EnableWebSecurity
@@ -30,7 +33,7 @@ public class WebSecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
 
     private  final String[] urlList = {
-            "/api/v*/user/register/**",
+            "/api/v*/user/register",
             "/api/v*/user/login"
     };
 
@@ -39,15 +42,15 @@ public class WebSecurityConfig {
     private final PasswordEncoder passwordEncoder;
 
     @Bean
-    public AuthenticationProvider authProvider(){
-        DaoAuthenticationProvider daoAuthenticationProvider =
-                new DaoAuthenticationProvider();
+    public AuthenticationProvider authenticationProvider() {
 
-        daoAuthenticationProvider.setUserDetailsService(userService.userDetailsService());
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder.bCryptPasswordEncoder());
+        authProvider.setUserDetailsService(userService.userDetailsService());
 
-        return daoAuthenticationProvider;
+        authProvider.setPasswordEncoder(passwordEncoder.bCryptPasswordEncoder());
+
+        return authProvider;
     }
 
     @Bean
@@ -68,7 +71,10 @@ public class WebSecurityConfig {
                         req
                                 .requestMatchers(urlList)
                                 .permitAll()
-                                .requestMatchers(HttpMethod.DELETE,  "/api/v*/user/delete").hasAnyRole(String.valueOf(UserRoles.User))
+                                .requestMatchers("/api/v*/user/delete").hasAnyRole(User.name())
+                                .requestMatchers(DELETE, "/api/v*/user/delete").hasAnyAuthority(User_Delete.name())
+                                .requestMatchers("/api/v*/user/getAll").hasAnyRole(Admin.name(), PropertyManger.name())
+                                .requestMatchers(GET, "/api/v*/user/getAll").hasAnyRole(Admin_Read.name(), Property_Manager_Read.name())
                                 .anyRequest()
                                 .authenticated()
 
@@ -77,14 +83,12 @@ public class WebSecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                .authenticationProvider(authProvider())
+                .authenticationProvider(authenticationProvider())
 
                 .addFilterBefore(
                         jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class
                 )
-
-                .formLogin(withDefaults())
                 .build();
     }
 }
