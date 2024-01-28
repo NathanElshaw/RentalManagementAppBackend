@@ -5,14 +5,17 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -74,15 +77,18 @@ public class UserService {
         return "Success";
     }
 
-    public String deleteUser(User user){
+    public List<User> getAllUsers(){
+        List<User> userList = userRepository.getAllUsers();
 
-        boolean userExists = userRepository.assertUserExists(user.getId());
+        return userList;
+    }
 
-        if(!userExists){
-            throw new IllegalStateException("User does not exist");
-        }
+    public String deleteUser(Principal user){
 
-        userRepository.delete(user);
+        User reqUser = (User) ((UsernamePasswordAuthenticationToken) user).getPrincipal();
+
+
+        userRepository.delete(reqUser);
 
         return "Deleted user";
     }
