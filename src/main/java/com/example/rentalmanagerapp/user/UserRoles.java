@@ -10,6 +10,7 @@ import java.util.Set;
 
 import static com.example.rentalmanagerapp.user.Permissions.*;
 
+@Getter
 @RequiredArgsConstructor
 public enum UserRoles {
 
@@ -59,7 +60,6 @@ public enum UserRoles {
     )
 
     ;
-    @Getter
     private final Set<Permissions> permissions;
 
     public List<SimpleGrantedAuthority> getAuthorities(){
@@ -71,7 +71,7 @@ public enum UserRoles {
                        ))
                        .toList());
 
-       authorities.add(new SimpleGrantedAuthority("ROlE_" + this.name()));
+       authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
 
        return authorities;
     };
