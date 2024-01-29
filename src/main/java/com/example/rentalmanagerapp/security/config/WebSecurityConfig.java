@@ -63,7 +63,6 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http) throws Exception {
 
-
         return http
                 .csrf(AbstractHttpConfigurer::disable)
 
@@ -71,10 +70,24 @@ public class WebSecurityConfig {
                         req
                                 .requestMatchers(urlList)
                                 .permitAll()
-                                .requestMatchers("/api/v*/user/delete").hasAnyRole(User.name())
-                                .requestMatchers(DELETE, "/api/v*/user/delete").hasAnyAuthority(User_Delete.name())
-                                .requestMatchers("/api/v*/user/getAll").hasAnyRole(Admin.name(), PropertyManger.name())
-                                .requestMatchers(GET, "/api/v*/user/getAll").hasAnyRole(Admin_Read.name(), Property_Manager_Read.name())
+                                .requestMatchers("/api/v*/user/delete").hasAnyRole(
+                                        User.name(),
+                                        Admin.name(),
+                                        PropertyManger.name())
+
+                                .requestMatchers(DELETE, "/api/v*/user/delete").hasAnyAuthority(
+                                        User_Delete.name(),
+                                        Admin_Delete.name(),
+                                        PropertyManger.name())
+
+                                .requestMatchers("/api/v*/user/getAll").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name())
+
+                                .requestMatchers(GET, "/api/v*/user/getAll").hasAnyAuthority(
+                                        Admin_Read.name(),
+                                        Property_Manager_Read.name())
+
                                 .anyRequest()
                                 .authenticated()
 
