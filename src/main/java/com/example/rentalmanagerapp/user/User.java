@@ -68,10 +68,6 @@ public class User implements UserDetails {
     private String password;
 
     //Authority
-    private Boolean isActive = false;
-
-    private Boolean isLocked = false;
-
     private UserRoles userRole = UserRoles.User;
 
     private Boolean hasUnit = false;
@@ -103,8 +99,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        // our "username" for security is the email field
-        return email;
+        return username;
     }
 
     @Override
@@ -185,8 +180,8 @@ public class User implements UserDetails {
     @AllArgsConstructor
     public static class UnitUserRequest {
         private final Long id;
-        private final  String fullName;
-        private final  LocalDate birthDate;
+        private final String fullName;
+        private final LocalDate birthDate;
         private final String email;
         private final String telephone;
         private final String username;
@@ -197,5 +192,4 @@ public class User implements UserDetails {
         private final Long amountPaid;
         private final Long amountOwed;
     }
-
 }
