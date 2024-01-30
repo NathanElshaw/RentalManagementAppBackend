@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 public class UnitCodesController {
     private final UnitCodesService unitCodesService;
 
-    @PostMapping("/createUnitCode")
+    @PostMapping("/create")
     public String createUnitCodes (
             @RequestBody UnitCodes unitCodes){
         return unitCodesService.createUnitCode(unitCodes);
@@ -35,7 +35,7 @@ public class UnitCodesController {
         return unitCodesService.updateCode(updateCodePayload);
     }
 
-    @DeleteMapping("/removeUnitCode")
+    @DeleteMapping("/delete")
     public String removeUnitCode(
             @RequestBody Long unitId){
         return unitCodesService.deleteUnitCode(unitId);
