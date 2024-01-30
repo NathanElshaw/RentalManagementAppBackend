@@ -38,13 +38,13 @@ public class UnitsController {
     }
 
     //Admin Requests
-    @GetMapping("/getAllUnitByAddress")
+    @GetMapping("/getAllUnitsByAddress")
     public List<Units> getAllUnitsByAddress(
             @RequestParam("Address") String payloadAddress){
         return unitsService.getAllUnitsByAddress(payloadAddress);
     }
 
-    @GetMapping("/getAllUnitDetailed")
+    @GetMapping("/getAllUnits")
     public List<Units.GetAllUnitsWithDetails> getAllUnitsWithDetails(){
 
         return unitsService.getAllUnitsWithDetails();
