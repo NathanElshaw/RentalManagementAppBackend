@@ -20,6 +20,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.sound.midi.Patch;
+
 import static com.example.rentalmanagerapp.user.Permissions.*;
 import static com.example.rentalmanagerapp.user.UserRoles.*;
 import static org.springframework.http.HttpMethod.*;
@@ -70,12 +72,25 @@ public class WebSecurityConfig {
                         req
                                 .requestMatchers(urlList)
                                 .permitAll()
+
+                                //User Endpoints
+
                                 .requestMatchers("/api/v*/user/delete").hasAnyRole(
                                         User.name(),
                                         Admin.name(),
                                         PropertyManger.name())
 
                                 .requestMatchers(DELETE, "/api/v*/user/delete").hasAnyAuthority(
+                                        User_Delete.name(),
+                                        Admin_Delete.name(),
+                                        PropertyManger.name())
+
+                                .requestMatchers("/api/v*/user/update").hasAnyRole(
+                                        User.name(),
+                                        Admin.name(),
+                                        PropertyManger.name())
+
+                                .requestMatchers(PATCH, "api/v*/user/update").hasAnyAuthority(
                                         User_Delete.name(),
                                         Admin_Delete.name(),
                                         PropertyManger.name())
@@ -87,6 +102,212 @@ public class WebSecurityConfig {
                                 .requestMatchers(GET, "/api/v*/user/getAll").hasAnyAuthority(
                                         Admin_Read.name(),
                                         Property_Manager_Read.name())
+
+                                //Rental Endpoints
+
+                                .requestMatchers("/api/v*/rentals/create").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(POST, "api/v*/rentals/create").hasAnyAuthority(
+                                        Admin_Post.name(),
+                                        Property_Manager_Post.name()
+                                )
+
+                                .requestMatchers("api/v*/rentals/getAll").hasAnyRole(
+                                        Admin.name()
+                                )
+
+                                .requestMatchers(GET, "api/v&/rentals/getAll").hasAnyAuthority(
+                                        Admin_Read.name()
+                                )
+
+                                .requestMatchers("api/v*/rentals/user/getRental").hasAnyRole(
+                                        User.name(),
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(GET, "api/v*/rentals/user/getRental").hasAnyAuthority(
+                                        User_Read.name(),
+                                        Admin_Read.name(),
+                                        Property_Manager_Read.name()
+                                )
+
+                                .requestMatchers("api/v*/rentals/manager/getUnits").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(GET, "api/v*/rentals/manage/getUnits").hasAnyAuthority(
+                                        Admin_Read.name(),
+                                        Property_Manager_Read.name()
+                                )
+
+                                .requestMatchers("api/v*/rentals/update").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(PATCH, "api/v*/rentals/update").hasAnyAuthority(
+                                        Admin_Update.name(),
+                                        Property_Manager_Update.name()
+                                )
+
+                                .requestMatchers("api/v*/rentals/delete").hasAnyRole(
+                                        Admin.name()
+                                )
+
+                                .requestMatchers(DELETE, "api/v*/rentals/delete").hasAnyAuthority(
+                                        Admin_Delete.name()
+                                )
+
+                                //Unit Endpoints
+
+                                .requestMatchers("api/v*/units/create").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(POST, "api/v*/units/create").hasAnyAuthority(
+                                        Admin_Post.name(),
+                                        Property_Manager_Post.name()
+                                )
+
+                                .requestMatchers("api/v*/units/getRental").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(GET, "api/v*/units/getRental").hasAnyAuthority(
+                                        Admin_Read.name(),
+                                        Property_Manager_Read.name()
+                                )
+
+                                .requestMatchers("api/v*/units/update").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(PATCH, "api/v*/units/update").hasAnyAuthority(
+                                        Admin_Update.name(),
+                                        Property_Manager_Update.name()
+                                )
+
+                                .requestMatchers("api/v*/units/getAllUnitsByAddress").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(GET, "api/v*/units/getAllUnitsByAddress").hasAnyAuthority(
+                                        Admin_Read.name(),
+                                        Property_Manager_Read.name()
+                                )
+
+                                .requestMatchers("api/v*/units/getAllUnits").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(GET, "api/v*/units/getAllUnits").hasAnyAuthority(
+                                        Admin_Read.name(),
+                                        Property_Manager_Read.name()
+                                )
+
+                                .requestMatchers("api/v*/units/userIdGetRental").hasAnyRole(
+                                        User.name(),
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(GET, "api/v*/units/userIdGetRental").hasAnyAuthority(
+                                        User_Read.name(),
+                                        Admin_Read.name(),
+                                        Property_Manager_Read.name()
+                                )
+
+                                //Unit code Endpoints
+
+                                .requestMatchers("api/v*/unitCodes/create").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(POST, "api/v*/unitCodes/create").hasAnyAuthority(
+                                        Admin_Post.name(),
+                                        Property_Manager_Post.name()
+                                )
+
+                                .requestMatchers("api/v*/unitCodes/joinUnit").hasAnyRole(
+                                        User.name(),
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(PATCH, "api/v*/unitCodes/joinUnit").hasAnyAuthority(
+                                        User_Update.name(),
+                                        Admin_Update.name(),
+                                        Property_Manager_Update.name()
+                                )
+
+                                .requestMatchers("api/v*/unitCodes/update").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(POST, "api/v*/unitCodes/update").hasAnyAuthority(
+                                        Admin_Update.name(),
+                                        Property_Manager_Update.name()
+                                )
+
+                                .requestMatchers("api/v*/unitCodes/delete").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(POST, "api/v*/unitCodes/delete").hasAnyAuthority(
+                                        Admin_Delete.name(),
+                                        Property_Manager_Delete.name()
+                                )
+
+                                //Issues
+
+                                .requestMatchers("api/v*/issues/create").hasAnyRole(
+                                        User.name(),
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(POST, "api/v*/issues/create").hasAnyAuthority(
+                                        User_Post.name(),
+                                        Admin_Post.name(),
+                                        Property_Manager_Post.name()
+                                )
+
+                                .requestMatchers("api/v*/issues/update").hasAnyRole(
+                                        User.name(),
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(PATCH, "api/v*/issues/update").hasAnyAuthority(
+                                        User_Update.name(),
+                                        Admin_Update.name(),
+                                        Property_Manager_Update.name()
+                                )
+
+                                .requestMatchers("/api/v*/issues/delete").hasAnyRole(
+                                        User.name(),
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(DELETE, "/api/v*/issues/delete").hasAnyAuthority(
+                                        User_Delete.name(),
+                                        Admin_Delete.name(),
+                                        Property_Manager_Delete.name()
+                                )
 
                                 .anyRequest()
                                 .authenticated()
