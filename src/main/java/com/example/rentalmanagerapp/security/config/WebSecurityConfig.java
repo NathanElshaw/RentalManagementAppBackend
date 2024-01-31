@@ -309,6 +309,82 @@ public class WebSecurityConfig {
                                         Property_Manager_Delete.name()
                                 )
 
+                                .requestMatchers("/api/v*/issues/manager/getRentalIssues").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(GET, "/api/v*/issues/manager/getRentalIssues").hasAnyAuthority(
+                                        Admin_Read.name(),
+                                        Property_Manager_Read.name()
+                                )
+
+                                .requestMatchers("/api/v*/issues/getAll").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(GET, "/api/v*/issues/getAll").hasAnyAuthority(
+                                        Admin_Read.name(),
+                                        PropertyManger.name()
+                                )
+
+                                //Charges Endpoints
+
+                                .requestMatchers("/api/v*/charges/create").hasAnyAuthority(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(POST, "/api/v*/charges/create").hasAnyAuthority(
+                                        Admin_Post.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers("/api/v*/charges/user/getCharges").hasAnyRole(
+                                        User.name(),
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(GET, "/api/v*/charges/user/getCharges").hasAnyAuthority(
+                                        User_Read.name(),
+                                        Admin_Read.name(),
+                                        Property_Manager_Read.name()
+                                )
+
+                                .requestMatchers("api/v*/charges/user/pay").hasAnyRole(
+                                        User.name(),
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(PATCH, "/api/v*/charges/user/pay").hasAnyAuthority(
+                                        User_Update.name(),
+                                        Admin_Update.name(),
+                                        Property_Manager_Update.name()
+                                )
+
+                                .requestMatchers("/api/v*/charges/update").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(PATCH, "/api/v*/charges/update").hasAnyAuthority(
+                                        Admin_Update.name(),
+                                        Property_Manager_Update.name()
+                                )
+
+                                .requestMatchers("/api/v*/charges/delete").hasAnyRole(
+                                        Admin.name(),
+                                        PropertyManger.name()
+                                )
+
+                                .requestMatchers(DELETE, "/api/v*/charges/delete").hasAnyAuthority(
+                                        Admin_Delete.name(),
+                                        Property_Manager_Delete.name()
+                                )
+
                                 .anyRequest()
                                 .authenticated()
 
