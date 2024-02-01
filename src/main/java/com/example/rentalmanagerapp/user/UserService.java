@@ -78,9 +78,10 @@ public class UserService {
     }
 
     public List<User> getAllUsers(){
-        List<User> userList = userRepository.getAllUsers();
 
-        return userList;
+        //modify with dto
+
+        return userRepository.getAllUsers();
     }
 
     public String deleteUser(Principal user){
@@ -106,15 +107,13 @@ public class UserService {
 
             HttpHeaders authHeader = new HttpHeaders();
 
-            authHeader.set("token", jwtService
+            authHeader.set(HttpHeaders.SET_COOKIE, jwtService
                     .generateToken(userDetailsService()
                             .loadUserByUsername(userLoginPayload.getUsername())));
 
-            return new ResponseEntity<String>("Good", authHeader, HttpStatus.CREATED);
+            return new ResponseEntity<>("Success", authHeader, HttpStatus.CREATED);
         }else{
             throw new IllegalStateException("Invalid username or password");
         }
-
-        //TODO create jwt on password match then create a session in the sessions table.
     }
 }
