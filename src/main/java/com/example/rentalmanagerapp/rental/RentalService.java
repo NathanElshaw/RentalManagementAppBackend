@@ -5,8 +5,10 @@ import com.example.rentalmanagerapp.rental.units.UnitsRepository;
 import com.example.rentalmanagerapp.user.User;
 import com.example.rentalmanagerapp.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,10 @@ public class RentalService {
     private final UserRepository userRepository;
 
     private final UnitsRepository unitsRepository;
+
+    private final UserRentalDTOMapper userRentalDTOMapper;
+
+    private final AdminRentalDTOMapper adminRentalDTOMapper;
 
     private IllegalStateException rentalNotFound(){
         return new IllegalStateException("No Rentals Exist");
@@ -44,17 +50,29 @@ public class RentalService {
     }
 
     //make dto for user req
-    public Rental getUserRental(User user){
+    public RentalDTO getUserRental(Principal user){
+
+        User reqUser = (User)
+                ((UsernamePasswordAuthenticationToken) user)
+                        .getPrincipal();
+
         boolean userHasRental = unitsRepository
-                .assertUserHasRental(user.getId());
+                .assertUserHasRental(reqUser.getId());
 
         if(!userHasRental){
             throw new BadRequestException("User doesnt have a unit");
         }
 
-        return repository
-                .findByRentalAddress(user.getRentalAddress())
+        Rental usersRental = repository
+                .findByRentalAddress(reqUser.getRentalAddress())
                 .orElseThrow(this::rentalNotFound);
+
+        Rental.Dto transferObject = new Rental.Dto(
+                usersRental,
+                reqUser.getUsersUnit()
+        );
+
+        return userRentalDTOMapper.apply(transferObject);
     }
 
     public String updateRental(
@@ -88,37 +106,23 @@ public class RentalService {
     }
 
 
-    public List<Rental> getAllRentals(){
+    public List<RentalDTO.AdminRentalDTO> getAllRentals(){
 
-        List<Rental> returnRentalList = new ArrayList<>();
+        List<RentalDTO.AdminRentalDTO> returnRentalList = new ArrayList<>();
         List<Rental> rentals = repository.getAllUnits();
 
          rentals.forEach(listRental -> {
-            Rental returnRental = new Rental(
-                    listRental.getId(),
-                    listRental.getRentalAddress(),
-                    listRental.getDescription(),
-                    listRental.getType(),
-                    listRental.getTotalTenants(),
-                    listRental.getTotalUnits(),
-                    listRental.getAvgRentAmount(),
-                    listRental.getTotalRentIncome(),
-                    listRental.getAssignedManager(),
-                    listRental.getCreatedBy(),
-                    listRental.getCreatedAt(),
-                    listRental.getUpdatedAt()
-            );
-
-            returnRentalList.add(returnRental);
-
+            returnRentalList.add(adminRentalDTOMapper
+                    .apply(listRental));
         });
 
         return returnRentalList;
     }
 
-    public List<Rental> getPropertyMangerRentals(User user){
+    public List<RentalDTO.AdminRentalDTO> getPropertyMangerRentals(User user){
 
-        List<Rental> returnedList = new ArrayList<>();
+        List<RentalDTO.AdminRentalDTO> returnedList =
+                new ArrayList<>();
 
          User manager = userRepository
                  .findById(user.getId())
@@ -126,23 +130,14 @@ public class RentalService {
                          new IllegalStateException("User not found")
         );
 
-         List<Rental> getManagedRentals = repository.getRentalByAssignedManager(manager);
+         List<Rental> getManagedRentals = repository
+                 .getRentalByAssignedManager(manager);
 
          getManagedRentals.forEach(rental ->
                  {
-                     Rental managedRental = new Rental(
-                             rental.getId(),
-                             rental.getRentalAddress(),
-                             rental.getDescription(),
-                             rental.getType(),
-                             rental.getTotalTenants(),
-                             rental.getTotalUnits(),
-                             rental.getAssignedManager(),
-                             rental.getCreatedBy(),
-                             rental.getUpdatedAt()
-                     );
-
-                     returnedList.add(managedRental);
+                     returnedList.add(adminRentalDTOMapper.apply(
+                             rental
+                     ));
                  }
          );
 
