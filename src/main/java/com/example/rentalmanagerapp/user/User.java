@@ -55,6 +55,11 @@ public class User implements UserDetails {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
+    //Authority
+    private boolean isLocked = false;
+
+    private boolean isActive = false;
+
     //Contact Info
     private String address;
 
@@ -68,7 +73,7 @@ public class User implements UserDetails {
     private String password;
 
     //Authority
-    private UserRoles userRole = UserRoles.User;
+    private UserRoles userRole = UserRoles.Admin;
 
     private Boolean hasUnit = false;
 
@@ -109,7 +114,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return isLocked;
     }
 
     @Override
@@ -119,7 +124,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isActive;
     }
 
     public User() {
