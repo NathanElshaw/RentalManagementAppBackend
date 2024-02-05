@@ -1,5 +1,6 @@
 package com.example.rentalmanagerapp.rental;
 
+import com.example.rentalmanagerapp.rental.units.UnitsRepository;
 import com.example.rentalmanagerapp.user.User;
 import com.example.rentalmanagerapp.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +30,15 @@ class RentalServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private UnitsRepository unitsRepository; 
+
+    @Mock
+    private UserRentalDTOMapper userRentalDTOMapper;
+
+    @Mock
+    private AdminRentalDTOMapper adminRentalDTOMapper;
+
     @InjectMocks
     private RentalService underTest;
 
@@ -40,7 +50,10 @@ class RentalServiceTest {
     void spinUp(){
         underTest = new RentalService(
             rentalRepository,
-            userRepository
+            userRepository,
+            unitsRepository,
+            userRentalDTOMapper,
+            adminRentalDTOMapper
         );
 
         user = new User(
@@ -157,11 +170,11 @@ class RentalServiceTest {
         when(rentalRepository.getAllUnits())
                 .thenReturn(rentalList);
 
-        List<Rental> testRentals = underTest.getAllRentals();
+        List<RentalDTO.AdminRentalDTO> testRentals = underTest.getAllRentals();
 
         assertThat(testRentals).isNotNull();
         assertThat(testRentals.size()).isEqualTo(1);
-        assertThat(testRentals.get(0).getRentalAddress()).isEqualTo(address);
+        assertThat(testRentals.get(0).getAddress()).isEqualTo(address);
     }
 
     @Test
@@ -185,11 +198,11 @@ class RentalServiceTest {
         verify(userRepository)
                 .findById(longArgumentCaptor.capture());
 
-        List<Rental> testRentals = underTest.getPropertyMangerRentals(user);
+        List<RentalDTO.AdminRentalDTO> testRentals = underTest.getPropertyMangerRentals(user);
 
         assertThat(testRentals).isNotNull();
         assertThat(testRentals.size()).isEqualTo(1);
-        assertThat(testRentals.get(0).getRentalAddress()).isEqualTo(address);
+        assertThat(testRentals.get(0).getAddress()).isEqualTo(address);
     }
 
     @Test
