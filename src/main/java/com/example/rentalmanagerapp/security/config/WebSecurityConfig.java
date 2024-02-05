@@ -35,7 +35,7 @@ public class WebSecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
 
     private  final String[] urlList = {
-            "/api/v*/user/register",
+            "/api/v*/user/register/**",
             "/api/v*/user/login"
     };
 
