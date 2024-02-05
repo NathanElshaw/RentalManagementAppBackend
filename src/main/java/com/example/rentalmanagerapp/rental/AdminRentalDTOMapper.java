@@ -2,13 +2,15 @@ package com.example.rentalmanagerapp.rental;
 
 import com.example.rentalmanagerapp.user.UserDTOMapper;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
 
 @Service
 @AllArgsConstructor
-public class AdminRentalDTO implements Function<Rental, RentalDTO.AdminRentalDTO> {
+@Getter
+public class AdminRentalDTOMapper implements Function<Rental, RentalDTO.AdminRentalDTO> {
 
     private final UserDTOMapper dtoMapper;
 
