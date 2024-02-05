@@ -1,5 +1,6 @@
 package com.example.rentalmanagerapp.rental;
 
+import com.example.rentalmanagerapp.rental.units.Units;
 import com.example.rentalmanagerapp.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
@@ -106,5 +107,12 @@ public class Rental {
         this.assignedManager = assignedManager;
         this.createdBy = createdBy;
         this.updatedAt = updatedAt;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class Dto{
+        private final Rental rental;
+        private final Units units;
     }
 }
