@@ -20,6 +20,16 @@ public class UserController {
         return userService.createUser(user);
     }
 
+    @GetMapping("/register/checkEmail")
+    public boolean checkEmail(@RequestParam("email") String email){
+        return userService.checkEmail(email);
+    }
+
+    @GetMapping("/register/checkUsername")
+    public boolean checkUsername(@RequestParam("username") String username){
+        return userService.checkUsername(username);
+    }
+
     @DeleteMapping("/delete")
     public String deleteUser(
             Principal user){
@@ -28,7 +38,8 @@ public class UserController {
     }
 
     @GetMapping("/getAll")
-    public List<User> getAllUsers(){
+    public List<UserDTO> getAllUsers(){
+
         return userService.getAllUsers();
     }
 
