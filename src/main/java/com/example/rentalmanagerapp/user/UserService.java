@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +29,8 @@ public class UserService {
 
     private final JwtService jwtService;
 
+    private final UserDTOMapper userDTOMapper;
+
     public UserDetailsService userDetailsService(){
         return new UserDetailsService() {
             @Override
@@ -38,6 +41,16 @@ public class UserService {
                                 new UsernameNotFoundException("Username not found"));
             }
         };
+    }
+
+    //Todo make functions to check specifically for email and username whilist signing up
+
+    public boolean checkUsername(String username){
+        return userRepository.assertUsernameExists(username);
+    }
+
+    public boolean checkEmail(String email){
+        return userRepository.assertEmailExists(email);
     }
 
     public String createUser(User user){
@@ -55,6 +68,10 @@ public class UserService {
             String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
             user.setPassword(encodedPassword);
+            user.setFullName(
+                    user.getFirstName() +
+                            " " +
+                            user.getLastName());
 
             userRepository.save(user);
 
@@ -77,17 +94,24 @@ public class UserService {
         return "Success";
     }
 
-    public List<User> getAllUsers(){
+    public List<UserDTO> getAllUsers(){
 
-        //modify with dto
+        List<UserDTO> dtoList = new ArrayList<>();
 
-        return userRepository.getAllUsers();
+        List<User> userList = userRepository.getAllUsers();
+
+        userList.forEach(user -> {
+            dtoList.add(userDTOMapper.apply(user));
+        });
+
+        return dtoList;
     }
 
     public String deleteUser(Principal user){
 
-        User reqUser = (User) ((UsernamePasswordAuthenticationToken) user).getPrincipal();
-
+        User reqUser = (User)
+                ((UsernamePasswordAuthenticationToken) user)
+                        .getPrincipal();
 
         userRepository.delete(reqUser);
 
@@ -96,6 +120,7 @@ public class UserService {
 
     public ResponseEntity<String> userLogin(
             User.UserLoginRequest userLoginPayload){
+
         User targetUser = userRepository.findByUsername(
                 userLoginPayload.getUsername()).orElseThrow(
                 ()->new IllegalStateException("Invalid username or password")
@@ -113,6 +138,7 @@ public class UserService {
 
             return new ResponseEntity<>("Success", authHeader, HttpStatus.CREATED);
         }else{
+
             throw new IllegalStateException("Invalid username or password");
         }
     }
