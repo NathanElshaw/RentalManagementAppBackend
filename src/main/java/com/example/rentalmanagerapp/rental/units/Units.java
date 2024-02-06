@@ -19,6 +19,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Setter
 @Table(name = "units")
 public class Units {
+
         @SequenceGenerator(
                 name = "unitsSequence",
                 sequenceName = "unitsSequence",
