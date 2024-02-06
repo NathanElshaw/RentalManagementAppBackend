@@ -26,6 +26,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Getter
 @Setter
 public class Issues {
+
     @SequenceGenerator(
             name = "issuesSequence",
             sequenceName = "issuesSequence",
@@ -36,7 +37,6 @@ public class Issues {
             strategy = SEQUENCE,
             generator = "issuesSequence"
     )
-
 
     @Id
     private Long id;
@@ -121,8 +121,22 @@ public class Issues {
     @Setter
     @Getter
     public static class createRequest {
+
         private final User user;
+
         private final String issueBody;
+
         private final IssuePriority priority;
     }
+
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    public class DtoReq {
+
+        private final Issues issues;
+
+        private final Units unit;
+    }
+
 }
