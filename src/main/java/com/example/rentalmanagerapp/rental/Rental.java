@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
@@ -23,6 +22,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Getter
 @Setter
 public class Rental {
+
     @SequenceGenerator(
             name = "rentalSequence",
             sequenceName = "rentalSequence",
