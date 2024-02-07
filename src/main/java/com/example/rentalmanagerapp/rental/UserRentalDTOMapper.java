@@ -4,7 +4,6 @@ import com.example.rentalmanagerapp.rental.units.Units;
 import com.example.rentalmanagerapp.user.UserDTOMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
@@ -14,7 +13,7 @@ import java.util.function.Function;
 @Getter
 public class UserRentalDTOMapper implements Function<Rental.Dto, RentalDTO> {
 
-    private final UserDTOMapper dtoMapper;
+    private final UserDTOMapper userDTOMapper;
 
     @Override
     public RentalDTO apply(Rental.Dto rentalDto){
@@ -27,7 +26,7 @@ public class UserRentalDTOMapper implements Function<Rental.Dto, RentalDTO> {
                 rental.getRentalAddress(),
                 rental.getType(),
                 rental.getTotalUnits(),
-                dtoMapper.apply(
+                userDTOMapper.apply(
                         rental.getAssignedManager()
                 ),
                 unit.getUnitNumber(),
