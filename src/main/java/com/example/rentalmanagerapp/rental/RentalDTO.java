@@ -1,11 +1,8 @@
 package com.example.rentalmanagerapp.rental;
 
 import com.example.rentalmanagerapp.user.UserDTO;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.cglib.core.Local;
 
-import javax.annotation.processing.Generated;
 import java.time.LocalDate;
 
 @Getter
@@ -17,8 +14,6 @@ public record RentalDTO(
         int totalUnits,
 
         UserDTO assignedManager,
-
-        //Unit
 
         int unitNumber,
 
@@ -35,7 +30,6 @@ public record RentalDTO(
         LocalDate leaseEnd
 ) {
     @Getter
-    @AllArgsConstructor
     public record AdminRentalDTO(
             String address,
 
@@ -53,6 +47,5 @@ public record RentalDTO(
 
             UserDTO assignedManager
     ){
-
     }
 }
