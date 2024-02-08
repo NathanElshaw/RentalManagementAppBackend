@@ -60,6 +60,12 @@ public class User implements UserDetails {
 
     private boolean isActive = false;
 
+    private UserRoles userRole = UserRoles.Admin;
+
+    private Boolean hasUnit = false;
+
+    private String confirmCode;
+
     //Contact Info
     private String address;
 
@@ -71,11 +77,6 @@ public class User implements UserDetails {
     private String username;
 
     private String password;
-
-    //Authority
-    private UserRoles userRole = UserRoles.Admin;
-
-    private Boolean hasUnit = false;
 
     //Rental info
     private LocalDate rentDue = null;
