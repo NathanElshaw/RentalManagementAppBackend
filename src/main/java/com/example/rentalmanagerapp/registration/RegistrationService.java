@@ -1,32 +1,38 @@
 package com.example.rentalmanagerapp.registration;
 
+import com.example.rentalmanagerapp.exceptions.BadRequestException;
+import com.example.rentalmanagerapp.user.User;
+import com.example.rentalmanagerapp.user.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class RegistrationService {
 
-    private EmailValidator email;
+    private final UserRepository userRepository;
 
-    public String createAccount(
-            RegistrationRequest request){
-        boolean emailIsValid = email.validate(request.getEmail());
-
-        if(!emailIsValid || request.getEmail() == null){
-            throw new IllegalStateException("Email is not valid");
-        } else if(!email.validateAgainstDb(request.getEmail())){
-            throw new IllegalStateException("Email already exists");
-        }
+    public String createToken(){
+        //Todo: add code creator
         return "";
     }
 
     public String sendToken(
             String email){
+        //todo send token to email to validate account
         return "";
     }
 
-    public String confirmToken(
+    public void confirmToken(
             String token){
-        return "";
+        User reqUser = userRepository
+                .confirmWithToken(token)
+                .orElseThrow(()->
+                        new BadRequestException("Invalid code"));
+
+        reqUser.setActive(true);
+
+        userRepository.save(reqUser);
     }
 
 }
