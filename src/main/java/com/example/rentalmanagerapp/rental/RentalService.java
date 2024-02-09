@@ -140,7 +140,6 @@ public class RentalService {
                      ));
                  }
          );
-
          return returnedList;
     }
 
