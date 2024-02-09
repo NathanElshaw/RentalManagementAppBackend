@@ -5,7 +5,6 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 
-@Getter
 public record RentalDTO(
         String address,
 
@@ -29,7 +28,7 @@ public record RentalDTO(
 
         LocalDate leaseEnd
 ) {
-    @Getter
+
     public record AdminRentalDTO(
             String address,
 
