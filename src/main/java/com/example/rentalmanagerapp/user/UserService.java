@@ -1,5 +1,6 @@
 package com.example.rentalmanagerapp.user;
 
+import com.example.rentalmanagerapp.registration.RegistrationService;
 import com.example.rentalmanagerapp.security.jwt.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +23,8 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class UserService {
+
+    private final RegistrationService registrationService;
 
     private final UserRepository userRepository;
 
@@ -56,6 +59,7 @@ public class UserService {
     public String createUser(User user){
             boolean userExists = userRepository.findByUsername(user.getUsername()).isPresent();
             boolean emailExists = userRepository.findByEmail(user.getEmail()).isPresent();
+            String code = registrationService.createToken();
 
             if(userExists){
                throw new IllegalStateException("User already exists");
@@ -72,10 +76,11 @@ public class UserService {
                     user.getFirstName() +
                             " " +
                             user.getLastName());
+            user.setConfirmCode(code);
 
             userRepository.save(user);
 
-            return UUID.randomUUID().toString();
+            return code;
     }
 
     public String updateUser(User user){
