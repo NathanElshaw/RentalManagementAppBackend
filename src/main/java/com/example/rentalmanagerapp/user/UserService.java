@@ -78,6 +78,11 @@ public class UserService {
                             user.getLastName());
             user.setConfirmCode(code);
 
+            registrationService.send(
+                    user.getEmail(),
+                    code
+            );
+
             userRepository.save(user);
 
             return code;
