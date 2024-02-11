@@ -56,11 +56,11 @@ public class User implements UserDetails {
     private LocalDate birthDate;
 
     //Authority
-    private boolean isLocked = false;
+    private boolean isLocked = true;
 
     private boolean isActive = false;
 
-    private UserRoles userRole = UserRoles.Admin;
+    private UserRoles userRole = UserRoles.inActive_User;
 
     private Boolean hasUnit = false;
 
@@ -115,7 +115,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return isLocked;
+        return !isLocked;
     }
 
     @Override
