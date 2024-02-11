@@ -30,7 +30,9 @@ public enum Permissions {
 
     User_Delete("user:delete"),
 
-    Inactive_User_Post("inactive_user:post");
+    Inactive_User_Post("inactive_user:post"),
+
+    Inactive_User_Update("inactive_user:post");
 
     @Getter
     private final String permissions;
