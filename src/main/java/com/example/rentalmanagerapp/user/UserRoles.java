@@ -42,7 +42,8 @@ public enum UserRoles {
 
     inActive_User(
             Set.of(
-                    Inactive_User_Post
+                    Inactive_User_Post,
+                    Inactive_User_Update
             )
     ),
 
