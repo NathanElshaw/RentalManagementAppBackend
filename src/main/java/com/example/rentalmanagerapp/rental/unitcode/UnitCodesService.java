@@ -1,5 +1,7 @@
 package com.example.rentalmanagerapp.rental.unitcode;
 
+import com.example.rentalmanagerapp.exceptions.BadRequestException;
+import com.example.rentalmanagerapp.registration.RegistrationService;
 import com.example.rentalmanagerapp.rental.unitcode.requests.JoinUnitRequest;import com.example.rentalmanagerapp.rental.unitcode.requests.UpdateCodeRequest;
 import com.example.rentalmanagerapp.rental.units.Units;
 import com.example.rentalmanagerapp.rental.units.UnitsRepository;
@@ -14,6 +16,8 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class UnitCodesService {
+
+    private final RegistrationService registrationService;
 
     private final UnitCodeRepository repository;
 
@@ -33,13 +37,15 @@ public class UnitCodesService {
             UnitCodes unitCodes){
 
         boolean parentUnitExist = unitsRepository
-                .assertUnitExistsById(unitCodes
-                        .getParentRental().getId());
+                .assertUnitExistByAddressAndNumber(
+                        unitCodes.getParentUnitAddress(),
+                        unitCodes.getParentUnitNumber());
 
         if(!parentUnitExist){
             throw error("Unit does not exist");
         }
 
+        unitCodes.setUnitCode(registrationService.createToken());
         unitCodes.setIssuedAt(LocalDateTime.now());
         unitCodes.setExpiresAt(LocalDateTime.now().plusHours(24));
 
@@ -49,12 +55,14 @@ public class UnitCodesService {
 
         unitsRepository.addUnitCodeToRental(
                 unitCodes,
-                unitCodes.getParentRental()
-                        .getUnitAddress(),
-                unitCodes.getParentRental()
-                        .getUnitNumber());
+                unitCodes.getParentUnitAddress(),
+                unitCodes.getParentUnitNumber());
 
         return "Success";
+    }
+
+    public boolean checkCode(String code){
+        return repository.findByUnitCode(code).isPresent();
     }
 
 
@@ -74,8 +82,10 @@ public class UnitCodesService {
                 .orElseThrow(
                 ()->error("User not found"));
 
-        repository.updateConfirmedAt(
-                joinUnitPayload.getUnitCode(), LocalDateTime.now());
+
+
+        targetUnit.setUpdatedAt(LocalDateTime.now());
+        repository.save(targetUnitCode);
 
         userRepository.addUnitToUser(
                 targetUser, targetUnit
@@ -85,10 +95,28 @@ public class UnitCodesService {
                 targetUser, targetUnit.getId(), targetUnit.getRentAmount());
 
         return "Successfully added user " +
-                targetUser.getFirstName() +
-                " " +
-                targetUser.getLastName() +
+                targetUser.getFullName() +
                 " To unit";
+    }
+
+    public void createUserJoinUnit(User user, String joinCode){
+
+        UnitCodes unitCode = repository.findByUnitCode(
+                        joinCode)
+                .orElseThrow(this::codeNotFound);
+
+        Units unit = unitsRepository
+                .findByAddressAndUnitNumber(
+                        unitCode.getParentUnitAddress(),
+                        unitCode.getParentUnitNumber()
+                ).orElseThrow(()-> new BadRequestException("Unit not found"));
+
+        user.setUsersUnit(unit);
+        user.setRentalAddress(unit.getUnitAddress());
+        unit.setRenter(user);
+
+        unitsRepository.save(unit);
+        userRepository.save(user);
     }
 
     public String updateCode(
