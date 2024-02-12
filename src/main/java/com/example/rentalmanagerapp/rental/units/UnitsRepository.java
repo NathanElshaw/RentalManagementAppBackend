@@ -26,7 +26,7 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
             "where u.id = ?1 ")
     boolean assertUnitExistsById(Long unitId);
 
-    @Query("select case when counts(u) > 0 then " +
+    @Query("select case when count(u) > 0 then " +
             "true else false end " +
             "from Units u " +
             "where  u.unitAddress = ?1 " +
