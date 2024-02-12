@@ -36,6 +36,10 @@ public class UnitCodes {
 
     private String unitCode;
 
+    private String parentUnitAddress;
+
+    private int parentUnitNumber;
+
     @OneToOne
     private Units parentRental;
 
