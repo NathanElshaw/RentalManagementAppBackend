@@ -1,6 +1,7 @@
 package com.example.rentalmanagerapp.user;
 
 import com.example.rentalmanagerapp.registration.RegistrationService;
+import com.example.rentalmanagerapp.rental.unitcode.UnitCodesService;
 import com.example.rentalmanagerapp.security.jwt.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -18,11 +19,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class UserService {
+
+    private final UnitCodesService unitCodesService;
 
     private final RegistrationService registrationService;
 
@@ -56,18 +60,23 @@ public class UserService {
         return userRepository.assertEmailExists(email);
     }
 
-    public String createUser(User user){
-            boolean userExists = userRepository.findByUsername(user.getUsername()).isPresent();
-            boolean emailExists = userRepository.findByEmail(user.getEmail()).isPresent();
+    public String createUser(User user, String... joinCode){
+        //Todo add if unitcode is present as a param add it to user.
+
+        if(userRepository
+                .findByUsername(user
+                        .getUsername()).isPresent()){
+            throw new IllegalStateException("User already exists");
+        }
+
+        if(userRepository
+                .findByEmail(user
+                        .getEmail()).isPresent()){
+            throw new IllegalStateException("Email already exists");
+        }
+
             String code = registrationService.createToken();
 
-            if(userExists){
-               throw new IllegalStateException("User already exists");
-            }
-
-            if(emailExists){
-                throw new IllegalStateException("Email already exists");
-            }
 
             String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
@@ -85,7 +94,15 @@ public class UserService {
 
             userRepository.save(user);
 
-            return code;
+            if(joinCode[0] != null && unitCodesService.checkCode(joinCode[0])){
+                User newUser = userRepository.findByEmail(
+                        user.getEmail()
+                ).orElseThrow();
+
+                unitCodesService
+                        .createUserJoinUnit(newUser, joinCode[0]);
+            }
+                return "Done";
     }
 
     public String updateUser(User user){
