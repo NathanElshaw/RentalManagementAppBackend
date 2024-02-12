@@ -55,7 +55,7 @@ class UserServiceTest {
     @Test
     void createUser() {
 
-        underTest.createUser(user);
+        underTest.createUser(user, "");
 
         ArgumentCaptor<User> userArgumentCaptor =
                 ArgumentCaptor.forClass(User.class);
@@ -74,7 +74,7 @@ class UserServiceTest {
         when(userRepository.findByEmail(email))
                 .thenReturn(Optional.of(user));
 
-        assertThatThrownBy(()-> underTest.createUser(user))
+        assertThatThrownBy(()-> underTest.createUser(user, ""))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Email already exists");
     }
@@ -84,7 +84,7 @@ class UserServiceTest {
         when(userRepository.findByUsername(username))
                 .thenReturn(Optional.of(user));
 
-        assertThatThrownBy(()-> underTest.createUser(user))
+        assertThatThrownBy(()-> underTest.createUser(user, ""))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("User already exists");
     }

@@ -31,7 +31,7 @@ class RentalServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private UnitsRepository unitsRepository; 
+    private UnitsRepository unitsRepository;
 
     @Mock
     private UserRentalDTOMapper userRentalDTOMapper;
