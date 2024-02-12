@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -16,8 +17,9 @@ public class UserController {
 
     @PostMapping("/register")
     public String createUser(
-            @RequestBody User user){
-        return userService.createUser(user);
+            @RequestBody User user,
+            @RequestParam(value = "joinCode", required = false) String joinCode){
+                    return userService.createUser(user, joinCode);
     }
 
     @GetMapping("/register/checkEmail")
