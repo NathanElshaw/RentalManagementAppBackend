@@ -60,7 +60,7 @@ public class User implements UserDetails {
 
     private boolean isActive = false;
 
-    private UserRoles userRole = UserRoles.inActive_User;
+    private UserRoles userRole = UserRoles.Admin;
 
     private Boolean hasUnit = false;
 
