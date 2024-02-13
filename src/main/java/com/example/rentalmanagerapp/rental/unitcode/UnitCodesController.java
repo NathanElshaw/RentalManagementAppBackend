@@ -1,7 +1,5 @@
 package com.example.rentalmanagerapp.rental.unitcode;
 
-import com.example.rentalmanagerapp.rental.unitcode.requests.JoinUnitRequest;
-import com.example.rentalmanagerapp.rental.unitcode.requests.UnitCodesRequest;
 import com.example.rentalmanagerapp.rental.unitcode.requests.UpdateCodeRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +19,6 @@ public class UnitCodesController {
     public String createUnitCodes (
             @RequestBody UnitCodes unitCodes){
         return unitCodesService.createUnitCode(unitCodes);
-    }
-
-    @PatchMapping("/joinUnit")
-    public String joinUnit(
-            @RequestBody JoinUnitRequest joinUnitPayload){
-        return unitCodesService.joinUnit(joinUnitPayload);
     }
 
     @PatchMapping("/updateCode")
