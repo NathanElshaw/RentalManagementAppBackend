@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -120,11 +121,6 @@ class UnitCodesServiceTest {
     @Test
     void joinUnit() {
 
-        JoinUnitRequest req = new JoinUnitRequest(
-                code,
-                user.getId()
-        );
-
         when(unitCodeRepository
                 .findByUnitCode(req.getUnitCode()))
                 .thenReturn(Optional.of(testCode));
@@ -140,7 +136,7 @@ class UnitCodesServiceTest {
                         unit.getId()))
                 .thenReturn(Optional.of(user));
 
-        underTest.joinUnit(req);
+        underTest.joinUnit(code, (Principal) user);
 
         ArgumentCaptor<String> stringArgumentCaptor =
                 ArgumentCaptor.forClass(String.class);
@@ -197,7 +193,9 @@ class UnitCodesServiceTest {
         );
 
         assertThatThrownBy(
-                ()->underTest.joinUnit(req))
+                ()->underTest.joinUnit(
+                        code,
+                        (Principal) user))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Code is invalid");
     }
@@ -213,7 +211,9 @@ class UnitCodesServiceTest {
                 .findByUnitCode(req.getUnitCode()))
                 .thenReturn(Optional.of(testCode));
 
-        assertThatThrownBy(()-> underTest.joinUnit(req))
+        assertThatThrownBy(()-> underTest.joinUnit(
+                code,
+                (Principal) user))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Unit is invalid");
     }
@@ -233,7 +233,8 @@ class UnitCodesServiceTest {
                 .findById(testCode.getParentRental().getId()))
                 .thenReturn(Optional.of(unit));
 
-        assertThatThrownBy(()->underTest.joinUnit(req))
+        assertThatThrownBy(()->underTest.joinUnit(code,
+                (Principal) user))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("User not found");
     }
