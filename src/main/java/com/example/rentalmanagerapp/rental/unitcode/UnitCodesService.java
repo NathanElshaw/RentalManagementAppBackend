@@ -8,8 +8,10 @@ import com.example.rentalmanagerapp.rental.units.UnitsRepository;
 import com.example.rentalmanagerapp.user.User;
 import com.example.rentalmanagerapp.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -29,13 +31,14 @@ public class UnitCodesService {
         return new IllegalStateException("Code is invalid");
     }
 
-    private IllegalStateException error(String s){
-        return new IllegalStateException(s);
+    private BadRequestException error(String s){
+        return new BadRequestException(s);
     }
 
     public String createUnitCode(
             UnitCodes unitCodes){
 
+        String code = unitCodes.getUnitCode();
         boolean parentUnitExist = unitsRepository
                 .assertUnitExistByAddressAndNumber(
                         unitCodes.getParentUnitAddress(),
@@ -45,16 +48,26 @@ public class UnitCodesService {
             throw error("Unit does not exist");
         }
 
-        unitCodes.setUnitCode(registrationService.createToken());
+        if(unitCodes.getUnitCode() == null) {
+             code = registrationService.createToken();
+
+            if (checkCode(code)) {
+                while (checkCode(code)) {
+                    code = registrationService.createToken();
+                }
+            }
+        }
+
+        unitCodes.setUnitCode(code);
         unitCodes.setIssuedAt(LocalDateTime.now());
         unitCodes.setExpiresAt(LocalDateTime.now().plusHours(24));
 
         repository.save(unitCodes);
 
-        //may need to then get from repo for correct id assignment for next func
-
         unitsRepository.addUnitCodeToRental(
-                unitCodes,
+                repository
+                        .findByUnitCode(code)
+                        .orElseThrow(()->error("Internal Error")),
                 unitCodes.getParentUnitAddress(),
                 unitCodes.getParentUnitNumber());
 
@@ -67,9 +80,15 @@ public class UnitCodesService {
 
 
     public String joinUnit(
-            JoinUnitRequest joinUnitPayload){
+            String code,
+            Principal user){
+
+        User reqUser = (User)
+                ((UsernamePasswordAuthenticationToken) user)
+                        .getPrincipal();
+
         UnitCodes targetUnitCode = repository.findByUnitCode(
-                joinUnitPayload.getUnitCode())
+                code)
                 .orElseThrow(this::codeNotFound);
 
         Units targetUnit = unitsRepository
@@ -78,7 +97,7 @@ public class UnitCodesService {
                 ()->error( "Unit is invalid"));
 
         User targetUser = userRepository
-                .findById(joinUnitPayload.getUserId())
+                .findById(reqUser.getId())
                 .orElseThrow(
                 ()->error("User not found"));
 
@@ -105,6 +124,10 @@ public class UnitCodesService {
                         joinCode)
                 .orElseThrow(this::codeNotFound);
 
+        user = userRepository
+                .findByEmail(user.getEmail())
+                .orElseThrow(()-> error("Internal Error"));
+
         Units unit = unitsRepository
                 .findByAddressAndUnitNumber(
                         unitCode.getParentUnitAddress(),
@@ -115,8 +138,9 @@ public class UnitCodesService {
         user.setRentalAddress(unit.getUnitAddress());
         unit.setRenter(user);
 
-        unitsRepository.save(unit);
         userRepository.save(user);
+        unitsRepository.save(unit);
+        repository.delete(unitCode);
     }
 
     public String updateCode(
@@ -126,7 +150,7 @@ public class UnitCodesService {
                 .orElseThrow(this::codeNotFound);
 
         updateUnitCode.setUnitCode(
-                UUID.randomUUID().toString());
+                registrationService.createToken());
 
         updateUnitCode.setIssuedAt(
                 LocalDateTime.now());
