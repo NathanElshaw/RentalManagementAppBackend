@@ -1,5 +1,6 @@
 package com.example.rentalmanagerapp.user;
 
+import com.example.rentalmanagerapp.rental.unitcode.UnitCodesService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,9 @@ import java.util.Optional;
 @RequestMapping("/api/v1/user")
 public class UserController {
 
-    private UserService userService;
+    private final UnitCodesService unitCodesService;
+
+    private final UserService userService;
 
     @PostMapping("/register")
     public String createUser(
@@ -21,6 +24,14 @@ public class UserController {
             @RequestParam(value = "joinCode", required = false) String joinCode){
                     return userService.createUser(user, joinCode);
     }
+
+    @PatchMapping("/join")
+    public String joinUnit(
+            @RequestParam(value = "code", required = false) String code,
+            Principal user){
+                return unitCodesService.joinUnit(code, user);
+    }
+
 
     @GetMapping("/register/checkEmail")
     public boolean checkEmail(@RequestParam("email") String email){
