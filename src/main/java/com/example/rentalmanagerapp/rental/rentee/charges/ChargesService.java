@@ -29,7 +29,7 @@ public class ChargesService {
             throw chargeNotFound();
         }
 
-        repository.updateCharge(charge.getId(), charge);
+        repository.save(charge);
 
         return "Successfully updated";
     }
