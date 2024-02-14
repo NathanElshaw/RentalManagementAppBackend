@@ -25,13 +25,6 @@ public interface ChargesRepository extends JpaRepository<Charges, Long> {
     @Modifying
     @Transactional
     @Query("update Charges c " +
-            "set c = ?2 " +
-            "where c.id = ?1 ")
-    void updateCharge(Long chargeId, Charges charge);
-
-    @Modifying
-    @Transactional
-    @Query("update Charges c " +
             "set c.amountPaid = ?2," +
             "c.amountOwed = ?3, " +
             "c.hasPaid = ?4," +
