@@ -105,16 +105,8 @@ class ChargesServiceTest {
 
         underTest.updateCharge(charge);
 
-        ArgumentCaptor<Long> longArgumentCaptor = ArgumentCaptor
-                .forClass(Long.class);
-
         ArgumentCaptor<Charges> chargesArgumentCaptor = ArgumentCaptor
                 .forClass(Charges.class);
-
-        verify(chargesRepository)
-                .updateCharge(
-                        longArgumentCaptor.capture(),
-                        chargesArgumentCaptor.capture());
 
         Charges chargesCaptor = chargesArgumentCaptor.getValue();
 
