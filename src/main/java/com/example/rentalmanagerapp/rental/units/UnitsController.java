@@ -26,7 +26,7 @@ public class UnitsController {
     }
 
     @GetMapping("/getRental")
-    public Units getRental (
+    public UnitsDTO getRental (
             @RequestBody String unitCode){
         return unitsService.getRentalWithCode(unitCode);
     }
@@ -39,7 +39,7 @@ public class UnitsController {
 
     //Admin Requests
     @GetMapping("/getAllUnitsByAddress")
-    public List<Units> getAllUnitsByAddress(
+    public List<UnitsDTO> getAllUnitsByAddress(
             @RequestParam("Address") String payloadAddress){
         return unitsService.getAllUnitsByAddress(payloadAddress);
     }
@@ -52,7 +52,7 @@ public class UnitsController {
 
     //User Requests
     @GetMapping("/userIdGetRental")
-    public Units.ReturnGetUnitsRequest userIdGetUnits(
+    public UnitsDTO userIdGetUnits(
             @RequestBody User user){
         return unitsService.userIdGetUnits(user);
     }
