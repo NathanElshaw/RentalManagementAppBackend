@@ -153,11 +153,11 @@ class UnitsServiceTest {
         verify(unitsRepository)
                 .getAllUnitByAddress(stringArgumentCaptor.capture());
 
-        List<Units> testUnits = underTest.getAllUnitsByAddress(address);
+        List<UnitsDTO> testUnits = underTest.getAllUnitsByAddress(address);
 
         assertThat(testUnits).isNotNull();
         assertThat(testUnits.size()).isEqualTo(1);
-        assertThat(testUnits.get(0).getUnitNumber()).isEqualTo(unitNumber);
+        assertThat(testUnits.get(0).unitNumber()).isEqualTo(unitNumber);
     }
 
     @Test
@@ -187,11 +187,11 @@ class UnitsServiceTest {
         verify(unitCodeRepository)
                 .findByUnitCode(stringArgumentCaptor.capture());
 
-        Units testUnits = underTest.getRentalWithCode(code);
+        UnitsDTO testUnits = underTest.getRentalWithCode(code);
 
         assertThat(testUnits).isNotNull();
-        assertThat(testUnits.getUnitNumber()).isEqualTo(unitNumber);
-        assertThat(testUnits.getUnitAddress()).isEqualTo(address);
+        assertThat(testUnits.unitNumber()).isEqualTo(unitNumber);
+        assertThat(testUnits.unitAddress()).isEqualTo(address);
     }
 
     @Test
@@ -245,12 +245,12 @@ class UnitsServiceTest {
         verify(unitsRepository)
                 .getUnitByUserId(userArgumentCaptor.capture());
 
-        Units.ReturnGetUnitsRequest testUnits =
+        UnitsDTO testUnits =
                 underTest.userIdGetUnits(user);
 
         assertThat(testUnits).isNotNull();
-        assertThat(testUnits.getUnitNumber()).isEqualTo(unitNumber);
-        assertThat(testUnits.getHasPets()).isNull();
+        assertThat(testUnits.unitNumber()).isEqualTo(unitNumber);
+        assertThat(testUnits.hasPets()).isNull();
     }
 
     @Test
