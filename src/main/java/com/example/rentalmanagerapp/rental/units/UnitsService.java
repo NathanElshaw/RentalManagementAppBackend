@@ -1,11 +1,13 @@
 package com.example.rentalmanagerapp.rental.units;
 
+import com.example.rentalmanagerapp.rental.AdminRentalDTOMapper;
 import com.example.rentalmanagerapp.rental.Rental;
 import com.example.rentalmanagerapp.rental.unitcode.UnitCodeRepository;
 import com.example.rentalmanagerapp.rental.unitcode.UnitCodes;
 import com.example.rentalmanagerapp.rental.RentalRepository;
 import com.example.rentalmanagerapp.rental.units.requests.UnitsRequest;
 import com.example.rentalmanagerapp.user.User;
+import com.example.rentalmanagerapp.user.UserDTOMapper;
 import com.example.rentalmanagerapp.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,12 @@ public class UnitsService {
     private final RentalRepository rentalRepository;
 
     private final UnitCodeRepository unitCodeRepository;
+
+    private final AdminRentalDTOMapper rentalDTOMapper;
+
+    private final UserDTOMapper userDTOMapper;
+
+    private final UnitsDTOMapper unitsDTOMapper;
 
     private IllegalStateException unitNotFound(){
         return new IllegalStateException("Unit not found");
@@ -72,9 +80,9 @@ public class UnitsService {
         return "Success";
     }
 
-    public List<Units> getAllUnitsByAddress(
+    public List<UnitsDTO> getAllUnitsByAddress(
             String payloadAddress){
-        List<Units> returnUnitsList = new ArrayList<>();
+        List<UnitsDTO> returnUnitsList = new ArrayList<>();
 
         List<Units> returnedUnits =
                 repository.getAllUnitByAddress(
@@ -85,39 +93,23 @@ public class UnitsService {
         }
 
             returnedUnits.forEach(rental -> {
-                Units newUnit = new Units(
-                        rental.getId(),
-                        rental.getParentUnitId(),
-                        rental.getUnitCode(),
-                        rental.getRenter(),
-                        rental.getUnitAddress(),
-                        rental.getBeds(),
-                        rental.getBaths(),
-                        rental.getUnitNumber(),
-                        rental.getHasPets(),
-                        rental.getRentAmount(),
-                        rental.getRentDue(),
-                        rental.getRentPaid(),
-                        rental.getLeaseStart(),
-                        rental.getRentDueDate(),
-                        rental.getLeaseEnd(),
-                        rental.getCreatedBy(),
-                        rental.getCreatedAt(),
-                        rental.getUpdatedAt());
-
-                returnUnitsList.add(newUnit);
+                returnUnitsList.add(
+                        unitsDTOMapper.apply(rental)
+                );
             });
 
         return returnUnitsList;
     }
 
-    public Units getRentalWithCode(
+    public UnitsDTO getRentalWithCode(
             String code){
-        return unitCodeRepository
+        Units targetUnit = unitCodeRepository
                 .findByUnitCode(code)
                 .orElseThrow(()->
                         throwUnitsError("Code is invalid"))
                 .getParentRental();
+
+        return unitsDTOMapper.apply(targetUnit);
 
         //Todo Validate unitCode then return unit to user to confirm if its the correct one.
     }
@@ -131,15 +123,12 @@ public class UnitsService {
 
         unitPayload.setUpdatedAt(LocalDateTime.now());
 
-        repository.updateUnit(
-                unitPayload.getId(),
-                unitPayload
-        );
+        repository.save(unitPayload);
 
         return "Successful Update";
     }
 
-    public Units.ReturnGetUnitsRequest userIdGetUnits (
+    public UnitsDTO userIdGetUnits (
             User user){
 
         boolean userExist = userRepository
@@ -155,18 +144,7 @@ public class UnitsService {
                 ()->throwUnitsError(
                         "User is not apart of any units"));
 
-        return new Units.ReturnGetUnitsRequest(
-                targetUnit.getUnitAddress(),
-                targetUnit.getBeds(),
-                targetUnit.getBaths(),
-                targetUnit.getUnitNumber(),
-                targetUnit.getHasPets(),
-                targetUnit.getRentAmount(),
-                targetUnit.getRentDue(),
-                targetUnit.getRentPaid(),
-                targetUnit.getLeaseStart(),
-                targetUnit.getRentDueDate(),
-                targetUnit.getLeaseEnd());
+        return unitsDTOMapper.apply(targetUnit);
     }
 
     public List<Units.GetAllUnitsWithDetails> getAllUnitsWithDetails (){
@@ -187,19 +165,7 @@ public class UnitsService {
 
             Units.GetAllUnitsWithDetails addingUnit = new Units.GetAllUnitsWithDetails(
                     unit.getId(),
-                    new Rental(
-                            parentRental.getId(),
-                            parentRental.getRentalAddress(),
-                            parentRental.getDescription(),
-                            parentRental.getType(),
-                            parentRental.getTotalTenants(),
-                            parentRental.getTotalUnits(),
-                            parentRental.getAvgRentAmount(),
-                            parentRental.getTotalRentIncome(),
-                            parentRental.getAssignedManager(),
-                            parentRental.getCreatedBy(),
-                            parentRental.getCreatedAt(),
-                            parentRental.getUpdatedAt()),
+                    rentalDTOMapper.apply(parentRental),
                     unit.getUnitCode() == null ?
                             null :
                             new UnitCodes(
@@ -210,19 +176,7 @@ public class UnitsService {
                             unitCode.getExpiresAt()),
                     unit.getRenter() == null ?
                             null :
-                            new User.UnitUserRequest(
-                            renter.getId(),
-                            renter.getFullName(),
-                            renter.getBirthDate(),
-                            renter.getEmail(),
-                            renter.getTelephone(),
-                            renter.getUsername(),
-                            renter.getUserRole(),
-                            renter.getRentDue(),
-                            renter.getRentLastPaid(),
-                            renter.getDateLeaseStarted(),
-                            renter.getAmountPaid(),
-                            renter.getAmountOwed()),
+                            userDTOMapper.apply(renter),
                     unit.getUnitAddress(),
                     unit.getBeds(),
                     unit.getBaths(),
@@ -233,8 +187,7 @@ public class UnitsService {
                     unit.getRentPaid(),
                     unit.getLeaseStart(),
                     unit.getRentDueDate(),
-                    unit.getLeaseEnd()
-            );
+                    unit.getLeaseEnd());
 
             returnedData.add(addingUnit);
 
