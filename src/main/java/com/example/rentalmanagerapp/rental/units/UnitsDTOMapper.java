@@ -14,7 +14,14 @@ public class UnitsDTOMapper implements Function<Units, UnitsDTO> {
                 unit.getUnitAddress(),
                 unit.getBeds(),
                 unit.getBaths(),
-                unit.getUnitNumber()
+                unit.getUnitNumber(),
+                unit.getHasPets(),
+                unit.getRentAmount(),
+                unit.getRentDue(),
+                unit.getRentPaid(),
+                unit.getLeaseStart(),
+                unit.getRentDueDate(),
+                unit.getLeaseEnd()
         );
     }
 
