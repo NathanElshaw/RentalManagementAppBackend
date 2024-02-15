@@ -1,14 +1,30 @@
 package com.example.rentalmanagerapp.rental.units;
 
+import java.time.LocalDate;
+
 public record UnitsDTO(
-    long id,
 
-    String address,
+        Long id,
+         String unitAddress,
 
-    int beds,
+         int beds,
 
-    double baths,
+         double bath,
 
-    int unitNumber
+         int unitNumber,
+
+         Boolean hasPets,
+
+         double rentAmount,
+
+         double rentDue,
+
+         double rentPaid,
+
+         LocalDate leaseStart,
+
+         LocalDate rentDueDate,
+
+         LocalDate leaseEnd
 ) {
 }
