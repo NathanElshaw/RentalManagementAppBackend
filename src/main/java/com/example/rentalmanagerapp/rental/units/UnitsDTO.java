@@ -15,6 +15,8 @@ public record UnitsDTO(
 
          Boolean hasPets,
 
+         int renterAmount,
+
          double rentAmount,
 
          double rentDue,
