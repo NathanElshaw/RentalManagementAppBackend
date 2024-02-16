@@ -197,7 +197,7 @@ public class UnitsService {
 
     }
 
-    public void deleteUnit(Units unit){
+    public String deleteUnit(Units unit){
         Rental parentRental = rentalRepository
                 .findByRentalAddress(unit.getUnitAddress())
                 .orElseThrow(()->throwUnitsError("Rental not found"));
@@ -212,13 +212,14 @@ public class UnitsService {
         );
 
         parentRental.setTotalTenants(
-                //add part of the model to count number of tenants
-                parentRental.getTotalTenants() - 1
+                parentRental.getTotalTenants() - unit.getRenterAmount()
         );
 
         rentalRepository.save(parentRental);
 
         repository.delete(unit);
+
+        return "Success";
     }
 
 }
