@@ -52,6 +52,8 @@ public class Units {
         @OneToOne
         private User renter;
 
+        private int renterAmount;
+
         private String unitAddress;
 
         private int beds;
