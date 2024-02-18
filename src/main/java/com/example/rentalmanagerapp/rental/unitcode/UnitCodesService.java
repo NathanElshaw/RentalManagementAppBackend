@@ -2,6 +2,8 @@ package com.example.rentalmanagerapp.rental.unitcode;
 
 import com.example.rentalmanagerapp.exceptions.BadRequestException;
 import com.example.rentalmanagerapp.registration.RegistrationService;
+import com.example.rentalmanagerapp.rental.Rental;
+import com.example.rentalmanagerapp.rental.RentalRepository;
 import com.example.rentalmanagerapp.rental.unitcode.requests.JoinUnitRequest;import com.example.rentalmanagerapp.rental.unitcode.requests.UpdateCodeRequest;
 import com.example.rentalmanagerapp.rental.units.Units;
 import com.example.rentalmanagerapp.rental.units.UnitsRepository;
@@ -24,6 +26,8 @@ public class UnitCodesService {
     private final UnitCodeRepository repository;
 
     private final UnitsRepository unitsRepository;
+
+    private final RentalRepository rentalRepository;
 
     private final UserRepository userRepository;
 
@@ -91,30 +95,29 @@ public class UnitCodesService {
                 code)
                 .orElseThrow(this::codeNotFound);
 
-        Units targetUnit = unitsRepository
+        Units unit = unitsRepository
                 .findById(targetUnitCode.getParentRental().getId())
                 .orElseThrow(
                 ()->error( "Unit is invalid"));
 
-        User targetUser = userRepository
-                .findById(reqUser.getId())
-                .orElseThrow(
-                ()->error("User not found"));
+        Rental rental = rentalRepository
+                .findByRentalAddress(unit.getUnitAddress())
+                        .orElseThrow(()-> error("Internal error"));
 
-
-
-        targetUnit.setUpdatedAt(LocalDateTime.now());
-        repository.save(targetUnitCode);
-
-        userRepository.addUnitToUser(
-                targetUser, targetUnit
+        unit.setUpdatedAt(LocalDateTime.now());
+        reqUser.setUsersUnit(unit);
+        unit.setRenter(reqUser);
+        rental.setAvgRentAmount(
+                ((rental.getAvgRentAmount() * rental.getTotalTenants()) + unit.getRentAmount()) /
+                        rental.getTotalTenants() + 1
         );
 
-        unitsRepository.addRenterToUnit(
-                targetUser, targetUnit.getId(), targetUnit.getRentAmount());
+        repository.save(targetUnitCode);
+        unitsRepository.save(unit);
+        rentalRepository.save(rental);
 
         return "Successfully added user " +
-                targetUser.getFullName() +
+                reqUser.getFullName() +
                 " To unit";
     }
 
@@ -134,9 +137,16 @@ public class UnitCodesService {
                         unitCode.getParentUnitNumber()
                 ).orElseThrow(()-> new BadRequestException("Unit not found"));
 
+        Rental rental = rentalRepository
+                .findByRentalAddress(unit.getUnitAddress())
+                        .orElseThrow(()-> error("Internal error"));
+
         user.setUsersUnit(unit);
         user.setRentalAddress(unit.getUnitAddress());
         unit.setRenter(user);
+        rental.setTotalTenants(
+                rental.getTotalTenants() + 1
+        );
 
         userRepository.save(user);
         unitsRepository.save(unit);
