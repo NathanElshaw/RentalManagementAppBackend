@@ -39,18 +39,11 @@ public class UserService {
     private final UserDTOMapper userDTOMapper;
 
     public UserDetailsService userDetailsService(){
-        return new UserDetailsService() {
-            @Override
-            public UserDetails loadUserByUsername(String username) {
-                return userRepository
-                        .findByUsername(username)
-                        .orElseThrow(() ->
-                                new UsernameNotFoundException("Username not found"));
-            }
-        };
+        return username -> userRepository
+                .findByUsername(username)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("Username not found"));
     }
-
-    //Todo make functions to check specifically for email and username whilist signing up
 
     public boolean checkUsername(String username){
         return userRepository.assertUsernameExists(username);
@@ -61,7 +54,6 @@ public class UserService {
     }
 
     public String createUser(User user, String... joinCode){
-        //Todo add if unitcode is present as a param add it to user.
 
         if(userRepository
                 .findByUsername(user
@@ -145,6 +137,13 @@ public class UserService {
         return "Deleted user";
     }
 
+    public UserDTO getUser(Principal user){
+        return userDTOMapper.apply(
+                (User) ((UsernamePasswordAuthenticationToken) user)
+                        .getPrincipal()
+        );
+    }
+
     public ResponseEntity<String> userLogin(
             User.UserLoginRequest userLoginPayload){
 
@@ -165,7 +164,6 @@ public class UserService {
 
             return new ResponseEntity<>("Success", authHeader, HttpStatus.CREATED);
         }else{
-
             throw new IllegalStateException("Invalid username or password");
         }
     }
