@@ -32,27 +32,32 @@ public class UserController {
                 return unitCodesService.joinUnit(code, user);
     }
 
+    @GetMapping("/getUser")
+    public UserDTO getUser(
+            Principal user){
+        return userService.getUser(user);
+    }
 
     @GetMapping("/register/checkEmail")
-    public boolean checkEmail(@RequestParam("email") String email){
+    public boolean checkEmail(
+            @RequestParam("email") String email){
         return userService.checkEmail(email);
     }
 
     @GetMapping("/register/checkUsername")
-    public boolean checkUsername(@RequestParam("username") String username){
+    public boolean checkUsername(
+            @RequestParam("username") String username){
         return userService.checkUsername(username);
     }
 
     @DeleteMapping("/delete")
     public String deleteUser(
             Principal user){
-        //Todo validate jwt , add delete service
         return userService.deleteUser(user);
     }
 
     @GetMapping("/getAll")
     public List<UserDTO> getAllUsers(){
-
         return userService.getAllUsers();
     }
 
