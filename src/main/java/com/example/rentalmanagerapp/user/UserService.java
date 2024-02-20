@@ -1,5 +1,6 @@
 package com.example.rentalmanagerapp.user;
 
+import com.example.rentalmanagerapp.exceptions.BadRequestException;
 import com.example.rentalmanagerapp.registration.RegistrationService;
 import com.example.rentalmanagerapp.rental.unitcode.UnitCodesService;
 import com.example.rentalmanagerapp.security.jwt.JwtService;
@@ -17,10 +18,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -97,20 +95,35 @@ public class UserService {
                 return "Done";
     }
 
-    public String updateUser(User user){
+    public ResponseEntity<String> updateUser(User user,
+                             Principal reqUser){
 
-        boolean userExists =
-                userRepository.assertUserExists(user.getId());
+        User trueReqUser = (User)
+                ((UsernamePasswordAuthenticationToken) reqUser)
+                .getPrincipal();
 
-        if(!userExists){
-            throw new IllegalStateException("Cannot update");
+        boolean assertUser = userRepository
+                .assertUserExists(user.getId());
+
+        if(!assertUser){
+            throw new BadRequestException("User not found");
+        }
+
+        if(!Objects.equals(user.getId(), trueReqUser.getId())){
+            throw  new BadRequestException("Invalid privilege");
         }
 
         user.setUpdatedAt(LocalDateTime.now());
 
         userRepository.updateUser(user.getId(), user);
 
-        return "Success";
+        HttpHeaders authHeader = new HttpHeaders();
+
+        authHeader.set(HttpHeaders.SET_COOKIE, jwtService
+                .generateToken(userDetailsService()
+                        .loadUserByUsername(trueReqUser.getUsername())));
+
+        return new ResponseEntity<>("Success", authHeader, HttpStatus.ACCEPTED);
     }
 
     public List<UserDTO> getAllUsers(){
