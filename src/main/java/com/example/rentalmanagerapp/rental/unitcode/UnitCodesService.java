@@ -100,22 +100,33 @@ public class UnitCodesService {
                 .orElseThrow(
                 ()->error( "Unit is invalid"));
 
-        Rental rental = rentalRepository
-                .findByRentalAddress(unit.getUnitAddress())
-                        .orElseThrow(()-> error("Internal error"));
+        if(unit.getRenter() != null){
 
-        unit.setUpdatedAt(LocalDateTime.now());
-        reqUser.setUsersUnit(unit);
-        unit.setRenter(reqUser);
-        rental.setAvgRentAmount(
-                ((rental.getAvgRentAmount() * rental.getTotalTenants()) + unit.getRentAmount()) /
-                        rental.getTotalTenants() + 1
-        );
+            reqUser.setUsersUnit(unit);
+            unit.setRenterAmount(unit.getRenterAmount() + 1);
 
-        repository.save(targetUnitCode);
-        unitsRepository.save(unit);
-        rentalRepository.save(rental);
+            unitsRepository.save(unit);
+            userRepository.save(reqUser);
+        }else {
 
+            Rental rental = rentalRepository
+                    .findByRentalAddress(unit.getUnitAddress())
+                    .orElseThrow(() -> error("Internal error"));
+
+            unit.setUpdatedAt(LocalDateTime.now());
+            reqUser.setUsersUnit(unit);
+            unit.setRenter(reqUser);
+            rental.setAvgRentAmount(
+                    ((rental.getAvgRentAmount() * rental.getTotalTenants()) + unit.getRentAmount()) /
+                            rental.getTotalTenants() + 1
+            );
+
+            repository.save(targetUnitCode);
+            unitsRepository.save(unit);
+            rentalRepository.save(rental);
+            userRepository.save(reqUser);
+
+        }
         return "Successfully added user " +
                 reqUser.getFullName() +
                 " To unit";
