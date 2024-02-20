@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.security.Principal;
 import java.util.Optional;
 
 import static com.example.rentalmanagerapp.globals.GlobalVars.email;
@@ -95,7 +96,7 @@ class UserServiceTest {
         when(userRepository.assertUserExists(user.getId()))
                 .thenReturn(true);
 
-        underTest.updateUser(user);
+        underTest.updateUser(user, (Principal) user);
 
         ArgumentCaptor<Long> longArgumentCaptor =
                 ArgumentCaptor.forClass(Long.class);
@@ -111,7 +112,7 @@ class UserServiceTest {
 
     @Test
     void updateUserWillThrow(){
-        assertThatThrownBy(()-> underTest.updateUser(user))
+        assertThatThrownBy(()-> underTest.updateUser(user, (Principal) user))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Cannot update");
     }
