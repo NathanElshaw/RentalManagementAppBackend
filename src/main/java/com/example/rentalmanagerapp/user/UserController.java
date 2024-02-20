@@ -61,11 +61,11 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @PutMapping("/update")
-    public String updateUser(
-            @RequestBody User user){
-        //Todo validate jwt before updating
-        return userService.updateUser(user);
+    @PatchMapping("/update")
+    public ResponseEntity<String> updateUser(
+            @RequestBody User user,
+            Principal reqUser) {
+        return userService.updateUser(user, reqUser);
     }
 
     @PostMapping("/login")
