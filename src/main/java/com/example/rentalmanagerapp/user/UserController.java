@@ -1,6 +1,8 @@
 package com.example.rentalmanagerapp.user;
 
 import com.example.rentalmanagerapp.rental.unitcode.UnitCodesService;
+import com.example.rentalmanagerapp.rental.units.UnitsDTO;
+import com.example.rentalmanagerapp.rental.units.UnitsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,8 @@ import java.util.Optional;
 public class UserController {
 
     private final UnitCodesService unitCodesService;
+
+    private final UnitsService unitsService;
 
     private final UserService userService;
 
@@ -48,6 +52,12 @@ public class UserController {
     public boolean checkUsername(
             @RequestParam("username") String username){
         return userService.checkUsername(username);
+    }
+
+    @GetMapping("/getRental")
+    public UnitsDTO getUserUnit(
+            Principal user){
+        return unitsService.userIdGetUnits(user);
     }
 
     @DeleteMapping("/delete")
