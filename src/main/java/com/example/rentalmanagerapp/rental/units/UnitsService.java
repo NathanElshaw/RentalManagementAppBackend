@@ -5,13 +5,14 @@ import com.example.rentalmanagerapp.rental.Rental;
 import com.example.rentalmanagerapp.rental.unitcode.UnitCodeRepository;
 import com.example.rentalmanagerapp.rental.unitcode.UnitCodes;
 import com.example.rentalmanagerapp.rental.RentalRepository;
-import com.example.rentalmanagerapp.rental.units.requests.UnitsRequest;
 import com.example.rentalmanagerapp.user.User;
 import com.example.rentalmanagerapp.user.UserDTOMapper;
 import com.example.rentalmanagerapp.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,8 +111,6 @@ public class UnitsService {
                 .getParentRental();
 
         return unitsDTOMapper.apply(targetUnit);
-
-        //Todo Validate unitCode then return unit to user to confirm if its the correct one.
     }
 
     public String updateUnit(
@@ -129,20 +128,31 @@ public class UnitsService {
     }
 
     public UnitsDTO userIdGetUnits (
-            User user){
+            Principal user){
+
+        User reqUser = (User)
+                ((UsernamePasswordAuthenticationToken) user)
+                        .getPrincipal();
 
         boolean userExist = userRepository
-                .assertUserExists(user.getId());
+                .assertUserExists(reqUser.getId());
 
         if(!userExist){
             throw throwUnitsError("User not found");
         }
 
         Units targetUnit = repository
-                .getUnitByUserId(user)
+                .getUnitByUserId(reqUser)
                 .orElseThrow(
                 ()->throwUnitsError(
                         "User is not apart of any units"));
+
+        if(!targetUnit.isShareInfo() &&
+                !reqUser.getIsPrimeRenter()){
+            targetUnit.setRenterAmount(0);
+            targetUnit.setRentAmount(0);
+            targetUnit.setRentPaid(0);
+        }
 
         return unitsDTOMapper.apply(targetUnit);
     }
@@ -157,26 +167,17 @@ public class UnitsService {
         }
 
         returnedUnitsList.forEach(unit -> {
-            Rental parentRental = unit.getParentUnitId();
-
-            UnitCodes unitCode = unit.getUnitCode();
-
-            User renter = unit.getRenter();
-
             Units.GetAllUnitsWithDetails addingUnit = new Units.GetAllUnitsWithDetails(
                     unit.getId(),
-                    rentalDTOMapper.apply(parentRental),
+                    rentalDTOMapper.apply(unit
+                            .getParentUnitId()),
                     unit.getUnitCode() == null ?
                             null :
-                            new UnitCodes(
-                            unitCode.getId(),
-                            unitCode.getUnitCode(),
-                            unitCode.getConfirmedAt(),
-                            unitCode.getIssuedAt(),
-                            unitCode.getExpiresAt()),
-                    unit.getRenter() == null ?
+                            unit.getUnitCode(),
+                    unit.getPrimRenter() == null ?
                             null :
-                            userDTOMapper.apply(renter),
+                            userDTOMapper.apply(unit
+                                    .getPrimRenter()),
                     unit.getUnitAddress(),
                     unit.getBeds(),
                     unit.getBaths(),
