@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface UnitsRepository extends JpaRepository<Units, Long> {
 
     @Query("select u from Units u " +
-            "where u.renter = ?1")
+            "where u.primRenter = ?1")
     Optional<Units> getUnitByUserId(User userid);
 
     @Query("select case when count(u) > 0 then " +
@@ -36,7 +36,7 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
     @Query("select case when counts(u) > 0 then " +
             "true else false end " +
             "from Units u " +
-            "where u.renter = ?1 ")
+            "where u.primRenter = ?1 ")
     boolean assertUserHasRental(Long userId);
 
     @Query("select u from Units u " +
@@ -45,7 +45,7 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
     Optional<Units> findByAddressAndUnitNumber (String address, int unitNumber);
 
     @Query("select u from Units u " +
-            "where u.renter = ?1 ")
+            "where u.primRenter = ?1 ")
     Optional<Units> findByUser(User user);
 
     @Transactional
@@ -59,7 +59,7 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
     @Transactional
     @Modifying
     @Query("update Units u " +
-            "set u.renter = ?1," +
+            "set u.primRenter = ?1," +
             "u.rentDue = ?3 " +
             "where u.id = ?2 ")
     void addRenterToUnit(User userId, Long unitId, double rentOwed);
@@ -79,7 +79,7 @@ public interface UnitsRepository extends JpaRepository<Units, Long> {
     @Query("update Units u " +
             "set u.rentPaid = ?2, " +
             " u.rentDue = ?3 " +
-            "where u.renter = ?1")
+            "where u.primRenter = ?1")
     void userPayment(User userId, double rentPaid, double rentDue);
 
     @Query("select u " +
