@@ -50,7 +50,7 @@ public class Units {
         private UnitCodes unitCode;
 
         @OneToOne
-        private User renter;
+        private User primRenter;
 
         private int renterAmount;
 
@@ -75,6 +75,8 @@ public class Units {
         private LocalDate rentDueDate;
 
         private LocalDate leaseEnd;
+
+        private boolean shareInfo;
 
         @OneToOne
         private User createdBy;
@@ -128,7 +130,7 @@ public class Units {
                 Rental parentUnitId
         ){
                 this.id = id;
-                this.renter = user;
+                this.primRenter = user;
                 this.unitAddress = unitAddress;
                 this.unitNumber = unitNumber;
                 this.parentUnitId = parentUnitId;
@@ -139,7 +141,7 @@ public class Units {
                 int unitNumber,
                 Rental parentUnitId
         ){
-                this.renter = user;
+                this.primRenter = user;
                 this.unitAddress = unitAddress;
                 this.unitNumber = unitNumber;
                 this.parentUnitId = parentUnitId;
