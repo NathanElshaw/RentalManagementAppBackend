@@ -5,6 +5,7 @@ import com.example.rentalmanagerapp.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @AllArgsConstructor
@@ -48,12 +49,5 @@ public class UnitsController {
     public List<Units.GetAllUnitsWithDetails> getAllUnitsWithDetails(){
 
         return unitsService.getAllUnitsWithDetails();
-    }
-
-    //User Requests
-    @GetMapping("/userIdGetRental")
-    public UnitsDTO userIdGetUnits(
-            @RequestBody User user){
-        return unitsService.userIdGetUnits(user);
     }
 }
