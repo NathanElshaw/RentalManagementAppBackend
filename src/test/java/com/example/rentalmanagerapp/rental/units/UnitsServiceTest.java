@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -237,7 +238,7 @@ class UnitsServiceTest {
                 .getUnitByUserId(user))
                 .thenReturn(Optional.of(unit));
 
-        underTest.userIdGetUnits(user);
+        underTest.userIdGetUnits((Principal) user);
 
         ArgumentCaptor<User> userArgumentCaptor =
                 ArgumentCaptor.forClass(User.class);
@@ -246,7 +247,7 @@ class UnitsServiceTest {
                 .getUnitByUserId(userArgumentCaptor.capture());
 
         UnitsDTO testUnits =
-                underTest.userIdGetUnits(user);
+                underTest.userIdGetUnits((Principal) user);
 
         assertThat(testUnits).isNotNull();
         assertThat(testUnits.unitNumber()).isEqualTo(unitNumber);
@@ -260,7 +261,7 @@ class UnitsServiceTest {
                 .thenReturn(false);
 
         assertThatThrownBy(()->underTest
-                .userIdGetUnits(user))
+                .userIdGetUnits((Principal) user))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("User not found");
     }
@@ -272,7 +273,7 @@ class UnitsServiceTest {
                 .thenReturn(true);
 
         assertThatThrownBy(() -> underTest
-                .userIdGetUnits(user))
+                .userIdGetUnits((Principal) user))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("User is not apart of any units");
     }
