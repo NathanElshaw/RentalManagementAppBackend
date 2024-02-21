@@ -94,6 +94,8 @@ public class User implements UserDetails {
     @OneToOne
     private Units usersUnit;
 
+    private Boolean isPrimeRenter = false;
+
     private LocalDateTime createdAt = LocalDateTime.now();
 
     private LocalDateTime updatedAt = LocalDateTime.now();
