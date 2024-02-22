@@ -1,6 +1,7 @@
 package com.example.rentalmanagerapp.rental;
 
 import com.example.rentalmanagerapp.exceptions.BadRequestException;
+import com.example.rentalmanagerapp.rental.units.Units;
 import com.example.rentalmanagerapp.rental.units.UnitsRepository;
 import com.example.rentalmanagerapp.user.User;
 import com.example.rentalmanagerapp.user.UserRepository;
@@ -77,17 +78,17 @@ public class RentalService {
 
     public String updateRental(
             Rental updateRental){
-        //Todo reduce this;
-        Rental targetRental =
-                repository.findById(
-                updateRental.getId())
-                .orElseThrow(this::rentalNotFound);
+        boolean assertRentalExists = repository.assertRentalByAddress(
+                updateRental.getRentalAddress()
+        );
+
+        if(!assertRentalExists){
+            throw new BadRequestException("Rental not found");
+        }
 
         updateRental.setUpdatedAt(LocalDateTime.now());
 
-        repository.updateRental(
-                updateRental.getId(),
-                targetRental);
+        repository.save(updateRental);
 
         return "Success";
     }
@@ -99,6 +100,13 @@ public class RentalService {
         if(!rentalExists){
             throw rentalNotFound();
         }
+
+        List<Units> unitsList = unitsRepository
+                .getAllUnitByAddress(
+                        rental.getRentalAddress()
+                );
+
+        unitsRepository.deleteAll(unitsList);
 
         repository.delete(rental);
 
