@@ -50,7 +50,6 @@ public class RentalService {
         return "New Rental Saved";
     }
 
-    //make dto for user req
     public RentalDTO getUserRental(Principal user){
 
         User reqUser = (User)
@@ -101,12 +100,10 @@ public class RentalService {
             throw rentalNotFound();
         }
 
-        List<Units> unitsList = unitsRepository
+        unitsRepository.deleteAll(unitsRepository
                 .getAllUnitByAddress(
                         rental.getRentalAddress()
-                );
-
-        unitsRepository.deleteAll(unitsList);
+                ));
 
         repository.delete(rental);
 
@@ -117,11 +114,11 @@ public class RentalService {
     public List<RentalDTO.AdminRentalDTO> getAllRentals(){
 
         List<RentalDTO.AdminRentalDTO> returnRentalList = new ArrayList<>();
-        List<Rental> rentals = repository.getAllUnits();
 
-         rentals.forEach(listRental -> {
-            returnRentalList.add(adminRentalDTOMapper
-                    .apply(listRental));
+        repository.getAllUnits().forEach(listRental -> {
+            returnRentalList.add(
+                    adminRentalDTOMapper.apply(listRental)
+            );
         });
 
         return returnRentalList;
