@@ -4,7 +4,7 @@ import com.example.rentalmanagerapp.exceptions.BadRequestException;
 import com.example.rentalmanagerapp.registration.RegistrationService;
 import com.example.rentalmanagerapp.rental.Rental;
 import com.example.rentalmanagerapp.rental.RentalRepository;
-import com.example.rentalmanagerapp.rental.unitcode.requests.JoinUnitRequest;import com.example.rentalmanagerapp.rental.unitcode.requests.UpdateCodeRequest;
+import com.example.rentalmanagerapp.rental.unitcode.requests.UpdateCodeRequest;
 import com.example.rentalmanagerapp.rental.units.Units;
 import com.example.rentalmanagerapp.rental.units.UnitsRepository;
 import com.example.rentalmanagerapp.user.User;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -100,7 +99,7 @@ public class UnitCodesService {
                 .orElseThrow(
                 ()->error( "Unit is invalid"));
 
-        if(unit.getRenter() != null){
+        if(unit.getPrimRenter() != null){
 
             reqUser.setUsersUnit(unit);
             unit.setRenterAmount(unit.getRenterAmount() + 1);
@@ -115,7 +114,8 @@ public class UnitCodesService {
 
             unit.setUpdatedAt(LocalDateTime.now());
             reqUser.setUsersUnit(unit);
-            unit.setRenter(reqUser);
+            reqUser.setIsPrimeRenter(true);
+            unit.setPrimRenter(reqUser);
             rental.setAvgRentAmount(
                     ((rental.getAvgRentAmount() * rental.getTotalTenants()) + unit.getRentAmount()) /
                             rental.getTotalTenants() + 1
@@ -154,7 +154,7 @@ public class UnitCodesService {
 
         user.setUsersUnit(unit);
         user.setRentalAddress(unit.getUnitAddress());
-        unit.setRenter(user);
+        unit.setPrimRenter(user);
         rental.setTotalTenants(
                 rental.getTotalTenants() + 1
         );
