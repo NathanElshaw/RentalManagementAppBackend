@@ -165,25 +165,27 @@ public class UnitCodesService {
     }
 
     public String updateCode(
-            UpdateCodeRequest updateCodePayload){
-        UnitCodes updateUnitCode = repository
-                .findById(updateCodePayload.getUnitCodeId())
+            UnitCodes unitCode){
+        UnitCodes targetUnitCode = repository
+                .findById(unitCode.getId())
                 .orElseThrow(this::codeNotFound);
 
-        updateUnitCode.setUnitCode(
-                registrationService.createToken());
+        if(targetUnitCode == null){
+            throw new BadRequestException("Code not valid");
+        }
 
-        updateUnitCode.setIssuedAt(
+        if(unitCode.getUnitCode() == null){
+            unitCode.setUnitCode(
+                    registrationService.createToken());
+        }
+
+        unitCode.setIssuedAt(
                 LocalDateTime.now());
 
-        updateUnitCode.setExpiresAt(
-                LocalDateTime.now().plusHours(
-                        updateCodePayload.getValidLength()));
+        unitCode.setExpiresAt(
+                LocalDateTime.now().plusHours(24));
 
-        repository.update(
-                updateCodePayload.getUnitCodeId(),
-                updateUnitCode
-        );
+        repository.save(unitCode);
 
         return "Successfully Reissued";
     }
