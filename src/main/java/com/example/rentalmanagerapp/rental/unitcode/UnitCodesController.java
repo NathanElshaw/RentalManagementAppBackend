@@ -1,6 +1,5 @@
 package com.example.rentalmanagerapp.rental.unitcode;
 
-import com.example.rentalmanagerapp.rental.unitcode.requests.UpdateCodeRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,10 +20,10 @@ public class UnitCodesController {
         return unitCodesService.createUnitCode(unitCodes);
     }
 
-    @PatchMapping("/updateCode")
+    @PatchMapping("/update")
     public String resendCode(
-            @RequestBody UpdateCodeRequest updateCodePayload){
-        return unitCodesService.updateCode(updateCodePayload);
+            @RequestBody UnitCodes updateCode){
+        return unitCodesService.updateCode(updateCode);
     }
 
     @DeleteMapping("/delete")
