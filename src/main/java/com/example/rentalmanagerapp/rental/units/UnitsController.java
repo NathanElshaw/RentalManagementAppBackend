@@ -20,12 +20,6 @@ public class UnitsController {
         return unitsService.createUnit(createUnitPayload);
     }
 
-    @GetMapping("/getRental")
-    public UnitsDTO getRental (
-            @RequestBody String unitCode){
-        return unitsService.getRentalWithCode(unitCode);
-    }
-
     @PatchMapping ("/update")
     public String updateUnit (
             @RequestBody Units updateUnitsPayload){
