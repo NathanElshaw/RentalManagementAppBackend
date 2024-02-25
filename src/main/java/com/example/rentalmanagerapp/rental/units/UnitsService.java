@@ -102,17 +102,6 @@ public class UnitsService {
         return returnUnitsList;
     }
 
-    public UnitsDTO getRentalWithCode(
-            String code){
-        Units targetUnit = unitCodeRepository
-                .findByUnitCode(code)
-                .orElseThrow(()->
-                        throwUnitsError("Code is invalid"))
-                .getParentRental();
-
-        return unitsDTOMapper.apply(targetUnit);
-    }
-
     public String updateUnit(
             Units unitPayload){
 
