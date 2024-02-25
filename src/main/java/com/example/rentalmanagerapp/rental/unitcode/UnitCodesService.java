@@ -6,10 +6,13 @@ import com.example.rentalmanagerapp.rental.Rental;
 import com.example.rentalmanagerapp.rental.RentalRepository;
 import com.example.rentalmanagerapp.rental.unitcode.requests.UpdateCodeRequest;
 import com.example.rentalmanagerapp.rental.units.Units;
+import com.example.rentalmanagerapp.rental.units.UnitsDTO;
+import com.example.rentalmanagerapp.rental.units.UnitsDTOMapper;
 import com.example.rentalmanagerapp.rental.units.UnitsRepository;
 import com.example.rentalmanagerapp.user.User;
 import com.example.rentalmanagerapp.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.aspectj.apache.bcel.classfile.Code;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,8 @@ public class UnitCodesService {
     private final RentalRepository rentalRepository;
 
     private final UserRepository userRepository;
+
+    private final UnitsDTOMapper unitsDTOMapper;
 
     private IllegalStateException codeNotFound(){
         return new IllegalStateException("Code is invalid");
@@ -81,6 +86,34 @@ public class UnitCodesService {
         return repository.findByUnitCode(code).isPresent();
     }
 
+    public UnitsDTO getUnitWithCode(String code){
+        UnitCodes unitCode = repository.findByUnitCode(
+                code)
+                .orElseThrow(()-> new BadRequestException("Code not valid"));
+
+        if(unitCode.getExpiresAt().isBefore(LocalDateTime.now())){
+            expireCode(unitCode);
+            throw new BadRequestException("Code is expired");
+        }else{
+            Units unit = unitsRepository.findByAddressAndUnitNumber(
+                    unitCode.getParentUnitAddress(),
+                    unitCode.getParentUnitNumber()
+            ).orElseThrow(()->
+                    new BadRequestException("Unit not found")
+            );
+
+            return unitsDTOMapper.apply(unit);
+        }
+    }
+
+    public void expireCode(UnitCodes unitCode){
+        unitCode.setUnitCode(null);
+        unitCode.setExpiresAt(null);
+        unitCode.setIssuedAt(null);
+
+        repository.save(unitCode);
+    }
+
 
     public String joinUnit(
             String code,
@@ -98,6 +131,11 @@ public class UnitCodesService {
                 .findById(targetUnitCode.getParentRental().getId())
                 .orElseThrow(
                 ()->error( "Unit is invalid"));
+
+        if(targetUnitCode.getExpiresAt().isBefore(LocalDateTime.now())){
+            expireCode(targetUnitCode);
+            throw new BadRequestException("Code is expired");
+        }
 
         if(unit.getPrimRenter() != null){
 
@@ -137,6 +175,11 @@ public class UnitCodesService {
         UnitCodes unitCode = repository.findByUnitCode(
                         joinCode)
                 .orElseThrow(this::codeNotFound);
+
+        if(unitCode.getExpiresAt().isBefore(LocalDateTime.now())){
+            expireCode(unitCode);
+            throw new BadRequestException("Code is expired");
+        }
 
         user = userRepository
                 .findByEmail(user.getEmail())
