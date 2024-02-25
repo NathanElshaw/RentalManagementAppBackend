@@ -1,12 +1,8 @@
 package com.example.rentalmanagerapp.rental.unitcode;
 
+import com.example.rentalmanagerapp.rental.units.UnitsDTO;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -18,6 +14,12 @@ public class UnitCodesController {
     public String createUnitCodes (
             @RequestBody UnitCodes unitCodes){
         return unitCodesService.createUnitCode(unitCodes);
+    }
+
+    @GetMapping("/get")
+    public UnitsDTO getUnitWithCode (
+            @RequestParam("Code") String code){
+        return unitCodesService.getUnitWithCode(code);
     }
 
     @PatchMapping("/update")
