@@ -1,18 +1,14 @@
 package com.example.rentalmanagerapp.user;
 
 import com.example.rentalmanagerapp.rental.units.Units;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
+import com.example.rentalmanagerapp.user.reputation.Reputation;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.ManyToAny;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -54,6 +50,9 @@ public class User implements UserDetails {
 
     @Column(name = "birth_date")
     private LocalDate birthDate;
+
+    @ManyToAny
+    private Reputation userScore;
 
     //Authority
     private boolean isLocked = true;
