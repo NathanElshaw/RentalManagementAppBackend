@@ -51,7 +51,7 @@ public class User implements UserDetails {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
-    @ManyToAny
+    @OneToOne
     private Reputation userScore;
 
     //Authority
